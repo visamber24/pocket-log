@@ -16,6 +16,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -42,7 +43,7 @@ fun SignupScreen(modifier: Modifier = Modifier) {
 
 
     Column(
-        modifier = modifier
+        modifier = Modifier
             .fillMaxSize()
             ,
         verticalArrangement = Arrangement.Center,
@@ -118,7 +119,7 @@ fun SignupScreen(modifier: Modifier = Modifier) {
             onValueChange = { email = it },
             label = {
                 Text(
-                    "Email"
+                    stringResource(R.string.email)
                 )
             },
             colors = TextFieldDefaults.colors(

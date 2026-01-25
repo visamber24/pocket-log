@@ -6,4 +6,8 @@
     <string name="first_name">First Name</string>
     <string name="create_account">Create Account</string>
     <string name="login_">Already a user?</string>
+    <string name="email">Email</string>
+    <string name="send_otp">Send OTP</string>
+    <string name="otp">OTP</string>
+    <string name="next">Next</string>
 </resources>
