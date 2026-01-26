@@ -1,4 +1,4 @@
-package com.lazysloth.pocketlog.ui.screen
+package com.lazysloth.pocketlog.ui.screen.authentication
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -16,7 +16,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
-import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -45,6 +44,7 @@ fun SignupScreen(modifier: Modifier = Modifier) {
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .width(280.dp)
             ,
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
@@ -53,7 +53,7 @@ fun SignupScreen(modifier: Modifier = Modifier) {
             stringResource(R.string.create_account),
             fontSize = 20.sp,
 
-            modifier = modifier
+            modifier = Modifier
                 .padding(start = 62.dp, bottom = 20.dp)
                 .align(Alignment.Start)
                 .background(
@@ -78,7 +78,9 @@ fun SignupScreen(modifier: Modifier = Modifier) {
                 unfocusedIndicatorColor = Color.Transparent,
                 disabledIndicatorColor = Color.Transparent
             ),
-            shape = RoundedCornerShape(10.dp)
+            shape = RoundedCornerShape(10.dp),
+            modifier = modifier,
+            singleLine = true
         )
         Spacer( Modifier.height(10.dp))
         TextField(
@@ -95,7 +97,12 @@ fun SignupScreen(modifier: Modifier = Modifier) {
                 unfocusedIndicatorColor = Color.Transparent,
                 disabledIndicatorColor = Color.Transparent
             ),
-            shape = RoundedCornerShape(10.dp)
+            shape = RoundedCornerShape(10.dp),
+
+            modifier = modifier,
+            singleLine = true
+
+
         )
         Spacer( Modifier.height(10.dp))
         TextField(
@@ -111,7 +118,10 @@ fun SignupScreen(modifier: Modifier = Modifier) {
                 unfocusedIndicatorColor = Color.Transparent,
                 disabledIndicatorColor = Color.Transparent
             ),
-            shape = RoundedCornerShape(10.dp)
+            shape = RoundedCornerShape(10.dp),
+            modifier = modifier,
+            singleLine = true
+
         )
         Spacer( Modifier.height(10.dp))
         TextField(
@@ -127,7 +137,10 @@ fun SignupScreen(modifier: Modifier = Modifier) {
                 unfocusedIndicatorColor = Color.Transparent,
                 disabledIndicatorColor = Color.Transparent
             ),
-            shape = RoundedCornerShape(10.dp)
+            shape = RoundedCornerShape(10.dp),
+            modifier = modifier,
+            singleLine = true
+
         )
         Spacer( Modifier.height(10.dp))
         TextField(
@@ -143,7 +156,10 @@ fun SignupScreen(modifier: Modifier = Modifier) {
                 unfocusedIndicatorColor = Color.Transparent,
                 disabledIndicatorColor = Color.Transparent
             ),
-            shape = RoundedCornerShape(10.dp)
+            shape = RoundedCornerShape(10.dp),
+            modifier = modifier,
+            singleLine = true
+
         )
 
         Spacer(Modifier.height(12.dp))
@@ -180,6 +196,6 @@ fun SignupScreen(modifier: Modifier = Modifier) {
 @Composable
 fun SignupPreviewScreen() {
     PocketLogTheme {
-        SignupScreen(Modifier)
+        SignupScreen(Modifier.width(280.dp))
     }
 }

@@ -1,4 +1,4 @@
-package com.lazysloth.pocketlog.ui.screen
+package com.lazysloth.pocketlog.ui.screen.authentication
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
