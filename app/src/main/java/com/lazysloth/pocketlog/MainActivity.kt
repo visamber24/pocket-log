@@ -21,6 +21,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.lazysloth.pocketlog.ui.screen.authentication.MainScreenNav
 import com.lazysloth.pocketlog.ui.screen.authentication.SignupScreen
 import com.lazysloth.pocketlog.ui.screen.home.HomeScreen
 import com.lazysloth.pocketlog.ui.theme.PocketLogTheme
@@ -32,7 +33,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             PocketLogTheme {
                 Scaffold(modifier = Modifier) { innerPadding ->
-                    HomeScreen(Modifier.padding(innerPadding))
+                    MainScreenNav(modifier = Modifier.padding(innerPadding))
                 }
             }
         }

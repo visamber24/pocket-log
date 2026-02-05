@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -28,7 +29,9 @@ import com.lazysloth.pocketlog.R
 import com.lazysloth.pocketlog.ui.theme.PocketLogTheme
 
 @Composable
-fun CreateNewPasswordScreen() {
+fun CreateNewPasswordScreen(
+    onClickNext: () -> Unit
+) {
     var createNewPassword by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
     Column(
@@ -50,6 +53,9 @@ fun CreateNewPasswordScreen() {
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent,
                 disabledIndicatorColor = Color.Transparent
+            ),
+            keyboardActions = KeyboardActions(
+
             ),
             shape = RoundedCornerShape(10.dp),
             singleLine = true,
@@ -74,9 +80,9 @@ fun CreateNewPasswordScreen() {
             modifier = Modifier.width(280.dp)
         )
         Spacer(Modifier.height(10.dp))
-        Button(onClick = {}) {
+        Button(onClick = {onClickNext()}) {
             Text(
-                stringResource(R.string.done)
+                stringResource(R.string.next)
             )
         }
     }
@@ -86,6 +92,6 @@ fun CreateNewPasswordScreen() {
 @Composable
 fun CreateNewPasswordScreenPreview() {
     PocketLogTheme {
-        CreateNewPasswordScreen()
+        CreateNewPasswordScreen(onClickNext = {})
     }
 }

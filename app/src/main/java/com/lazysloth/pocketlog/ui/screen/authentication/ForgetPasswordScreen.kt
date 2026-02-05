@@ -27,7 +27,10 @@ import com.lazysloth.pocketlog.R
 import com.lazysloth.pocketlog.ui.theme.PocketLogTheme
 
 @Composable
-fun ForgetPasswordScreen() {
+fun ForgetPasswordScreen(
+    onClickNext: () -> Unit,
+
+    ) {
     var email by remember { mutableStateOf("") }
     var otpStat by remember { mutableStateOf(false) }
     var otp by remember { mutableStateOf("") }
@@ -40,7 +43,7 @@ fun ForgetPasswordScreen() {
     ) {
         TextField(
             value = email,
-            onValueChange = {email = it},
+            onValueChange = { email = it },
             label = {
                 Text(
                     text = stringResource(R.string.email)
@@ -55,16 +58,16 @@ fun ForgetPasswordScreen() {
             singleLine = true
         )
         Spacer(Modifier.height(10.dp))
-        Button(onClick = {otpStat = true}) {
+        Button(onClick = { otpStat = true }) {
             Text(
                 stringResource(R.string.send_otp)
             )
         }
         Spacer(Modifier.height(10.dp))
-        if (otpStat){
+        if (otpStat) {
             TextField(
                 value = otp,
-                onValueChange = {otp = it},
+                onValueChange = { otp = it },
                 label = {
                     Text(
                         text = stringResource(R.string.otp)
@@ -79,7 +82,7 @@ fun ForgetPasswordScreen() {
                 singleLine = true
             )
             Spacer(Modifier.height(10.dp))
-            Button(onClick = {}) {
+            Button(onClick = {onClickNext()}) {
                 Text(
                     stringResource(R.string.next)
                 )
@@ -93,6 +96,6 @@ fun ForgetPasswordScreen() {
 @Composable
 fun ForgetPasswordScreenPreview() {
     PocketLogTheme {
-        ForgetPasswordScreen()
+        ForgetPasswordScreen(onClickNext = {})
     }
 }

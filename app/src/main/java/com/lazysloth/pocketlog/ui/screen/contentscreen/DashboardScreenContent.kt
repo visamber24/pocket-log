@@ -1,7 +1,6 @@
 package com.lazysloth.pocketlog.ui.screen.contentscreen
 
 import androidx.compose.foundation.gestures.ScrollableDefaults
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -15,14 +14,11 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
@@ -36,33 +32,12 @@ import com.lazysloth.pocketlog.data.TransactionType
 
 @Composable
 fun DashboardScreenContent(modifier: Modifier = Modifier) {
-    Scaffold(
-        floatingActionButton = {
-            Column(
-                verticalArrangement = Arrangement.spacedBy(12.dp),
-                horizontalAlignment = Alignment.End
-            ) {
-                FloatingActionButton(onClick = {}) {
-                    Icon(
-                        painter = painterResource(R.drawable.visibility_24px),
-                        contentDescription = "Add"
-                    )
-                }
-                FloatingActionButton(onClick = {}) {
-                    Icon(
-                        painter = painterResource(R.drawable.add_24px),
-                        contentDescription = "Capture with camera"
-                    )
-                }
-            }
-        }
-    ) { innerPadding ->
+
         val listState = rememberLazyListState()
         LazyColumn(
             state = listState,
             flingBehavior = ScrollableDefaults.flingBehavior(),
-            modifier = Modifier
-                .padding(innerPadding)
+            modifier = modifier
                 .fillMaxSize()
         ) {
             items(50) { index ->
@@ -73,15 +48,15 @@ fun DashboardScreenContent(modifier: Modifier = Modifier) {
                     amount = index,
                     category = Category.TRAVEL,
                     account = Account.Family,
-                    note = "",
+                    note = "note for test",
 
 
-                    description = "",
+                    description = "description for test",
                 )
 
             }
         }
-    }
+
 }
 
 @Composable

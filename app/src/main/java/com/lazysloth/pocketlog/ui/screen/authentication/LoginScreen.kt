@@ -34,8 +34,13 @@ import androidx.compose.ui.unit.dp
 import com.lazysloth.pocketlog.R
 
 @Composable
-fun LoginScreen( modifier: Modifier = Modifier) {
-    var usernameInput by remember {mutableStateOf("")}
+fun LoginScreen(
+    modifier: Modifier = Modifier,
+    onForgetClick: () -> Unit,
+    onNewUserclick: () -> Unit,
+    onClickGo: () -> Unit
+) {
+    var usernameInput by remember { mutableStateOf("") }
     var defaultUsername by remember { mutableStateOf("") }
     Column(
 
@@ -44,20 +49,22 @@ fun LoginScreen( modifier: Modifier = Modifier) {
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
-    ){
+    ) {
         TextField(
             value = defaultUsername,
-            onValueChange = {defaultUsername= it},
+            onValueChange = { defaultUsername = it },
 
             leadingIcon = {
-                Icon(painter = painterResource(R.drawable.person_24px),
-                contentDescription = null)
-                          },
+                Icon(
+                    painter = painterResource(R.drawable.person_24px),
+                    contentDescription = null
+                )
+            },
             modifier = modifier
                 .width(280.dp),
             shape = RoundedCornerShape(20.dp),
             singleLine = true,
-            label = { Text(stringResource(R.string.username) )},
+            label = { Text(stringResource(R.string.username)) },
             colors = TextFieldDefaults.colors(
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent,
@@ -70,7 +77,7 @@ fun LoginScreen( modifier: Modifier = Modifier) {
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically,
 
-        ) {
+            ) {
             OutlinedTextField(
                 value = usernameInput,
                 onValueChange = { usernameInput = it },
@@ -88,17 +95,16 @@ fun LoginScreen( modifier: Modifier = Modifier) {
             )
             Spacer(modifier = Modifier.width(10.dp))
             Button(
-                onClick = {},
+                onClick = {onClickGo()},
                 modifier = Modifier
                     .width(59.dp)
                     .height(50.dp)
-                    .padding(0.dp)
-                    ,
+                    .padding(0.dp),
                 contentPadding = PaddingValues(8.dp)
 
 //                border = BorderStroke(width = 1.dp, brush = Brush.linearGradient() )
 
-            ){
+            ) {
 //                Icon(
 //                    Icons.AutoMirrored.Filled.ArrowForward,
 //                    contentDescription = null
@@ -111,22 +117,21 @@ fun LoginScreen( modifier: Modifier = Modifier) {
                         .fillMaxWidth()
 
 
-
                 )
             }
         }
         TextButton(
-            onClick = {},
+            onClick = { onForgetClick() },
             modifier = Modifier
                 .align(Alignment.Start)
                 .padding(start = 62.dp)
-        ){
+        ) {
             Text(
                 text = "forgot pass?"
             )
         }
         Button(
-            onClick = {},
+            onClick = { onNewUserclick() },
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
         ) {
@@ -140,7 +145,6 @@ fun LoginScreen( modifier: Modifier = Modifier) {
 
 @Preview(showSystemUi = true)
 @Composable
-fun LoginPreview()
-{
-    LoginScreen()
+fun LoginPreview() {
+    LoginScreen(onForgetClick = {}, onNewUserclick = {}, onClickGo = {})
 }
