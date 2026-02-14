@@ -38,6 +38,8 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -115,6 +117,7 @@ fun LoginScreen(
             verticalAlignment = Alignment.CenterVertically,
 
             ) {
+//            val visualTransform = if(password.value)
             OutlinedTextField(
                 value = password,
                 onValueChange = { password = it },
@@ -129,10 +132,10 @@ fun LoginScreen(
                 ),
                 keyboardActions = KeyboardActions(
                     onDone = {
-                        onClickGo()
+                        onDone()
                     },
-
                 ),
+                visualTransformation = VisualTransformation.None,
                 shape = RoundedCornerShape(20.dp),
                 label = { Text(stringResource(R.string.password)) },
                 singleLine = true,
@@ -141,7 +144,7 @@ fun LoginScreen(
             )
             Spacer(modifier = Modifier.width(10.dp))
             Button(
-                onClick = { onClickGo() },
+                onClick = { onDone() },
                 modifier = Modifier
                     .width(59.dp)
                     .height(50.dp)

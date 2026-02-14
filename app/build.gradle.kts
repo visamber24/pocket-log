@@ -44,7 +44,8 @@ android {
 }
 
 dependencies {
-
+    // connect database module
+    implementation(project(":database"))
     //Navigation depedency
     implementation(libs.androidx.compose.navigation.suite)
     //datastore dependency

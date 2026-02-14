@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 // At the top level of your kotlin file:
-val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
+val Context.dataStore:DataStore<Preferences> by preferencesDataStore(name = "settings")
 
 class PasswordManager(private val context: Context) {
 

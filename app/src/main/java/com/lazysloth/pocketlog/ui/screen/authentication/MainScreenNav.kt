@@ -7,21 +7,24 @@ import com.lazysloth.pocketlog.ui.screen.authentication.viewmodel.AuthViewModel
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.lazysloth.database.ItemDao
 import com.lazysloth.pocketlog.data.PasswordManager
 import com.lazysloth.pocketlog.ui.navigationitem.AuthenticationNavigation
 import com.lazysloth.pocketlog.ui.screen.authentication.viewmodel.AuthViewModelFactory
 import com.lazysloth.pocketlog.ui.screen.home.HomeScreen
 
 @Composable
-fun MainScreenNav(navController: NavHostController = rememberNavController(),modifier: Modifier) {
+fun MainScreenNav(navController: NavHostController = rememberNavController(), modifier: Modifier) {
     val context = LocalContext.current
     val viewModel: AuthViewModel = viewModel(
         factory = AuthViewModelFactory(PasswordManager(context))
     )
+    val item : ItemDao
     val passwordExists by viewModel.passwordExists.collectAsState()
     NavHost(
         startDestination = AuthenticationNavigation.LOGIN.name,
@@ -36,9 +39,15 @@ fun MainScreenNav(navController: NavHostController = rememberNavController(),mod
                     )
 
                 },
-                onClickGo =  { navController.navigate(AuthenticationNavigation.HOME_SCREEN.name) {popUpTo(
-                    AuthenticationNavigation.HOME_SCREEN.name) {inclusive = true}}  })
+                onClickGo = {
+                    navController.navigate(AuthenticationNavigation.HOME_SCREEN.name) {
+                        popUpTo(
+                            navController.graph.findStartDestination().id
+                        ) { inclusive = true }
+                    }
+                })
         }
+
         composable(route = AuthenticationNavigation.SIGNUP.name) {
             SignupScreen(
                 onClickGo = { navController.navigate(AuthenticationNavigation.HOME_SCREEN.name) },
@@ -47,12 +56,20 @@ fun MainScreenNav(navController: NavHostController = rememberNavController(),mod
         }
         composable(route = AuthenticationNavigation.FORGET.name) {
             ForgetPasswordScreen(
-                onClickNext = {navController.navigate(AuthenticationNavigation.NEW_PASSWORD.name)}
+                onClickNext = { navController.navigate(AuthenticationNavigation.NEW_PASSWORD.name) }
             )
         }
         composable(route = AuthenticationNavigation.NEW_PASSWORD.name) {
             CreateNewPasswordScreen(
-                onClickNext = {navController.navigate(AuthenticationNavigation.LOGIN.name)}
+                onClickNext = {
+                    navController.navigate(AuthenticationNavigation.LOGIN.name) {
+                        popUpTo(
+                            navController.graph.findStartDestination().id
+                        ) {
+                            inclusive = true
+                        }
+                    }
+                }
             )
         }
         composable(route = AuthenticationNavigation.HOME_SCREEN.name) {
