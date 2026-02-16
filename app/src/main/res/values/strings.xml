@@ -13,4 +13,5 @@
     <string name="create_new_password">Create New Password</string>
     <string name="confirm_password">Confirm Password</string>
     <string name="done">Done</string>
+    <string name="settings">Settings</string>
 </resources>

@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -23,9 +25,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -33,19 +39,22 @@ import com.lazysloth.pocketlog.R
 import com.lazysloth.pocketlog.ui.theme.PocketLogTheme
 
 @Composable
-fun SignupScreen(modifier: Modifier = Modifier) {
+fun SignupScreen(
+    onClickGo: () -> Unit,
+    onClickAlreadyAUser: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     var createUsername by remember { mutableStateOf("") }
     var firstName by remember { mutableStateOf("") }
     var lastName by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
-
+    val focusManager = LocalFocusManager.current
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .width(280.dp)
-            ,
+            .width(280.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -61,7 +70,6 @@ fun SignupScreen(modifier: Modifier = Modifier) {
                     shape = RoundedCornerShape(12.dp)
                 )
                 .padding(16.dp)
-                
 
 
         )
@@ -70,7 +78,7 @@ fun SignupScreen(modifier: Modifier = Modifier) {
             onValueChange = { createUsername = it },
             label = {
                 Text(
-                    text = "Username"
+                    text = stringResource(R.string.username)
                 )
             },
             colors = TextFieldDefaults.colors(
@@ -79,10 +87,19 @@ fun SignupScreen(modifier: Modifier = Modifier) {
                 disabledIndicatorColor = Color.Transparent
             ),
             shape = RoundedCornerShape(10.dp),
+            keyboardOptions = KeyboardOptions(
+                imeAction = ImeAction.Next,
+
+            ),
+            keyboardActions = KeyboardActions(
+                onNext = {
+                    focusManager.moveFocus(FocusDirection.Down)
+                }
+            ),
             modifier = modifier,
             singleLine = true
         )
-        Spacer( Modifier.height(10.dp))
+        Spacer(Modifier.height(10.dp))
         TextField(
             value = firstName,
             onValueChange = { firstName = it },
@@ -98,13 +115,21 @@ fun SignupScreen(modifier: Modifier = Modifier) {
                 disabledIndicatorColor = Color.Transparent
             ),
             shape = RoundedCornerShape(10.dp),
+            keyboardOptions = KeyboardOptions(
+                imeAction = ImeAction.Next,
 
+            ),
+            keyboardActions = KeyboardActions(
+                onNext = {
+                    focusManager.moveFocus(FocusDirection.Down)
+                }
+            ),
             modifier = modifier,
             singleLine = true
 
 
         )
-        Spacer( Modifier.height(10.dp))
+        Spacer(Modifier.height(10.dp))
         TextField(
             value = lastName,
             onValueChange = { lastName = it },
@@ -119,11 +144,20 @@ fun SignupScreen(modifier: Modifier = Modifier) {
                 disabledIndicatorColor = Color.Transparent
             ),
             shape = RoundedCornerShape(10.dp),
+            keyboardOptions = KeyboardOptions(
+                imeAction = ImeAction.Next
+            ),
+            keyboardActions = KeyboardActions(
+                onNext = {
+                    focusManager.moveFocus(FocusDirection.Down)
+                }
+            ),
             modifier = modifier,
-            singleLine = true
+            singleLine = true,
 
-        )
-        Spacer( Modifier.height(10.dp))
+
+            )
+        Spacer(Modifier.height(10.dp))
         TextField(
             value = email,
             onValueChange = { email = it },
@@ -138,14 +172,23 @@ fun SignupScreen(modifier: Modifier = Modifier) {
                 disabledIndicatorColor = Color.Transparent
             ),
             shape = RoundedCornerShape(10.dp),
+            keyboardOptions = KeyboardOptions(
+                imeAction = ImeAction.Next,
+                keyboardType = KeyboardType.Email
+            ),
+            keyboardActions = KeyboardActions(
+                onNext = {
+                    focusManager.moveFocus(FocusDirection.Down)
+                }
+            ),
             modifier = modifier,
             singleLine = true
 
         )
-        Spacer( Modifier.height(10.dp))
+        Spacer(Modifier.height(10.dp))
         TextField(
             value = password,
-            onValueChange = {password = it},
+            onValueChange = { password = it },
             label = {
                 Text(
                     stringResource(R.string.password)
@@ -157,6 +200,16 @@ fun SignupScreen(modifier: Modifier = Modifier) {
                 disabledIndicatorColor = Color.Transparent
             ),
             shape = RoundedCornerShape(10.dp),
+            keyboardOptions = KeyboardOptions(
+                imeAction = ImeAction.Done,
+                keyboardType = KeyboardType.Password
+            ),
+
+            keyboardActions = KeyboardActions(
+                onDone = {
+                    onClickGo()
+                }
+            ),
             modifier = modifier,
             singleLine = true
 
@@ -165,9 +218,9 @@ fun SignupScreen(modifier: Modifier = Modifier) {
         Spacer(Modifier.height(12.dp))
         Row(
             Modifier.align(Alignment.Start)
-        ){
+        ) {
             TextButton(
-                onClick = {},
+                onClick = { onClickAlreadyAUser() },
                 modifier = Modifier
 
                     .padding(start = 55.dp)
@@ -180,7 +233,7 @@ fun SignupScreen(modifier: Modifier = Modifier) {
             }
             Spacer(Modifier.width(85.dp))
             Button(
-                onClick = {}
+                onClick = { onClickGo() }
             ) {
                 Text(
                     text = stringResource(R.string.go),
@@ -196,6 +249,6 @@ fun SignupScreen(modifier: Modifier = Modifier) {
 @Composable
 fun SignupPreviewScreen() {
     PocketLogTheme {
-        SignupScreen(Modifier.width(280.dp))
+        SignupScreen(onClickGo = {}, onClickAlreadyAUser = {}, Modifier.width(280.dp))
     }
 }

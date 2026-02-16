@@ -1,3 +1,6 @@
+package com.lazysloth.pocketlog.ui.screen.authentication
+
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -10,6 +13,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -19,24 +24,55 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.lazysloth.pocketlog.R
+import com.lazysloth.pocketlog.data.PasswordManager
+import com.lazysloth.pocketlog.ui.screen.authentication.viewmodel.AuthViewModel
+import com.lazysloth.pocketlog.ui.screen.authentication.viewmodel.AuthViewModelFactory
 
 @Composable
-fun LoginScreen( modifier: Modifier = Modifier) {
-    var usernameInput by remember {mutableStateOf("")}
-    var defaultUsername by remember { mutableStateOf("") }
+fun LoginScreen(
+    modifier: Modifier = Modifier,
+    onForgetClick: () -> Unit,
+    onNewUserClick: () -> Unit,
+    onClickGo: () -> Unit
+
+) {
+    val context = LocalContext.current
+    val viewModel : AuthViewModel = viewModel(
+        factory = AuthViewModelFactory(PasswordManager(context))
+    )
+    var password by remember { mutableStateOf("") }
+    var username by remember { mutableStateOf("") }
+    val focusManager = LocalFocusManager.current
+    val savedPassword by viewModel.savedPassword.collectAsState()
+    val onDone = {
+        if (password.isNotEmpty() && password == savedPassword) {
+            Toast.makeText(context, "Login Successful!", Toast.LENGTH_SHORT).show()
+            onClickGo()
+        } else {
+            Toast.makeText(context, "Invalid password.", Toast.LENGTH_SHORT).show()
+        }
+    }
     Column(
 
         verticalArrangement = Arrangement.Center,
@@ -44,20 +80,30 @@ fun LoginScreen( modifier: Modifier = Modifier) {
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
-    ){
+    ) {
         TextField(
-            value = defaultUsername,
-            onValueChange = {defaultUsername= it},
+            value = username,
+            onValueChange = { username = it },
 
             leadingIcon = {
-                Icon(painter = painterResource(R.drawable.person_24px),
-                contentDescription = null)
-                          },
+                Icon(
+                    painter = painterResource(R.drawable.person_24px),
+                    contentDescription = null
+                )
+            },
             modifier = modifier
                 .width(280.dp),
+            keyboardOptions = KeyboardOptions(
+                imeAction = ImeAction.Next
+            ),
+            keyboardActions = KeyboardActions(
+                onNext = {
+                    focusManager.moveFocus(FocusDirection.Down)
+                }
+            ),
             shape = RoundedCornerShape(20.dp),
             singleLine = true,
-            label = { Text(stringResource(R.string.username) )},
+            label = { Text(stringResource(R.string.username)) },
             colors = TextFieldDefaults.colors(
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent,
@@ -70,16 +116,26 @@ fun LoginScreen( modifier: Modifier = Modifier) {
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically,
 
-        ) {
+            ) {
+//            val visualTransform = if(password.value)
             OutlinedTextField(
-                value = usernameInput,
-                onValueChange = { usernameInput = it },
+                value = password,
+                onValueChange = { password = it },
                 leadingIcon = {
                     Icon(
                         painter = painterResource(R.drawable.password_person_24px),
                         contentDescription = null
                     )
                 },
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Done
+                ),
+                keyboardActions = KeyboardActions(
+                    onDone = {
+                        onDone()
+                    },
+                ),
+                visualTransformation = VisualTransformation.None,
                 shape = RoundedCornerShape(20.dp),
                 label = { Text(stringResource(R.string.password)) },
                 singleLine = true,
@@ -88,17 +144,16 @@ fun LoginScreen( modifier: Modifier = Modifier) {
             )
             Spacer(modifier = Modifier.width(10.dp))
             Button(
-                onClick = {},
+                onClick = { onDone() },
                 modifier = Modifier
                     .width(59.dp)
                     .height(50.dp)
-                    .padding(0.dp)
-                    ,
+                    .padding(0.dp),
                 contentPadding = PaddingValues(8.dp)
 
 //                border = BorderStroke(width = 1.dp, brush = Brush.linearGradient() )
 
-            ){
+            ) {
 //                Icon(
 //                    Icons.AutoMirrored.Filled.ArrowForward,
 //                    contentDescription = null
@@ -111,22 +166,21 @@ fun LoginScreen( modifier: Modifier = Modifier) {
                         .fillMaxWidth()
 
 
-
                 )
             }
         }
         TextButton(
-            onClick = {},
+            onClick = { onForgetClick() },
             modifier = Modifier
                 .align(Alignment.Start)
                 .padding(start = 62.dp)
-        ){
+        ) {
             Text(
                 text = "forgot pass?"
             )
         }
         Button(
-            onClick = {},
+            onClick = { onNewUserClick() },
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
         ) {
@@ -140,7 +194,6 @@ fun LoginScreen( modifier: Modifier = Modifier) {
 
 @Preview(showSystemUi = true)
 @Composable
-fun LoginPreview()
-{
-    LoginScreen()
+fun LoginPreview() {
+    LoginScreen(onForgetClick = {}, onNewUserClick = {}, onClickGo = {})
 }

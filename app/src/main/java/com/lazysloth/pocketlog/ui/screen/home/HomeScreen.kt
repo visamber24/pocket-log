@@ -13,11 +13,11 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import com.lazysloth.pocketlog.R
-import com.lazysloth.pocketlog.ui.ApplicationBottomNavigation
+import androidx.compose.ui.tooling.preview.Preview
+import com.lazysloth.pocketlog.ui.navigationitem.ApplicationBottomNavigation
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(modifier: Modifier = Modifier) {
     var currentScreen by rememberSaveable { mutableStateOf(ApplicationBottomNavigation.HOME) }
 
     NavigationSuiteScaffold(
@@ -27,7 +27,7 @@ fun HomeScreen() {
                      icon =
                          {
                              Icon(
-                                 painter = painterResource(id = it.icon),
+                                 painter = painterResource(id = it.icon ),
                                  contentDescription = it.label
                              )
                          },
@@ -52,13 +52,12 @@ fun HomeScreen() {
                         DashboardScreen()
                     }
                     ApplicationBottomNavigation.ACCOUNT ->  {
-                        AccoundScreen()
+                        AccountScreen()
                     }
 
                     ApplicationBottomNavigation.STATS -> {
                         StatsScreen()
                     }
-
 
                     ApplicationBottomNavigation.PROFILE -> {
                         ProfileScreen()
@@ -71,3 +70,9 @@ fun HomeScreen() {
 
 }
 
+@Preview(showSystemUi = true)
+@Composable
+fun HomeScreenPreview()
+{
+    HomeScreen()
+}

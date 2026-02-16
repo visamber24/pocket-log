@@ -23,4 +23,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "Pocket Log"
 include(":app")
- 
+include(":database")
