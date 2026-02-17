@@ -39,7 +39,9 @@ android {
 
 dependencies {
 
-    implementation(project(":app"))
+//datastore and preference
+    implementation(libs.androidx.datastore.preferences)
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
     //room depedency
     implementation(libs.androidx.room.ktx)
     implementation(libs.androidx.core.ktx)

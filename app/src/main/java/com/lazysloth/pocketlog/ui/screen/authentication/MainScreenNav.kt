@@ -3,7 +3,6 @@ package com.lazysloth.pocketlog.ui.screen.authentication
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import com.lazysloth.pocketlog.ui.screen.authentication.viewmodel.AuthViewModel
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -12,9 +11,10 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.lazysloth.database.ItemDao
-import com.lazysloth.pocketlog.data.PasswordManager
+
+import com.lazysloth.pocketlog.database.data.PasswordManager
 import com.lazysloth.pocketlog.ui.navigationitem.AuthenticationNavigation
+import com.lazysloth.pocketlog.ui.screen.authentication.viewmodel.AuthViewModel
 import com.lazysloth.pocketlog.ui.screen.authentication.viewmodel.AuthViewModelFactory
 import com.lazysloth.pocketlog.ui.screen.home.HomeScreen
 
@@ -24,7 +24,7 @@ fun MainScreenNav(navController: NavHostController = rememberNavController(), mo
     val viewModel: AuthViewModel = viewModel(
         factory = AuthViewModelFactory(PasswordManager(context))
     )
-    val item : ItemDao
+
     val passwordExists by viewModel.passwordExists.collectAsState()
     NavHost(
         startDestination = AuthenticationNavigation.LOGIN.name,

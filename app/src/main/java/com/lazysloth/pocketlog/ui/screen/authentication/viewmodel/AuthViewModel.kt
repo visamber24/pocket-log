@@ -3,7 +3,7 @@ package com.lazysloth.pocketlog.ui.screen.authentication.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.lazysloth.pocketlog.data.PasswordManager
+import com.lazysloth.pocketlog.database.data.PasswordManager
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn

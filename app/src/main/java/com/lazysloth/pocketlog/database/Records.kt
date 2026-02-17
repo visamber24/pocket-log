@@ -1,10 +1,9 @@
-package com.lazysloth.database
+package com.lazysloth.pocketlog.database
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.lazysloth.pocketlog.data.Category
-import com.lazysloth.pocketlog.data.TransactionType
-import java.util.Locale
+import com.lazysloth.pocketlog.database.data.Category
+import com.lazysloth.pocketlog.database.data.TransactionType
 
 @Entity(tableName = "items")
 data class Records(

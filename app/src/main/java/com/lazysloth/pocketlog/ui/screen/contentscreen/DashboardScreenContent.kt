@@ -26,9 +26,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.lazysloth.pocketlog.R
-import com.lazysloth.pocketlog.data.Account
-import com.lazysloth.pocketlog.data.Category
-import com.lazysloth.pocketlog.data.TransactionType
+import com.lazysloth.pocketlog.database.data.Account
+import com.lazysloth.pocketlog.database.data.Category
+import com.lazysloth.pocketlog.database.data.TransactionType
 
 @Composable
 fun DashboardScreenContent(modifier: Modifier = Modifier) {

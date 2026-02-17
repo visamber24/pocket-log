@@ -1,6 +1,7 @@
 [versions]
 agp = "8.13.2"
 datastorePreferences = "1.2.0"
+foundationLayoutVersion = "1.10.3"
 kotlin = "2.3.0"
 coreKtx = "1.17.0"
 junit = "4.13.2"
@@ -19,9 +20,11 @@ navigationRuntimeKtx = "2.9.7"
 navigationCompose = "2.9.7"
 appcompat = "1.7.1"
 roomKtx = "2.8.4"
+ui = "1.10.3"
 
 [libraries]
 #navigation suit
+androidx-compose-foundation-layout-v1103 = { module = "androidx.compose.foundation:foundation-layout", version.ref = "foundationLayoutVersion" }
 androidx-compose-navigation-suite = { module = "androidx.compose.material3:material3-adaptive-navigation-suite", version.ref = "navigationSuite"}
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastorePreferences" }
@@ -48,6 +51,7 @@ androidx-compose-foundation = { group = "androidx.compose.foundation", name = "f
 androidx-navigation-runtime-ktx = { group = "androidx.navigation", name = "navigation-runtime-ktx", version.ref = "navigationRuntimeKtx" }
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+androidx-ui = { group = "androidx.compose.ui", name = "ui", version.ref = "ui" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

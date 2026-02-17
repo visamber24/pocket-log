@@ -44,14 +44,16 @@ android {
 }
 
 dependencies {
-    // connect database module
-    implementation(project(":database"))
+    // alignment
+    implementation(libs.androidx.compose.foundation.layout.v1103)
+
     //Navigation depedency
     implementation(libs.androidx.compose.navigation.suite)
     //datastore dependency
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
-
+    //room database
+    implementation(libs.androidx.room.ktx)
 
     //serialization dpendency
     implementation(libs.kotlinx.serialization.json)
@@ -69,6 +71,7 @@ dependencies {
     implementation(libs.androidx.compose.foundation)
     implementation(libs.androidx.navigation.runtime.ktx)
     implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.ui)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

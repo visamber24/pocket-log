@@ -1,4 +1,4 @@
-package com.lazysloth.database
+package com.lazysloth.pocketlog.database
 
 import androidx.room.Dao
 import androidx.room.Delete
@@ -8,18 +8,18 @@ import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-interface ItemDao {
+interface TransactionItemDao {
     @Insert
-    suspend fun insert()
+    suspend fun insert(records: Records)
 
     @Delete
-    suspend fun delete()
+    suspend fun delete(records: Records)
 
     @Update
-    suspend fun update()
+    suspend fun update(records: Records)
 
     @Query("SELECT * from items WHERE id = :id ")
     fun getItems(id: Int) : Flow<Records>
     @Query("SELECT * FROM items WHERE amount= 1")
-    fun getAllItems()
+    fun getAllTransactionItems() : Flow<List<Records>>
 }
