@@ -37,6 +37,7 @@ import com.lazysloth.pocketlog.database.data.PasswordManager
 import com.lazysloth.pocketlog.ui.screen.authentication.viewmodel.AuthViewModel
 import com.lazysloth.pocketlog.ui.screen.authentication.viewmodel.AuthViewModelFactory
 import com.lazysloth.pocketlog.ui.theme.PocketLogTheme
+import com.lazysloth.pocketlog.ui.theme.inputFieldShape
 
 @Composable
 fun CreateNewPasswordScreen(
@@ -88,7 +89,7 @@ fun CreateNewPasswordScreen(
                     focusManager.moveFocus(FocusDirection.Down)
                 }
             ),
-            shape = RoundedCornerShape(10.dp),
+            shape = inputFieldShape,
             singleLine = true,
             modifier = Modifier.width(280.dp)
         )
@@ -112,7 +113,7 @@ fun CreateNewPasswordScreen(
             keyboardActions = KeyboardActions(
                 onDone = { onDone() }
             ),
-            shape = RoundedCornerShape(10.dp),
+            shape = inputFieldShape,
             singleLine = true,
             modifier = Modifier.width(280.dp)
         )

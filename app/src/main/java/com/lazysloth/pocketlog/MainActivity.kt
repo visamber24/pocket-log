@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.sp
 import com.lazysloth.pocketlog.ui.screen.authentication.MainScreenNav
 import com.lazysloth.pocketlog.ui.screen.authentication.SignupScreen
 import com.lazysloth.pocketlog.ui.screen.home.HomeScreen
+import com.lazysloth.pocketlog.ui.screen.other.AddTransactionScreen
 import com.lazysloth.pocketlog.ui.theme.PocketLogTheme
 
 class MainActivity : ComponentActivity() {
@@ -33,7 +34,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             PocketLogTheme {
                 Scaffold(modifier = Modifier) { innerPadding ->
-                    MainScreenNav(modifier = Modifier.padding(innerPadding))
+                    AddTransactionScreen(Modifier.padding(innerPadding))
                 }
             }
         }

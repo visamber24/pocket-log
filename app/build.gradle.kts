@@ -44,6 +44,9 @@ android {
 }
 
 dependencies {
+    //coil for display image
+    implementation(libs.coil.compose)
+
     // alignment
     implementation(libs.androidx.compose.foundation.layout.v1103)
 
