@@ -63,6 +63,9 @@ fun SignupScreen(
             Toast.makeText(context, "Account Created", Toast.LENGTH_SHORT).show()
             onClickGo()
         }
+        else {
+            Toast.makeText(context,"Please fill all the fields",Toast.LENGTH_LONG).show()
+        }
     }
     Column(
         modifier = Modifier
@@ -220,7 +223,7 @@ fun SignupScreen(
 
             keyboardActions = KeyboardActions(
                 onDone = {
-                    onClickGo()
+                    onGo()
                 }
             ),
             modifier = modifier,

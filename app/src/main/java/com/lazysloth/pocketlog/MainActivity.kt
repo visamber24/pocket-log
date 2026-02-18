@@ -34,7 +34,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             PocketLogTheme {
                 Scaffold(modifier = Modifier) { innerPadding ->
-                    AddTransactionScreen(Modifier.padding(innerPadding))
+                    MainScreenNav(modifier = Modifier.padding(innerPadding))
                 }
             }
         }
