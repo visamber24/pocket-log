@@ -1,26 +1,22 @@
 package com.lazysloth.pocketlog.database.repository
 
-import com.lazysloth.pocketlog.database.Records
+import com.lazysloth.pocketlog.database.Transaction
 import kotlinx.coroutines.flow.Flow
 
 interface TransactionRepository  {
-     suspend fun insertTransaction(records: Records)
+     suspend fun insertTransaction(transaction: Transaction)
+
+     suspend fun deleteTransaction(transaction: Transaction)
 
 
 
-     suspend fun deleteTransaction(records: Records)
+     suspend fun updateTransaction(transaction: Transaction) 
 
-
-
-//     suspend fun updateTransaction() {
+//     fun getItems(id: Int): Flow<Transaction> {
 //        TODO("Not yet implemented")
 //    }
 
-//     fun getItems(id: Int): Flow<Records> {
-//        TODO("Not yet implemented")
-//    }
-
-    fun getAllTransactions() : Flow<List<Records>>
+    fun getAllTransactions() : Flow<List<Transaction>>
 
 
 

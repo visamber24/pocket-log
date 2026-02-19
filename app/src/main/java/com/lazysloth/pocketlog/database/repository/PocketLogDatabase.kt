@@ -4,13 +4,13 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.lazysloth.pocketlog.database.Records
+import com.lazysloth.pocketlog.database.Transaction
 import com.lazysloth.pocketlog.database.TransactionItemDao
 
 
-@Database(entities = [Records :: class], version = 1, exportSchema = false)
+@Database(entities = [Transaction :: class], version = 1, exportSchema = false)
 abstract class PocketLogDatabase : RoomDatabase() {
-    abstract fun itemDao() : TransactionItemDao
+    abstract fun getTransactionItem() : TransactionItemDao
 
     companion object {
         @Volatile

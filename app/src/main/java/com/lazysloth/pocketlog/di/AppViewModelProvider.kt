@@ -9,9 +9,9 @@ import com.lazysloth.pocketlog.ui.screen.home.viewmodel.AddTransactionScreenView
 
 object AppViewModelProvider {
     val Factory = viewModelFactory {
-//        initializer {
-//            AddTransactionScreenViewmodel(expenseApplication().container.transactionRepository)
-//        }
+        initializer {
+            AddTransactionScreenViewmodel(expenseApplication().container.transactionRepository)
+        }
     }
 }
 

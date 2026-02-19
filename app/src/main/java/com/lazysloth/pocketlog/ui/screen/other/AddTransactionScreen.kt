@@ -1,16 +1,15 @@
 package com.lazysloth.pocketlog.ui.screen.other
 
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenuItem
@@ -39,12 +38,9 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.lazysloth.pocketlog.R
-import com.lazysloth.pocketlog.database.AppDataContainer
-import com.lazysloth.pocketlog.database.data.TransactionType
+import com.lazysloth.pocketlog.di.AppViewModelProvider
 import com.lazysloth.pocketlog.ui.screen.home.uiState.AddTransactionUiState
 import com.lazysloth.pocketlog.ui.screen.home.viewmodel.AddTransactionScreenViewmodel
 import com.lazysloth.pocketlog.ui.theme.PocketLogTheme
@@ -59,6 +55,7 @@ fun AddTransactionScreen(
     val context = LocalContext.current.applicationContext
     // Manually create a factory to provide the ViewModel with its required repository.
     val viewModel: AddTransactionScreenViewmodel = viewModel(
+        factory = AppViewModelProvider.Factory
 //        factory = object : ViewModelProvider.Factory {
 //            override fun <T : ViewModel> create(modelClass: Class<T>): T {
 //                if (modelClass.isAssignableFrom(AddTransactionScreenViewmodel::class.java)) {
@@ -88,7 +85,13 @@ fun AddTransactionScreen(
             val uiState by viewModel.uiState.collectAsState()
             AddItems(modifier = Modifier, viewModel = viewModel, state = uiState)
             Spacer(Modifier.height(8.dp))
-            Button(onClick = { viewModel.saveTransaction() }) {
+            Button(
+                onClick = {
+                    viewModel.saveTransaction()
+                    Toast.makeText(context, "Transaction Saved", Toast.LENGTH_LONG)
+                },
+                enabled = uiState.addAmount.isNotBlank() && uiState.options.isNotEmpty()
+            ) {
                 Text("Save")
             }
         }
@@ -104,17 +107,27 @@ fun AddItems(
     viewModel: AddTransactionScreenViewmodel
 ) {
 
-
+    Text(
+        text = "Account :",
+        style = MaterialTheme.typography.titleMedium,
+        textAlign = TextAlign.Start,
+    )
+    RadioGroup(
+        options = state.accounts,
+        selectedOption = state.account,
+        onOptionSelected = { account -> viewModel.onAccountSelected(account) },
+//        optionToText =
+    )
     OutlinedTextField(
         value = state.addAmount,
         onValueChange = { viewModel.onAmountChange(it) },
-//        label = { Text("add amount") },
+        label = { Text("add amount") },
         colors = OutlinedTextFieldDefaults.colors(
             focusedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
             unfocusedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
             disabledContainerColor = MaterialTheme.colorScheme.secondaryContainer,
         ),
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
         modifier = Modifier
             .fillMaxWidth()
             .padding(dimensionResource(R.dimen.transaction_input_item_padding)),
@@ -123,8 +136,8 @@ fun AddItems(
         singleLine = true
     )
 
-    val options = listOf("Option 1", "Option 2", "Option 3", "Option 4", "Option 5")
-    var selectedOptionText by remember { mutableStateOf(options[0]) }
+
+    var selectedOptionText by remember { mutableStateOf(state.options[0].name) }
     ExposedDropdownMenuBox(
         expanded = state.expanded,
         onExpandedChange = { viewModel.onExpandedChange(it) }
@@ -149,11 +162,11 @@ fun AddItems(
         ExposedDropdownMenu(
             expanded = state.expanded,
             onDismissRequest = { viewModel.onExpandedChange(false) }) {
-            options.forEach { selectionOption ->
+            state.options.forEach { selectionOption ->
                 DropdownMenuItem(
-                    text = { Text(selectionOption) },
+                    text = { Text(selectionOption.name) },
                     onClick = {
-                        selectedOptionText = selectionOption
+                        selectedOptionText = selectionOption.name
                         viewModel.onExpandedChange(false)
                     },
                     contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding
@@ -164,17 +177,20 @@ fun AddItems(
     }
     Spacer(Modifier.height(4.dp))
     Text(
-        text = "Transaction Type :",
+        text = "Transaction option :",
         style = MaterialTheme.typography.titleMedium,
         textAlign = TextAlign.Start,
 
         )
 
-    TransactionTypeRadioGroup(selectedType = state.selectedType, onTypeSelected = {
-        viewModel.onTransactionTypeSelected(
-            it
-        )
-    })
+    RadioGroup(
+        options = state.transactionType,
+        selectedOption = state.selectedType,
+        onOptionSelected = {
+            viewModel.onTransactionTypeSelected(
+                it
+            )
+        })
 
 
     OutlinedTextField(
@@ -217,30 +233,32 @@ fun AddItems(
 }
 
 @Composable
-fun TransactionTypeRadioGroup(
-    selectedType: TransactionType,
-    onTypeSelected: (TransactionType) -> Unit
+fun <T : Enum<T>> RadioGroup(
+    options: List<T>,
+    selectedOption: T,
+    onOptionSelected: (T) -> Unit = {},
+//    optionToText: (T) -> String
 ) {
 
     Row(
         horizontalArrangement = Arrangement.spacedBy(16.dp)
     ) {
 
-        TransactionType.entries.forEach { type ->
+        options.forEach { option ->
 
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
-                    .clickable { onTypeSelected(type) } // make whole row clickable
+                    .clickable { onOptionSelected(option) } // make whole row clickable
             ) {
 
                 RadioButton(
-                    selected = selectedType == type,
-                    onClick = { onTypeSelected(type) } // required
+                    selected = selectedOption == option,
+                    onClick = { onOptionSelected(option) } // required
                 )
 
                 Text(
-                    text = type.name,
+                    text = option.name,
                     modifier = Modifier.padding(start = 4.dp)
                 )
             }

@@ -3,23 +3,24 @@ package com.lazysloth.pocketlog.database
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface TransactionItemDao {
-    @Insert
-    suspend fun insert(records: Records)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun insert(transaction: Transaction)
 
     @Delete
-    suspend fun delete(records: Records)
+    suspend fun delete(transaction: Transaction)
 
     @Update
-    suspend fun update(records: Records)
+    suspend fun update(transaction: Transaction)
 
-    @Query("SELECT * from items WHERE id = :id ")
-    fun getItems(id: Int) : Flow<Records>
-    @Query("SELECT * FROM items WHERE amount= 1")
-    fun getAllTransactionItems() : Flow<List<Records>>
+//    @Query("SELECT * from items WHERE id = :id ")
+//    fun getItems(id: Int) : Flow<Transaction>
+    @Query("SELECT * FROM items ORDER BY id ASC")
+    fun getAllTransactionItems() : Flow<List<Transaction>>
 }

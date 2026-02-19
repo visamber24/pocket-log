@@ -15,7 +15,7 @@ class AppDataContainer(
     private val context : Context
 ) : AppContainer{
     override val transactionRepository: TransactionRepository by lazy {
-        OfflineTransactionRepository(PocketLogDatabase.getDatabase(context).itemDao())
+        OfflineTransactionRepository(PocketLogDatabase.getDatabase(context).getTransactionItem())
     }
     override val authRepository: AuthRepository
         get() = TODO("Not yet implemented")
