@@ -2,4 +2,6 @@
 <resources>
     <dimen name="description_dimension">160dp</dimen>
     <dimen name="transaction_input_item_padding">12dp</dimen>
+    <dimen name="date_button_padding">100dp</dimen>
+    <dimen name="time_button_padding">100dp</dimen>
 </resources>

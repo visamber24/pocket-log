@@ -1,9 +1,9 @@
 package com.lazysloth.pocketlog.ui.screen.home.viewmodel
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.lazysloth.pocketlog.database.Transaction
+import com.lazysloth.pocketlog.database.data.Category
 import com.lazysloth.pocketlog.database.data.TransactionType
 import com.lazysloth.pocketlog.database.repository.TransactionRepository
 import com.lazysloth.pocketlog.ui.screen.home.uiState.Account
@@ -13,6 +13,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.time.ZoneId
+import java.time.ZonedDateTime
+import java.util.Date
 
 class AddTransactionScreenViewmodel(private val transactionRepository: TransactionRepository) :
     ViewModel() {
@@ -35,6 +38,13 @@ class AddTransactionScreenViewmodel(private val transactionRepository: Transacti
         }
     }
 
+    fun onOptionSelected(option: Category) {
+        _uiState.update {
+            it.copy(option = option, selectCategoryOption = option.name)
+        }
+    }
+
+
     fun onTransactionTypeSelected(type: TransactionType) {
         _uiState.update {
             it.copy(
@@ -42,7 +52,8 @@ class AddTransactionScreenViewmodel(private val transactionRepository: Transacti
             )
         }
     }
-    fun onAccountSelected(account: Account){
+
+    fun onAccountSelected(account: Account) {
         _uiState.update {
             it.copy(account = account)
         }
@@ -59,18 +70,43 @@ class AddTransactionScreenViewmodel(private val transactionRepository: Transacti
     }
 
     fun saveTransaction() {
+
         viewModelScope.launch {
             transactionRepository.insertTransaction(_uiState.value.toItem())
         }
     }
+    fun onClickDate(isOpen : Boolean){
+        _uiState.update {
+            it.copy(dateOpen = isOpen)
+        }
+    }
+    fun onDateChange(newDate : Date) {
+        // 1. Convert the old Date object to an Instant
+        val instant = newDate.toInstant()
+
+        // 2. Get the user's current time zone
+        val zoneId = ZoneId.systemDefault()
+
+        // 3. Create the modern ZonedDateTime object
+        val zonedDateTime = ZonedDateTime.ofInstant(instant, zoneId)
+
+        // 4. UpdateTime the UI state with the correct ZonedDateTime object
+        _uiState.update { currentState ->
+            currentState.copy(dateTime = zonedDateTime) // UpdateTime the state
+        }
+    }
+
+    fun onClickTime(){
+
+    }
     fun AddTransactionUiState.toItem(): Transaction = Transaction(
         id = id,
-        amount = addAmount.toDoubleOrNull()?:0.0,
-        account = account.name ,
-        category = options[0],
-        transactionType =  selectedType ,
+        amount = addAmount.toDoubleOrNull() ?: 0.0,
+        account = account,
+        category = option,
+        transactionType = selectedType,
         note = inputNote,
         description = inputDescription,
-//        date_time = 0
+        dateTime = dateTime
     )
 }

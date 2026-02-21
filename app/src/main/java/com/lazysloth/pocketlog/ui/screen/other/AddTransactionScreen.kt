@@ -3,6 +3,7 @@ package com.lazysloth.pocketlog.ui.screen.other
 import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -10,8 +11,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
+import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
@@ -22,13 +26,13 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -40,11 +44,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.lazysloth.pocketlog.R
+import com.lazysloth.pocketlog.database.data.Category
+import com.lazysloth.pocketlog.database.data.TransactionType
 import com.lazysloth.pocketlog.di.AppViewModelProvider
+import com.lazysloth.pocketlog.ui.screen.home.uiState.Account
 import com.lazysloth.pocketlog.ui.screen.home.uiState.AddTransactionUiState
 import com.lazysloth.pocketlog.ui.screen.home.viewmodel.AddTransactionScreenViewmodel
 import com.lazysloth.pocketlog.ui.theme.PocketLogTheme
 import com.lazysloth.pocketlog.ui.theme.inputFieldShape
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
+import java.util.Date
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -76,21 +86,34 @@ fun AddTransactionScreen(
         }
     ) { innerPadding ->
         Column(
-            verticalArrangement = Arrangement.Center,
+//            verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .padding(innerPadding)
                 .fillMaxSize()
         ) {
             val uiState by viewModel.uiState.collectAsState()
-            AddItems(modifier = Modifier, viewModel = viewModel, state = uiState)
+            AddItems(
+                modifier = Modifier, state = uiState,
+                viewModel::onAccountSelected,
+                viewModel::onAmountChange,
+                viewModel::onExpandedChange,
+                viewModel::onOptionSelected,
+                viewModel::onTransactionTypeSelected,
+                viewModel::onNoteValueChange,
+                viewModel::onDescriptionChange,
+                viewModel::onClickDate,
+                viewModel::onDateChange
+            )
+
+
             Spacer(Modifier.height(8.dp))
             Button(
                 onClick = {
                     viewModel.saveTransaction()
-                    Toast.makeText(context, "Transaction Saved", Toast.LENGTH_LONG)
+                    Toast.makeText(context, "Transaction Saved", Toast.LENGTH_LONG).show()
                 },
-                enabled = uiState.addAmount.isNotBlank() && uiState.options.isNotEmpty()
+                enabled = (uiState.addAmount.isNotBlank() && uiState.options.isNotEmpty())
             ) {
                 Text("Save")
             }
@@ -104,7 +127,15 @@ fun AddTransactionScreen(
 fun AddItems(
     modifier: Modifier,
     state: AddTransactionUiState,
-    viewModel: AddTransactionScreenViewmodel
+    onAccountSelected: (Account) -> Unit,
+    onAmountChange: (String) -> Unit,
+    onExpandedChange: (Boolean) -> Unit,
+    onOptionSelected: (Category) -> Unit,
+    onTransactionTypeSelected: (TransactionType) -> Unit,
+    onNoteValueChange: (String) -> Unit,
+    onDescriptionChange: (String) -> Unit,
+    onClickDate: (Boolean) -> Unit,
+    onDateChange: (Date) -> Unit
 ) {
 
     Text(
@@ -115,12 +146,12 @@ fun AddItems(
     RadioGroup(
         options = state.accounts,
         selectedOption = state.account,
-        onOptionSelected = { account -> viewModel.onAccountSelected(account) },
+        onOptionSelected = { account -> onAccountSelected(account) },
 //        optionToText =
     )
     OutlinedTextField(
         value = state.addAmount,
-        onValueChange = { viewModel.onAmountChange(it) },
+        onValueChange = { onAmountChange(it) },
         label = { Text("add amount") },
         colors = OutlinedTextFieldDefaults.colors(
             focusedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
@@ -137,10 +168,10 @@ fun AddItems(
     )
 
 
-    var selectedOptionText by remember { mutableStateOf(state.options[0].name) }
+
     ExposedDropdownMenuBox(
         expanded = state.expanded,
-        onExpandedChange = { viewModel.onExpandedChange(it) }
+        onExpandedChange = { onExpandedChange(it) }
     ) {
         OutlinedTextField(
             modifier = Modifier
@@ -148,7 +179,7 @@ fun AddItems(
                 .padding(dimensionResource(R.dimen.transaction_input_item_padding))
                 .menuAnchor(),
             readOnly = true,
-            value = selectedOptionText,
+            value = state.selectCategoryOption,
             onValueChange = {},
             label = { Text("Category") },
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = state.expanded) },
@@ -161,13 +192,13 @@ fun AddItems(
         )
         ExposedDropdownMenu(
             expanded = state.expanded,
-            onDismissRequest = { viewModel.onExpandedChange(false) }) {
+            onDismissRequest = { onExpandedChange(false) }) {
             state.options.forEach { selectionOption ->
                 DropdownMenuItem(
                     text = { Text(selectionOption.name) },
                     onClick = {
-                        selectedOptionText = selectionOption.name
-                        viewModel.onExpandedChange(false)
+                        onOptionSelected(selectionOption)
+                        onExpandedChange(false)
                     },
                     contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding
                 )
@@ -187,15 +218,13 @@ fun AddItems(
         options = state.transactionType,
         selectedOption = state.selectedType,
         onOptionSelected = {
-            viewModel.onTransactionTypeSelected(
-                it
-            )
+            onTransactionTypeSelected(it)
         })
 
 
     OutlinedTextField(
         value = state.inputNote,
-        onValueChange = { viewModel.onNoteValueChange(it) },
+        onValueChange = { onNoteValueChange(it) },
         label = { Text(stringResource(R.string.note) + "..") },
         colors = OutlinedTextFieldDefaults.colors(
             focusedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
@@ -212,7 +241,7 @@ fun AddItems(
 
     OutlinedTextField(
         value = state.inputDescription,
-        onValueChange = { viewModel.onDescriptionChange(it) },
+        onValueChange = { onDescriptionChange(it) },
         label = { Text(stringResource(R.string.description) + "..") },
         colors = OutlinedTextFieldDefaults.colors(
             focusedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
@@ -225,9 +254,42 @@ fun AddItems(
             .padding(dimensionResource(R.dimen.transaction_input_item_padding)),
         enabled = true,
         shape = inputFieldShape,
-
-
+    )
+//    var dateOpen by remember { mutableStateOf(false) }
+    val formatter = remember { DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM) }
+    Box(Modifier.clickable(enabled = true, onClick = {onClickDate(true)})){
+        OutlinedTextField(
+            value = state.dateTime.format(formatter),
+            onValueChange = {},
+            readOnly = true,
+            enabled = false,
+            modifier = Modifier
+                .width(dimensionResource(R.dimen.date_button_padding))
         )
+    }
+
+
+    val datePickerState = rememberDatePickerState()
+    println("dateOpen = ${state.dateOpen}")
+    if (state.dateOpen) {
+        DatePickerDialog(
+            onDismissRequest = { onClickDate(false)},
+            confirmButton = {
+                TextButton(onClick = { onClickDate(false)}) {
+                    datePickerState.selectedDateMillis?.let {millis ->
+                        onDateChange(Date(millis))
+                    }
+                    Text("OK")
+                }
+            }
+        ) {
+            DatePicker(
+                showModeToggle = true,
+                state = datePickerState,
+                title = { Text("Date") },
+                headline = { Text("Select a date") })
+        }
+    }
 
 
 }
@@ -273,6 +335,34 @@ fun AddTransactionPreview() {
         // This preview will not work because it cannot create the ViewModel
         // without a dependency injection framework that can provide a fake repository.
         // For now, you can test the UI in an emulator.
-        AddTransactionScreen(Modifier)
+        val fakeUiState = AddTransactionUiState(
+            addAmount = "123.45",
+            inputNote = "Groceries",
+            inputDescription = "Weekly shopping at the supermarket",
+            account = Account.Cash,
+            selectedType = TransactionType.DEBIT,
+        )
+        Column(
+//            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .padding(10.dp)
+                .fillMaxSize()
+        ) {
+            AddItems(
+                modifier = Modifier.padding(16.dp),
+                state = fakeUiState,
+                // Pass empty lambdas because we don't need logic in a UI preview
+                onAmountChange = {},
+                onAccountSelected = {},
+                onTransactionTypeSelected = {},
+                onOptionSelected = {},
+                onNoteValueChange = {},
+                onDescriptionChange = {},
+                onExpandedChange = {},
+                onClickDate = {},
+                onDateChange = {}
+            )
+        }
     }
 }
