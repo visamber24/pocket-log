@@ -332,9 +332,7 @@ fun <T : Enum<T>> RadioGroup(
 @Preview(showSystemUi = true)
 fun AddTransactionPreview() {
     PocketLogTheme() {
-        // This preview will not work because it cannot create the ViewModel
-        // without a dependency injection framework that can provide a fake repository.
-        // For now, you can test the UI in an emulator.
+
         val fakeUiState = AddTransactionUiState(
             addAmount = "123.45",
             inputNote = "Groceries",
@@ -352,7 +350,7 @@ fun AddTransactionPreview() {
             AddItems(
                 modifier = Modifier.padding(16.dp),
                 state = fakeUiState,
-                // Pass empty lambdas because we don't need logic in a UI preview
+
                 onAmountChange = {},
                 onAccountSelected = {},
                 onTransactionTypeSelected = {},
