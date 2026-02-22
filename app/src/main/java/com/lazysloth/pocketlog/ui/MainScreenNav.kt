@@ -21,6 +21,7 @@ import com.lazysloth.pocketlog.ui.screen.authentication.SignupScreen
 import com.lazysloth.pocketlog.ui.screen.authentication.viewmodel.AuthViewModel
 import com.lazysloth.pocketlog.ui.screen.authentication.viewmodel.AuthViewModelFactory
 import com.lazysloth.pocketlog.ui.screen.home.HomeScreen
+import com.lazysloth.pocketlog.ui.screen.home.TransactionDetailsScreen
 import com.lazysloth.pocketlog.ui.screen.other.AddTransactionScreen
 import com.lazysloth.pocketlog.ui.theme.PocketLogTheme
 
@@ -83,11 +84,18 @@ fun MainScreenNav(navController: NavHostController = rememberNavController(), mo
                 onClickAdd = {
                     navController.navigate("addTransaction")
                 },
-                onClickAi = {}
+                onClickAi = {},
+                onClickTransactionDetails = {
+                    navController.navigate("transactionDetails")
+                }
             )
         }
         composable("addTransaction") {
-            AddTransactionScreen()
+            AddTransactionScreen(
+            )
+        }
+        composable("transactionDetails") {
+            TransactionDetailsScreen(onBack = { navController.navigate("Home_screen") })
         }
     }
 

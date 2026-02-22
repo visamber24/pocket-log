@@ -40,6 +40,7 @@ object DashboardScreenDestination : NavigationDestination {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DashboardScreen(
+    onClickTransactionDetails:(Int) -> Unit,
     onClickAdd: () -> Unit,
     viewmodel: DashboardScreenViewModel = viewModel(
         factory = AppViewModelProvider.Factory
@@ -89,8 +90,8 @@ fun DashboardScreen(
         }
     ) {innerPadding ->
         val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
-        val uiState by viewmodel.uiState.collectAsState()
-        DashboardScreenContent(uiState.transList,Modifier.padding(innerPadding))
+        val uiStateList by viewmodel.uiStateList.collectAsState()
+        DashboardScreenContent(viewmodel,onClickDetails = {  },uiStateList.transList,Modifier.padding(innerPadding))
     }
 }
 
@@ -98,5 +99,5 @@ fun DashboardScreen(
 @Preview(showSystemUi = true)
 @Composable
 fun DashboardPreview() {
-    PocketLogTheme { DashboardScreen(onClickAdd = {}) }
+    PocketLogTheme { DashboardScreen(onClickAdd = {}, onClickTransactionDetails = {}) }
 }
