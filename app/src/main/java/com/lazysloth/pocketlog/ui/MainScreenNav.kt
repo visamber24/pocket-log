@@ -92,6 +92,7 @@ fun MainScreenNav(navController: NavHostController = rememberNavController(), mo
         }
         composable("addTransaction") {
             AddTransactionScreen(
+                popBackStack = {navController.popBackStack()}
             )
         }
         composable("transactionDetails") {

@@ -60,7 +60,7 @@ import java.util.Date
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddTransactionScreen(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,popBackStack : () -> Unit,
 ) {
     val context = LocalContext.current.applicationContext
     // Manually create a factory to provide the ViewModel with its required repository.
@@ -112,6 +112,7 @@ fun AddTransactionScreen(
                 onClick = {
                     viewModel.saveTransaction()
                     Toast.makeText(context, "Transaction Saved", Toast.LENGTH_LONG).show()
+                    popBackStack()
                 },
                 enabled = (uiState.addAmount.isNotBlank() && uiState.options.isNotEmpty())
             ) {
