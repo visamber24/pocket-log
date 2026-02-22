@@ -12,9 +12,7 @@ interface TransactionRepository  {
 
      suspend fun updateTransaction(transaction: Transaction) 
 
-//     fun getItems(id: Int): Flow<Transaction> {
-//        TODO("Not yet implemented")
-//    }
+     fun getTransaction(id: Int): Flow<Transaction?>
 
     fun getAllTransactions() : Flow<List<Transaction>>
 

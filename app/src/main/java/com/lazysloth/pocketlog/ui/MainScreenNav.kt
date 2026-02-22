@@ -1,22 +1,28 @@
-package com.lazysloth.pocketlog.ui.screen.authentication
+package com.lazysloth.pocketlog.ui
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-
 import com.lazysloth.pocketlog.database.data.PasswordManager
 import com.lazysloth.pocketlog.ui.navigationitem.AuthenticationNavigation
+import com.lazysloth.pocketlog.ui.screen.authentication.CreateNewPasswordScreen
+import com.lazysloth.pocketlog.ui.screen.authentication.ForgetPasswordScreen
+import com.lazysloth.pocketlog.ui.screen.authentication.LoginScreen
+import com.lazysloth.pocketlog.ui.screen.authentication.SignupScreen
 import com.lazysloth.pocketlog.ui.screen.authentication.viewmodel.AuthViewModel
 import com.lazysloth.pocketlog.ui.screen.authentication.viewmodel.AuthViewModelFactory
 import com.lazysloth.pocketlog.ui.screen.home.HomeScreen
+import com.lazysloth.pocketlog.ui.screen.other.AddTransactionScreen
+import com.lazysloth.pocketlog.ui.theme.PocketLogTheme
 
 @Composable
 fun MainScreenNav(navController: NavHostController = rememberNavController(), modifier: Modifier) {
@@ -30,7 +36,7 @@ fun MainScreenNav(navController: NavHostController = rememberNavController(), mo
         startDestination = AuthenticationNavigation.LOGIN.name,
         navController = navController
     ) {
-        composable(route = AuthenticationNavigation.LOGIN.name) {
+        composable(route = "login") {
             LoginScreen(
                 onForgetClick = { navController.navigate(AuthenticationNavigation.FORGET.name) },
                 onNewUserClick = {
@@ -73,8 +79,25 @@ fun MainScreenNav(navController: NavHostController = rememberNavController(), mo
             )
         }
         composable(route = AuthenticationNavigation.HOME_SCREEN.name) {
-            HomeScreen()
+            HomeScreen(
+                onClickAdd = {
+                    navController.navigate("addTransaction")
+                },
+                onClickAi = {}
+            )
+        }
+        composable("addTransaction") {
+            AddTransactionScreen()
         }
     }
 
+}
+
+@Preview(showSystemUi = true)
+@Composable
+fun MainScreenPreview() {
+    PocketLogTheme {
+        val navController: NavHostController =rememberNavController()
+        MainScreenNav(navController, modifier = Modifier)
+    }
 }

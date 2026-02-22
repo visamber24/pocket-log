@@ -17,7 +17,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.lazysloth.pocketlog.ui.navigationitem.ApplicationBottomNavigation
 
 @Composable
-fun HomeScreen(modifier: Modifier = Modifier) {
+fun HomeScreen(
+    onClickAdd : () -> Unit,
+    onClickAi: () -> Unit,
+    modifier: Modifier = Modifier) {
     var currentScreen by rememberSaveable { mutableStateOf(ApplicationBottomNavigation.HOME) }
 
     NavigationSuiteScaffold(
@@ -49,7 +52,7 @@ fun HomeScreen(modifier: Modifier = Modifier) {
                 {
 
                     ApplicationBottomNavigation.HOME -> {
-                        DashboardScreen()
+                        DashboardScreen(onClickAdd = { onClickAdd() })
                     }
                     ApplicationBottomNavigation.ACCOUNT ->  {
                         AccountScreen()
@@ -74,5 +77,5 @@ fun HomeScreen(modifier: Modifier = Modifier) {
 @Composable
 fun HomeScreenPreview()
 {
-    HomeScreen()
+    HomeScreen(onClickAi = {}, onClickAdd = {})
 }

@@ -19,8 +19,8 @@ interface TransactionItemDao {
     @Update
     suspend fun update(transaction: Transaction)
 
-//    @Query("SELECT * from items WHERE id = :id ")
-//    fun getItems(id: Int) : Flow<Transaction>
+    @Query("SELECT * from items WHERE id = :id ")
+    fun getTransaction(id: Int) : Flow<Transaction?>
     @Query("SELECT * FROM items ORDER BY id ASC")
     fun getAllTransactionItems() : Flow<List<Transaction>>
 }

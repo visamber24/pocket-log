@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -23,35 +24,36 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.lazysloth.pocketlog.R
+import com.lazysloth.pocketlog.database.Transaction
 import com.lazysloth.pocketlog.database.data.Category
 import com.lazysloth.pocketlog.database.data.TransactionType
+import com.lazysloth.pocketlog.ui.screen.home.DashboardScreen
 import com.lazysloth.pocketlog.ui.screen.home.uiState.Account
+import com.lazysloth.pocketlog.ui.theme.PocketLogTheme
 
 @Composable
-fun DashboardScreenContent(modifier: Modifier = Modifier) {
+fun DashboardScreenContent(transList: List<Transaction>,modifier: Modifier = Modifier) {
 
         val listState = rememberLazyListState()
         LazyColumn(
-            state = listState,
             flingBehavior = ScrollableDefaults.flingBehavior(),
             modifier = modifier
                 .fillMaxSize()
         ) {
-            items(50) { index ->
+            items(transList) { item ->
 
                 RecordContent(
                     icon = painterResource(R.drawable.donut_large_24px),
-                    typeOfTransaction = TransactionType.CREDIT,
-                    amount = index,
-                    category = Category.TRAVEL,
-                    account = Account.Family,
-                    note = "note for test",
-
-
-                    description = "description for test",
+                    typeOfTransaction = item.transactionType,
+                    amount = item.amount.toInt(),
+                    category = item.category,
+                    account = item.account,
+                    note = item.note,
+                    description = item.description,
                 )
 
             }
@@ -128,4 +130,10 @@ fun RecordContent(
             }
         }
     }
+}
+
+@Preview(showSystemUi = true)
+@Composable
+fun DashboardPreview() {
+    PocketLogTheme { DashboardScreen(onClickAdd = {}) }
 }

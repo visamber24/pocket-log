@@ -18,4 +18,5 @@
     <string name="note">note</string>
     <string name="description">description</string>
     <string name="add_amount">add amount</string>
+    <string name="dashboard_screen">dashboard</string>
 </resources>

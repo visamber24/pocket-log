@@ -1,5 +1,7 @@
 package com.lazysloth.pocketlog.ui.screen.home.viewmodel
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.lazysloth.pocketlog.database.Transaction
@@ -20,9 +22,9 @@ import java.util.Date
 class AddTransactionScreenViewmodel(private val transactionRepository: TransactionRepository) :
     ViewModel() {
 
+
     private val _uiState = MutableStateFlow(AddTransactionUiState())
     val uiState: StateFlow<AddTransactionUiState> = _uiState.asStateFlow()
-
 
     fun onAmountChange(newAmount: String) {
         _uiState.update {
@@ -80,6 +82,7 @@ class AddTransactionScreenViewmodel(private val transactionRepository: Transacti
             it.copy(dateOpen = isOpen)
         }
     }
+    @RequiresApi(Build.VERSION_CODES.O)
     fun onDateChange(newDate : Date) {
         // 1. Convert the old Date object to an Instant
         val instant = newDate.toInstant()
