@@ -66,7 +66,7 @@ fun LoginScreen(
     val savedPassword by viewModel.savedPassword.collectAsState()
     val onDone = {
         if (password.isNotEmpty() && password == savedPassword) {
-            Toast.makeText(context, "Login Successful!", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "Login Successful!", Toast.LENGTH_LONG).show()
             onClickGo()
         } else {
             Toast.makeText(context, "Invalid password.", Toast.LENGTH_SHORT).show()
