@@ -6,9 +6,12 @@ import androidx.lifecycle.viewModelScope
 import com.lazysloth.pocketlog.database.User
 import com.lazysloth.pocketlog.database.data.PasswordManager
 import com.lazysloth.pocketlog.database.repository.UserRepository
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.security.MessageDigest
 
@@ -23,14 +26,23 @@ class AuthViewModel(private val userRepository: UserRepository) : ViewModel() {
             .digest(password.toByteArray())
         return bytes.joinToString("") { "%02x".format(it) }
     }
+
+    private val _userEntryUiState = MutableStateFlow(SignupUiState())
+    val userEntryUiState: StateFlow<SignupUiState> = _userEntryUiState.asStateFlow()
     fun saveUser() {
         viewModelScope.launch {
-            userRepository.saveUser(User())
+            userRepository.saveUser(_userEntryUiState.value.toUser())
         }
     }
 
-    val savedPassword: StateFlow<String?> = passwordManager.savedPasswordFlow
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), null)
+    suspend fun verifyPassword(email: String, password: String): Boolean {
+        val savedPassword = userRepository.getUserPassword(email) ?: false
+        return savedPassword == password
+
+
+    }
+
+
 }
 
 class AuthViewModelFactory(
@@ -44,3 +56,11 @@ class AuthViewModelFactory(
         throw IllegalArgumentException("Unknown ViewModel class")
     }
 }
+
+data class UserEntryUiState(
+    val username: String = "",
+    val firstName: String = "",
+    val lastName: String = "",
+    val password: String = "",
+    val emailId: String = "",
+)

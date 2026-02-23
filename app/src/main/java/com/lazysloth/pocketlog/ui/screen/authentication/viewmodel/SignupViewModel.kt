@@ -1,7 +1,8 @@
 package com.lazysloth.pocketlog.ui.screen.authentication.viewmodel
 
 import androidx.lifecycle.ViewModel
-import com.lazysloth.pocketlog.ui.screen.authentication.uiState.SignupUiState
+import com.lazysloth.pocketlog.database.User
+import com.lazysloth.pocketlog.ui.screen.authentication.viewmodel.SignupUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -37,3 +38,19 @@ class SignupViewModel : ViewModel() {
         }
     }
 }
+
+data class SignupUiState(
+    val id: Int = 0,
+    val username: String = "",
+    val firstName: String = "",
+    val lastName: String = "",
+    val email: String = "",
+    val password: String = "",
+    val confirmPassword: String = "",
+)
+fun SignupUiState.toUser() : User = User(
+    id = id,
+    username = username,
+    emailId = email,
+    password = password
+)
