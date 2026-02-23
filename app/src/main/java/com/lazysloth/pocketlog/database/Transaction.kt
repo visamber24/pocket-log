@@ -1,5 +1,7 @@
 package com.lazysloth.pocketlog.database
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.lazysloth.pocketlog.database.data.Category
@@ -25,6 +27,7 @@ data class Transaction(
 
 
 class Converters {
+    @RequiresApi(Build.VERSION_CODES.O)
     @TypeConverter
     fun fromString(value: String?): ZonedDateTime? {
         return value?.let { ZonedDateTime.parse(it) }

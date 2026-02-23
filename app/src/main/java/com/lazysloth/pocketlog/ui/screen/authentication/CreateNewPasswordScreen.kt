@@ -53,7 +53,7 @@ fun CreateNewPasswordScreen(
 
     val onDone = {
         if (createNewPassword.isNotEmpty() && createNewPassword == confirmPassword) {
-            viewModel.savePassword(createNewPassword)
+            viewModel.saveUser()
             Toast.makeText(context, "Password Saved!", Toast.LENGTH_SHORT).show()
             onClickNext()
         } else {

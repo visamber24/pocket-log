@@ -3,20 +3,29 @@ package com.lazysloth.pocketlog.ui.screen.authentication.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.lazysloth.pocketlog.database.User
 import com.lazysloth.pocketlog.database.data.PasswordManager
+import com.lazysloth.pocketlog.database.repository.UserRepository
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import java.security.MessageDigest
 
-class AuthViewModel(private val passwordManager: PasswordManager) : ViewModel() {
+class AuthViewModel(private val userRepository: UserRepository) : ViewModel() {
 
-    val passwordExists: StateFlow<Boolean> = passwordManager.passwordExistsFlow
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
+//    val passwordExists: StateFlow<Boolean> = userRepository.
+//        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
 
-    fun savePassword(password: String) {
+    fun hashPassword(password: String): String {
+        val bytes = MessageDigest
+            .getInstance("SHA-256")
+            .digest(password.toByteArray())
+        return bytes.joinToString("") { "%02x".format(it) }
+    }
+    fun saveUser() {
         viewModelScope.launch {
-            passwordManager.savePassword(password)
+            userRepository.saveUser(User())
         }
     }
 

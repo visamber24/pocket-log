@@ -5,11 +5,15 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.lazysloth.pocketlog.ExpenseApplication
+import com.lazysloth.pocketlog.ui.screen.authentication.viewmodel.AuthViewModel
 import com.lazysloth.pocketlog.ui.screen.home.viewmodel.AddTransactionScreenViewmodel
 import com.lazysloth.pocketlog.ui.screen.home.viewmodel.DashboardScreenViewModel
 
 object AppViewModelProvider {
     val Factory = viewModelFactory {
+        initializer {
+            AuthViewModel(expenseApplication().container.authRepository)
+        }
         initializer {
             AddTransactionScreenViewmodel(expenseApplication().container.transactionRepository)
         }
@@ -18,6 +22,7 @@ object AppViewModelProvider {
                 expenseApplication().container.transactionRepository
             )
         }
+
     }
 }
 
