@@ -1,5 +1,7 @@
 package com.lazysloth.pocketlog.ui
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -19,6 +21,7 @@ import com.lazysloth.pocketlog.ui.screen.home.TransactionDetailsScreen
 import com.lazysloth.pocketlog.ui.screen.other.AddTransactionScreen
 import com.lazysloth.pocketlog.ui.theme.PocketLogTheme
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun MainScreenNav(navController: NavHostController = rememberNavController(), modifier: Modifier) {
     val context = LocalContext.current
@@ -47,7 +50,11 @@ fun MainScreenNav(navController: NavHostController = rememberNavController(), mo
 
         composable(route = AuthenticationNavigation.SIGNUP.name) {
             SignupScreen(
-                onClickGo = { navController.navigate(AuthenticationNavigation.LOGIN.name) },
+                onClickGo = { navController.navigate(AuthenticationNavigation.LOGIN.name) {
+                    popUpTo(
+                        navController.graph.findStartDestination().id
+                    ) {inclusive = true}
+                } },
                 onClickAlreadyAUser = { navController.navigate(AuthenticationNavigation.LOGIN.name) },
             )
         }
@@ -92,6 +99,7 @@ fun MainScreenNav(navController: NavHostController = rememberNavController(), mo
 
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Preview(showSystemUi = true)
 @Composable
 fun MainScreenPreview() {

@@ -70,8 +70,8 @@ fun LoginScreen(
 //    val savedPassword by viewModel.savedPassword.collectAsState()
     val onDone = {
         viewModel.viewModelScope.launch {
-            if (loginUiState.password.isNotEmpty() && loginUiState.email.isNotEmpty() && viewModel.verifyPassword(
-                    loginUiState.email, loginUiState.password
+            if (loginUiState.password.isNotEmpty() && loginUiState.identifier.isNotEmpty() && viewModel.verifyPassword(
+                    loginUiState.identifier, loginUiState.password
                 )
             ) {
                 Toast.makeText(context, "Login Successful!", Toast.LENGTH_LONG).show()
@@ -90,8 +90,8 @@ fun LoginScreen(
             .background(MaterialTheme.colorScheme.background)
     ) {
         TextField(
-            value = loginUiState.email,
-            onValueChange = { signupViewModel.onEmailChange(it) },
+            value = loginUiState.identifier,
+            onValueChange = { signupViewModel.onIdentifierChange(it) },
 
             leadingIcon = {
                 Icon(
@@ -111,7 +111,7 @@ fun LoginScreen(
             ),
             shape = RoundedCornerShape(20.dp),
             singleLine = true,
-            label = { Text(stringResource(R.string.username)) },
+            label = { Text(stringResource(R.string.username_emailId)) },
             colors = TextFieldDefaults.colors(
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent,
