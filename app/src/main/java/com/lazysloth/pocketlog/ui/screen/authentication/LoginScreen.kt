@@ -42,11 +42,13 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.lazysloth.pocketlog.R
-import com.lazysloth.pocketlog.database.data.PasswordManager
+import com.lazysloth.pocketlog.di.AppViewModelProvider
 import com.lazysloth.pocketlog.ui.screen.authentication.viewmodel.AuthViewModel
-import com.lazysloth.pocketlog.ui.screen.authentication.viewmodel.AuthViewModelFactory
+import com.lazysloth.pocketlog.ui.screen.authentication.viewmodel.SignupViewModel
+import kotlinx.coroutines.launch
 
 @Composable
 fun LoginScreen(
@@ -58,18 +60,25 @@ fun LoginScreen(
 ) {
     val context = LocalContext.current
     val viewModel : AuthViewModel = viewModel(
-        factory = AuthViewModelFactory(PasswordManager(context))
+        factory = AppViewModelProvider.Factory
     )
+    val signupViewModel: SignupViewModel = viewModel()
+    val loginUiState by signupViewModel.uiState.collectAsState()
     var password by remember { mutableStateOf("") }
     var username by remember { mutableStateOf("") }
     val focusManager = LocalFocusManager.current
-    val savedPassword by viewModel.savedPassword.collectAsState()
+//    val savedPassword by viewModel.savedPassword.collectAsState()
     val onDone = {
-        if (password.isNotEmpty() && password == savedPassword) {
-            Toast.makeText(context, "Login Successful!", Toast.LENGTH_SHORT).show()
-            onClickGo()
-        } else {
-            Toast.makeText(context, "Invalid password.", Toast.LENGTH_SHORT).show()
+        viewModel.viewModelScope.launch {
+            if (loginUiState.password.isNotEmpty() && loginUiState.identifier.isNotEmpty() && viewModel.verifyPassword(
+                    loginUiState.identifier, loginUiState.password
+                )
+            ) {
+                Toast.makeText(context, "Login Successful!", Toast.LENGTH_LONG).show()
+                onClickGo()
+            } else {
+                Toast.makeText(context, "Invalid password.", Toast.LENGTH_SHORT).show()
+            }
         }
     }
     Column(
@@ -81,8 +90,8 @@ fun LoginScreen(
             .background(MaterialTheme.colorScheme.background)
     ) {
         TextField(
-            value = username,
-            onValueChange = { username = it },
+            value = loginUiState.identifier,
+            onValueChange = { signupViewModel.onIdentifierChange(it) },
 
             leadingIcon = {
                 Icon(
@@ -102,7 +111,7 @@ fun LoginScreen(
             ),
             shape = RoundedCornerShape(20.dp),
             singleLine = true,
-            label = { Text(stringResource(R.string.username)) },
+            label = { Text(stringResource(R.string.username_emailId)) },
             colors = TextFieldDefaults.colors(
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent,
@@ -118,8 +127,8 @@ fun LoginScreen(
             ) {
 //            val visualTransform = if(password.value)
             OutlinedTextField(
-                value = password,
-                onValueChange = { password = it },
+                value = loginUiState.password,
+                onValueChange = { signupViewModel.onPasswordChange(it) },
                 leadingIcon = {
                     Icon(
                         painter = painterResource(R.drawable.password_person_24px),

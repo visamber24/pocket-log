@@ -9,26 +9,29 @@ import androidx.room.TypeConverters
 import com.lazysloth.pocketlog.database.Converters
 import com.lazysloth.pocketlog.database.Transaction
 import com.lazysloth.pocketlog.database.TransactionItemDao
+import com.lazysloth.pocketlog.database.User
+import com.lazysloth.pocketlog.database.UserDao
 
 
-@Database(entities = [Transaction :: class], version = 2, exportSchema = false)
+@Database(entities = [Transaction::class, User::class], version = 3, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class PocketLogDatabase : RoomDatabase() {
-    abstract fun getTransactionItem() : TransactionItemDao
+    abstract fun getTransactionItem(): TransactionItemDao
+    abstract fun userDao(): UserDao
 
     companion object {
         @Volatile
-        private var Instance : PocketLogDatabase? = null
-        fun getDatabase(context : Context) : PocketLogDatabase {
+        private var Instance: PocketLogDatabase? = null
+        fun getDatabase(context: Context): PocketLogDatabase {
             return Instance ?: synchronized(this) {
                 Room.databaseBuilder(
                     context = context,
                     PocketLogDatabase::class.java,
                     name = "pocketLog_database"
                 )
-                    .fallbackToDestructiveMigration(false)
+                    .fallbackToDestructiveMigration()
                     .build()
-                    .also { Instance = it}
+                    .also { Instance = it }
 
             }
         }

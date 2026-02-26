@@ -1,6 +1,8 @@
 package com.lazysloth.pocketlog.ui.screen.other
 
+import android.os.Build
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -57,10 +59,11 @@ import java.time.format.FormatStyle
 import java.util.Date
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddTransactionScreen(
-    modifier: Modifier = Modifier,popBackStack : () -> Unit,
+    modifier: Modifier = Modifier, popBackStack: () -> Unit,
 ) {
     val context = LocalContext.current.applicationContext
     // Manually create a factory to provide the ViewModel with its required repository.
@@ -123,6 +126,7 @@ fun AddTransactionScreen(
 }
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddItems(
@@ -256,9 +260,9 @@ fun AddItems(
         enabled = true,
         shape = inputFieldShape,
     )
-//    var dateOpen by remember { mutableStateOf(false) }
+//  var dateOpen by remember { mutableStateOf(false) }
     val formatter = remember { DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM) }
-    Box(Modifier.clickable(enabled = true, onClick = {onClickDate(true)})){
+    Box(Modifier.clickable(enabled = true, onClick = { onClickDate(true) })) {
         OutlinedTextField(
             value = state.dateTime.format(formatter),
             onValueChange = {},
@@ -274,10 +278,10 @@ fun AddItems(
     println("dateOpen = ${state.dateOpen}")
     if (state.dateOpen) {
         DatePickerDialog(
-            onDismissRequest = { onClickDate(false)},
+            onDismissRequest = { onClickDate(false) },
             confirmButton = {
-                TextButton(onClick = { onClickDate(false)}) {
-                    datePickerState.selectedDateMillis?.let {millis ->
+                TextButton(onClick = { onClickDate(false) }) {
+                    datePickerState.selectedDateMillis?.let { millis ->
                         onDateChange(Date(millis))
                     }
                     Text("OK")
@@ -329,10 +333,11 @@ fun <T : Enum<T>> RadioGroup(
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 @Preview(showSystemUi = true)
 fun AddTransactionPreview() {
-    PocketLogTheme() {
+    PocketLogTheme {
 
         val fakeUiState = AddTransactionUiState(
             addAmount = "123.45",
@@ -351,7 +356,6 @@ fun AddTransactionPreview() {
             AddItems(
                 modifier = Modifier.padding(16.dp),
                 state = fakeUiState,
-
                 onAmountChange = {},
                 onAccountSelected = {},
                 onTransactionTypeSelected = {},
