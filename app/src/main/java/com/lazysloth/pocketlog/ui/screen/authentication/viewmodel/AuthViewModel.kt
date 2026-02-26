@@ -29,9 +29,9 @@ class AuthViewModel(private val userRepository: UserRepository) : ViewModel() {
 
     private val _userEntryUiState = MutableStateFlow(SignupUiState())
     val userEntryUiState: StateFlow<SignupUiState> = _userEntryUiState.asStateFlow()
-    fun saveUser() {
+    fun saveUser(userState : SignupUiState) {
         viewModelScope.launch {
-            userRepository.saveUser(_userEntryUiState.value.toUser())
+            userRepository.saveUser(userState.toUser())
         }
     }
 
@@ -45,17 +45,7 @@ class AuthViewModel(private val userRepository: UserRepository) : ViewModel() {
 
 }
 
-class AuthViewModelFactory(
-    private val passwordManager: PasswordManager
-) : ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(AuthViewModel::class.java)) {
-            @Suppress("UNCHECKED_CAST")
-            return AuthViewModel(passwordManager) as T
-        }
-        throw IllegalArgumentException("Unknown ViewModel class")
-    }
-}
+
 
 data class UserEntryUiState(
     val username: String = "",

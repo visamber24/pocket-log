@@ -45,9 +45,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.lazysloth.pocketlog.R
-import com.lazysloth.pocketlog.database.data.PasswordManager
+import com.lazysloth.pocketlog.di.AppViewModelProvider
 import com.lazysloth.pocketlog.ui.screen.authentication.viewmodel.AuthViewModel
-import com.lazysloth.pocketlog.ui.screen.authentication.viewmodel.AuthViewModelFactory
 import com.lazysloth.pocketlog.ui.screen.authentication.viewmodel.SignupViewModel
 import kotlinx.coroutines.launch
 
@@ -61,7 +60,7 @@ fun LoginScreen(
 ) {
     val context = LocalContext.current
     val viewModel : AuthViewModel = viewModel(
-        factory = AuthViewModelFactory(PasswordManager(context))
+        factory = AppViewModelProvider.Factory
     )
     val signupViewModel: SignupViewModel = viewModel()
     val loginUiState by signupViewModel.uiState.collectAsState()
@@ -91,8 +90,8 @@ fun LoginScreen(
             .background(MaterialTheme.colorScheme.background)
     ) {
         TextField(
-            value = loginUiState.username,
-            onValueChange = { signupViewModel.onUsernameChange(it) },
+            value = loginUiState.email,
+            onValueChange = { signupViewModel.onEmailChange(it) },
 
             leadingIcon = {
                 Icon(

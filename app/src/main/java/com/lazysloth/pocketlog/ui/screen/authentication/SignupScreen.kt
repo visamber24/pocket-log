@@ -37,9 +37,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.lazysloth.pocketlog.R
-import com.lazysloth.pocketlog.database.data.PasswordManager
+import com.lazysloth.pocketlog.di.AppViewModelProvider
 import com.lazysloth.pocketlog.ui.screen.authentication.viewmodel.AuthViewModel
-import com.lazysloth.pocketlog.ui.screen.authentication.viewmodel.AuthViewModelFactory
 import com.lazysloth.pocketlog.ui.screen.authentication.viewmodel.SignupViewModel
 import com.lazysloth.pocketlog.ui.theme.PocketLogTheme
 
@@ -53,13 +52,13 @@ fun SignupScreen(
     val context = LocalContext.current
     val viewModel: SignupViewModel = viewModel()
     val authViewModel: AuthViewModel = viewModel(
-            factory = AuthViewModelFactory(PasswordManager(context))
+            factory = AppViewModelProvider.Factory
             )
     val focusManager = LocalFocusManager.current
     val uiState by viewModel.uiState.collectAsState()
     val onGo = {
         if(uiState.username.isNotEmpty() && uiState.firstName.isNotEmpty() && uiState.lastName.isNotEmpty() && uiState.email.isNotEmpty()){
-            authViewModel.savePassword(uiState.password)
+            authViewModel.saveUser(uiState)
             Toast.makeText(context, "Account Created", Toast.LENGTH_SHORT).show()
             onClickGo()
         }
