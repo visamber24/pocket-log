@@ -32,6 +32,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -52,18 +53,18 @@ fun SignupScreen(
     val context = LocalContext.current
     val viewModel: SignupViewModel = viewModel()
     val authViewModel: AuthViewModel = viewModel(
-            factory = AppViewModelProvider.Factory
-            )
+        factory = AppViewModelProvider.Factory
+    )
     val focusManager = LocalFocusManager.current
     val uiState by viewModel.uiState.collectAsState()
     val onGo = {
-        if(uiState.username.isNotEmpty() && uiState.firstName.isNotEmpty() && uiState.lastName.isNotEmpty() && uiState.email.isNotEmpty()){
+        if (uiState.username.contains(Regex("""[\p{Punct}\p{S}]""")) && uiState.username.isNotEmpty() && uiState.firstName.isNotEmpty() && uiState.lastName.isNotEmpty() && uiState.email.isNotEmpty() && uiState.password.isNotEmpty()
+        ) {
             authViewModel.saveUser(uiState)
             Toast.makeText(context, "Account Created", Toast.LENGTH_SHORT).show()
             onClickGo()
-        }
-        else {
-            Toast.makeText(context,"Please fill all the fields",Toast.LENGTH_LONG).show()
+        } else {
+            Toast.makeText(context, "Please fill all the fields or invalid field", Toast.LENGTH_LONG).show()
         }
     }
     Column(
@@ -90,7 +91,11 @@ fun SignupScreen(
         )
         TextField(
             value = uiState.username,
-            onValueChange = { viewModel.onUsernameChange(it) },
+            onValueChange = {
+
+                viewModel.onUsernameChange(it)
+
+            },
             label = {
                 Text(
                     text = stringResource(R.string.username)
@@ -112,7 +117,8 @@ fun SignupScreen(
                 }
             ),
             modifier = modifier,
-            singleLine = true
+            singleLine = true,
+            isError = uiState.isError
         )
         Spacer(Modifier.height(10.dp))
         TextField(
@@ -248,7 +254,9 @@ fun SignupScreen(
             }
             Spacer(Modifier.width(85.dp))
             Button(
-                onClick = { onGo() }
+                onClick = {
+                    onGo()
+                }
             ) {
                 Text(
                     text = stringResource(R.string.go),

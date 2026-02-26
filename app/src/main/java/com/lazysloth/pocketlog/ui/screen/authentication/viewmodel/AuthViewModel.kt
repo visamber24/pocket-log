@@ -35,11 +35,15 @@ class AuthViewModel(private val userRepository: UserRepository) : ViewModel() {
         }
     }
 
-    suspend fun verifyPassword(email: String, password: String): Boolean {
-        val savedPassword = userRepository.getUserPassword(email) ?: false
-        return savedPassword == password
-
-
+    suspend fun verifyPassword(identifier: String, password: String): Boolean {
+        if(identifier.contains("@")){
+            val savedPassword = userRepository.getUserPasswordByEmail(identifier)
+            return savedPassword == password
+        }
+        else{
+            val savedPassword = userRepository.getUserPasswordByUsername(identifier)
+            return savedPassword == password
+        }
     }
 
 
