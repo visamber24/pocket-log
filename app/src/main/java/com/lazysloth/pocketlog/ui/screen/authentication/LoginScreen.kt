@@ -1,8 +1,6 @@
 package com.lazysloth.pocketlog.ui.screen.authentication
 
 import android.widget.Toast
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -28,9 +26,6 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
@@ -47,12 +42,10 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.lazysloth.pocketlog.R
-import com.lazysloth.pocketlog.di.AppViewModelProvider
 import com.lazysloth.pocketlog.ui.screen.authentication.viewmodel.AuthViewModel
 import com.lazysloth.pocketlog.ui.screen.authentication.viewmodel.SignupViewModel
-import com.lazysloth.pocketlog.ui.screen.home.viewmodel.AddTransactionScreenViewmodel
-import com.lazysloth.pocketlog.ui.screen.home.viewmodel.DashboardScreenViewModel
 import kotlinx.coroutines.launch
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun LoginScreen(
@@ -63,23 +56,9 @@ fun LoginScreen(
 
 ) {
     val context = LocalContext.current
-    val viewModel : AuthViewModel = viewModel(
-
-        factory = AppViewModelProvider.Factory
-    )
+    val viewModel : AuthViewModel = koinViewModel()
     val signupViewModel: SignupViewModel = viewModel()
     val loginUiState by signupViewModel.uiState.collectAsState()
-
-    val addTransactionScreenViewmodel: AddTransactionScreenViewmodel = viewModel(
-        viewModelStoreOwner = LocalActivity.current as ComponentActivity,
-        factory = AppViewModelProvider.Factory
-    )
-    val dashboardScreenViewModel: DashboardScreenViewModel = viewModel(
-        viewModelStoreOwner = LocalActivity.current as ComponentActivity,
-        factory = AppViewModelProvider.Factory
-    )
-
-
     val focusManager = LocalFocusManager.current
 
     val onDone = {
@@ -89,8 +68,7 @@ fun LoginScreen(
                 )
             ) {
                 Toast.makeText(context, "Login Successful!", Toast.LENGTH_LONG).show()
-                addTransactionScreenViewmodel.getIdByUsername(loginUiState.identifier)
-                dashboardScreenViewModel.getIdByUsername(loginUiState.identifier)
+                viewModel.getUserIdByUsername(loginUiState.identifier)
                 onClickGo()
             } else {
                 Toast.makeText(context, "Invalid password or username/Email or both.", Toast.LENGTH_SHORT).show()

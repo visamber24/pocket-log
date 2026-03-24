@@ -9,6 +9,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.lazysloth.pocketlog.di.UserPersists
 import com.lazysloth.pocketlog.ui.navigationitem.AuthenticationNavigation
 import com.lazysloth.pocketlog.ui.screen.authentication.CreateNewPasswordScreen
 import com.lazysloth.pocketlog.ui.screen.authentication.ForgetPasswordScreen
@@ -17,18 +18,27 @@ import com.lazysloth.pocketlog.ui.screen.authentication.SignupScreen
 import com.lazysloth.pocketlog.ui.screen.home.HomeScreen
 import com.lazysloth.pocketlog.ui.screen.home.TransactionDetailsScreen
 import com.lazysloth.pocketlog.ui.screen.other.AddTransactionScreen
+import com.lazysloth.pocketlog.ui.screen.other.SettingsScreen
 import com.lazysloth.pocketlog.ui.theme.PocketLogTheme
 
 @Composable
-fun MainScreenNav(navController: NavHostController = rememberNavController(), modifier: Modifier) {
+fun MainScreenNav(
+    session: UserPersists,
+    navController: NavHostController = rememberNavController(),
+    modifier: Modifier
+) {
     val context = LocalContext.current
 
     NavHost(
-        startDestination = AuthenticationNavigation.LOGIN.name,
+        startDestination = if (session.currentId != -1) {
+            AuthenticationNavigation.HOME_SCREEN.name
+        } else {
+            "login"
+        },
         navController = navController
     ) {
         composable(route = "login") {
-             LoginScreen(
+            LoginScreen(
                 onForgetClick = { navController.navigate(AuthenticationNavigation.FORGET.name) },
                 onNewUserClick = {
                     navController.navigate(
@@ -47,11 +57,13 @@ fun MainScreenNav(navController: NavHostController = rememberNavController(), mo
 
         composable(route = AuthenticationNavigation.SIGNUP.name) {
             SignupScreen(
-                onClickGo = { navController.navigate(AuthenticationNavigation.LOGIN.name) {
-                    popUpTo(
-                        navController.graph.findStartDestination().id
-                    ) {inclusive = true}
-                } },
+                onClickGo = {
+                    navController.navigate(AuthenticationNavigation.LOGIN.name) {
+                        popUpTo(
+                            navController.graph.findStartDestination().id
+                        ) { inclusive = true }
+                    }
+                },
                 onClickAlreadyAUser = { navController.navigate(AuthenticationNavigation.LOGIN.name) },
             )
         }
@@ -81,16 +93,31 @@ fun MainScreenNav(navController: NavHostController = rememberNavController(), mo
                 onClickAi = {},
                 onClickTransactionDetails = {
                     navController.navigate("transactionDetails")
+                },
+                onClickSetting = {
+                    navController.navigate("setting_screen")
                 }
             )
         }
         composable("addTransaction") {
             AddTransactionScreen(
-                popBackStack = {navController.popBackStack()}
+                popBackStack = { navController.popBackStack() }
             )
         }
         composable("transactionDetails") {
-            TransactionDetailsScreen(onBack = { navController.navigate("Home_screen") })
+            TransactionDetailsScreen(onBack = { navController.popBackStack() })
+        }
+        composable(route = "setting_screen") {
+            SettingsScreen(onClickLogout = {
+                session.logout()
+                navController.navigate("login") {
+                    popUpTo(
+                        navController.graph.findStartDestination().id
+                    ) {
+                        inclusive = true
+                    }
+                }
+            })
         }
     }
 
@@ -100,7 +127,8 @@ fun MainScreenNav(navController: NavHostController = rememberNavController(), mo
 @Composable
 fun MainScreenPreview() {
     PocketLogTheme {
-        val navController: NavHostController =rememberNavController()
-        MainScreenNav(navController, modifier = Modifier)
+        val navController: NavHostController = rememberNavController()
+        val context = LocalContext.current
+        MainScreenNav(session = UserPersists(context),navController, modifier = Modifier)
     }
 }

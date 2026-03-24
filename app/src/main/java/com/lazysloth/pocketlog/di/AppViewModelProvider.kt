@@ -1,3 +1,4 @@
+/*
 package com.lazysloth.pocketlog.di
 
 import androidx.lifecycle.ViewModelProvider
@@ -29,8 +30,14 @@ object AppViewModelProvider {
             DashboardScreenViewModel(
                 expenseApplication().container.transactionRepository,
                 expenseApplication().container.userRepository
+                ,expenseApplication().container.
             )
         }
+//        initializer {
+//            UserPersists(
+//                expenseApplication().container.transactionRepository
+//            )
+//        }
 
     }
 }
@@ -47,4 +54,4 @@ fun CreationExtras.expenseApplication(): ExpenseApplication {
     }
 
     throw IllegalStateException("Could not find ExpenseApplication. Current key value: $app")
-}
+}*/

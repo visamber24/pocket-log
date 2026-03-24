@@ -1,10 +1,6 @@
 package com.lazysloth.pocketlog.ui.screen.other
 
-import android.os.Build
 import android.widget.Toast
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.LocalActivity
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -46,16 +42,15 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.lazysloth.pocketlog.R
 import com.lazysloth.pocketlog.database.data.Category
 import com.lazysloth.pocketlog.database.data.TransactionType
-import com.lazysloth.pocketlog.di.AppViewModelProvider
 import com.lazysloth.pocketlog.ui.screen.home.uiState.Account
 import com.lazysloth.pocketlog.ui.screen.home.uiState.AddTransactionUiState
 import com.lazysloth.pocketlog.ui.screen.home.viewmodel.AddTransactionScreenViewmodel
 import com.lazysloth.pocketlog.ui.theme.PocketLogTheme
 import com.lazysloth.pocketlog.ui.theme.inputFieldShape
+import org.koin.androidx.compose.koinViewModel
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 import java.util.Date
@@ -68,10 +63,7 @@ fun AddTransactionScreen(
 ) {
     val context = LocalContext.current.applicationContext
     // Manually create a factory to provide the ViewModel with its required repository.
-    val viewModel: AddTransactionScreenViewmodel = viewModel(
-        viewModelStoreOwner = LocalActivity.current as ComponentActivity,
-        factory = AppViewModelProvider.Factory
-    )
+    val viewModel: AddTransactionScreenViewmodel = koinViewModel()
 
     Scaffold(
         topBar = {

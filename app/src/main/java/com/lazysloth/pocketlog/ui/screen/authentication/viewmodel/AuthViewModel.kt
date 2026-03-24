@@ -2,16 +2,12 @@ package com.lazysloth.pocketlog.ui.screen.authentication.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.lazysloth.pocketlog.database.Transaction
-import com.lazysloth.pocketlog.database.repository.TransactionRepository
 import com.lazysloth.pocketlog.database.repository.UserRepository
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import com.lazysloth.pocketlog.di.UserPersists
 import kotlinx.coroutines.launch
 import java.security.MessageDigest
 
-class AuthViewModel(private val userRepository: UserRepository, private val transactionRepository: TransactionRepository ) : ViewModel() {
+class AuthViewModel(private val userRepository: UserRepository,private val userPersists: UserPersists) : ViewModel() {
 
 //    val passwordExists: StateFlow<Boolean> = userRepository.
 //        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
@@ -23,14 +19,15 @@ class AuthViewModel(private val userRepository: UserRepository, private val tran
         return bytes.joinToString("") { "%02x".format(it) }
     }
 
-    private val _userEntryUiState = MutableStateFlow(SignupUiState())
-    val userEntryUiState: StateFlow<SignupUiState> = _userEntryUiState.asStateFlow()
     fun saveUser(userState : SignupUiState) {
         viewModelScope.launch {
-            userRepository.saveUser(userState.toUser())
-//            transactionRepository.assignUserId()
+            val userId = userPersists.currentId
+            userRepository.saveUser(userState.toUser(userId))
 
         }
+    }
+    suspend fun getUserIdByUsername(username: String){
+        userPersists.currentId = userRepository.userDao.getIdByUsername(username)!!
     }
 
     suspend fun verifyPassword(identifier: String, password: String): Boolean {

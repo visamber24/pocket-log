@@ -3,13 +3,14 @@ package com.lazysloth.pocketlog.ui.screen.authentication.viewmodel
 import androidx.lifecycle.ViewModel
 import coil.compose.AsyncImagePainter
 import com.lazysloth.pocketlog.database.User
+import com.lazysloth.pocketlog.di.UserPersists
 import com.lazysloth.pocketlog.ui.screen.authentication.viewmodel.SignupUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
-class SignupViewModel : ViewModel() {
+class SignupViewModel() : ViewModel() {
     private val _uiState = MutableStateFlow(SignupUiState())
     val uiState : StateFlow<SignupUiState> = _uiState.asStateFlow()
 
@@ -70,8 +71,8 @@ data class SignupUiState(
     val confirmPassword: String = "",
     val isError: Boolean = false,
 )
-fun SignupUiState.toUser() : User = User(
-    id = id,
+fun SignupUiState.toUser(userId: Int) : User = User(
+    id = userId,
     username = username,
     emailId = email,
     password = password

@@ -1,8 +1,5 @@
 package com.lazysloth.pocketlog.ui.screen.home.viewmodel
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.lazysloth.pocketlog.database.Transaction
@@ -10,6 +7,7 @@ import com.lazysloth.pocketlog.database.data.Category
 import com.lazysloth.pocketlog.database.data.TransactionType
 import com.lazysloth.pocketlog.database.repository.TransactionRepository
 import com.lazysloth.pocketlog.database.repository.UserRepository
+import com.lazysloth.pocketlog.di.UserPersists
 import com.lazysloth.pocketlog.ui.screen.home.uiState.Account
 import com.lazysloth.pocketlog.ui.screen.home.uiState.AddTransactionUiState
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -20,12 +18,11 @@ import kotlinx.coroutines.launch
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.util.Date
-import kotlin.math.log
 
 class AddTransactionScreenViewmodel(
     private val transactionRepository: TransactionRepository,
     private val userRepository: UserRepository,
-
+    private val userPersists: UserPersists
 ) : ViewModel() {
 
 
@@ -33,12 +30,7 @@ class AddTransactionScreenViewmodel(
     val uiState: StateFlow<AddTransactionUiState> = _uiState.asStateFlow()
 
 
-    var currentUserId by mutableStateOf<Int?>(null)
 
-    suspend fun getIdByUsername(username: String) {
-        currentUserId=  userRepository.getIdByUsername(username)
-        println("getIdBYUsername function get called currentUserid = $currentUserId")
-    }
 
     init {
         viewModelScope.launch {
@@ -93,8 +85,10 @@ class AddTransactionScreenViewmodel(
 
     fun saveTransaction() {
         viewModelScope.launch {
-            transactionRepository.insertTransaction(_uiState.value.toItem())
-            println("the currentuserid = $currentUserId")
+            val userId = userPersists.currentId
+            println("the currentUserid = ${userPersists.currentId}")
+            transactionRepository.insertTransaction(_uiState.value.toItem(userId))
+
         }
     }
 
@@ -121,9 +115,9 @@ class AddTransactionScreenViewmodel(
     }
 
 
-    fun AddTransactionUiState.toItem(): Transaction = Transaction(
+    fun AddTransactionUiState.toItem(userId: Int): Transaction = Transaction(
         id = id,
-        userId = currentUserId,
+        userId = userId,
         amount = addAmount.toDoubleOrNull() ?: 0.0,
         account = account,
         category = option,

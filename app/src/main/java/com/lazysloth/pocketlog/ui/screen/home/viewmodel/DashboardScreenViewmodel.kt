@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.lazysloth.pocketlog.database.Transaction
 import com.lazysloth.pocketlog.database.repository.TransactionRepository
 import com.lazysloth.pocketlog.database.repository.UserRepository
+import com.lazysloth.pocketlog.di.UserPersists
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -16,8 +17,9 @@ import kotlinx.coroutines.flow.stateIn
 
 
 class DashboardScreenViewModel(
-    transactionRepository: TransactionRepository,
+    private val transactionRepository: TransactionRepository,
     private val userRepository: UserRepository,
+    private val userPersists: UserPersists
 
 ) : ViewModel() {
         //TODO this is not required for this screen but required for details screen
@@ -31,21 +33,12 @@ private val itemId  = MutableStateFlow<Int?>(null)
     var userId = MutableStateFlow<Int?>(null)
 
 
-        suspend fun getIdByUsername(username: String) {
-            userId.value = userRepository.getIdByUsername(username)
-            println("userId = $userId")
-        }
+
 
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val uiStateList: StateFlow<DashboardUiState> =
-        userId
-            .filterNotNull()
-            .flatMapLatest { id ->
-
-
-        transactionRepository.getAllTransactions(id)
-        }
+        transactionRepository.getAllTransactions(userPersists.currentId)
             .map {
                 DashboardUiState(it)
             }.stateIn(

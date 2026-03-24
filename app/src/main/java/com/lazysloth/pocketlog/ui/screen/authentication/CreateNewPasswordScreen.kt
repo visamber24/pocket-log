@@ -30,11 +30,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.lazysloth.pocketlog.R
-import com.lazysloth.pocketlog.di.AppViewModelProvider
 import com.lazysloth.pocketlog.ui.screen.authentication.viewmodel.AuthViewModel
 import com.lazysloth.pocketlog.ui.screen.authentication.viewmodel.SignupViewModel
 import com.lazysloth.pocketlog.ui.theme.PocketLogTheme
 import com.lazysloth.pocketlog.ui.theme.inputFieldShape
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun CreateNewPasswordScreen(
@@ -42,9 +42,7 @@ fun CreateNewPasswordScreen(
 ) {
     val context = LocalContext.current
     val viewModel: SignupViewModel = viewModel()
-    val authViewModel: AuthViewModel = viewModel(
-        factory = AppViewModelProvider.Factory
-    )
+    val authViewModel: AuthViewModel = koinViewModel()
     val uiState by viewModel.uiState.collectAsState()
     val focusManager = LocalFocusManager.current
 

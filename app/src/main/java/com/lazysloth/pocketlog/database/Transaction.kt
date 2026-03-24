@@ -21,7 +21,8 @@ import java.time.ZonedDateTime
         childColumns = arrayOf("userId"),
         onUpdate = ForeignKey.CASCADE,
         onDelete = ForeignKey.CASCADE
-    )]
+    )],
+    indices = [Index("userId")]
 )
 data class Transaction(
     @PrimaryKey(autoGenerate = true)

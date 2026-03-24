@@ -191,5 +191,5 @@ fun RecordContent(
 @Preview(showSystemUi = true)
 @Composable
 fun DashboardPreview() {
-    PocketLogTheme { DashboardScreen(onClickAdd = {}, onClickTransactionDetails = {}) }
+    PocketLogTheme { DashboardScreen(onClickAdd = {}, onClickTransactionDetails = {}, onClickSetting = {}) }
 }
