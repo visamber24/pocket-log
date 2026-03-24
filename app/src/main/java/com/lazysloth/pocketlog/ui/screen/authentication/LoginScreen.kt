@@ -68,7 +68,7 @@ fun LoginScreen(
                 )
             ) {
                 Toast.makeText(context, "Login Successful!", Toast.LENGTH_LONG).show()
-                viewModel.getUserIdByUsername(loginUiState.identifier)
+                viewModel.getUserIdByIdentifier(loginUiState.identifier)
                 onClickGo()
             } else {
                 Toast.makeText(context, "Invalid password or username/Email or both.", Toast.LENGTH_SHORT).show()

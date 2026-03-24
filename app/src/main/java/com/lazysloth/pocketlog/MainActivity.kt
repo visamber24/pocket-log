@@ -33,6 +33,7 @@ class MainActivity() : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
+            println("current userId is ${session.currentId}")
             PocketLogTheme {
                 Scaffold(modifier = Modifier) { innerPadding ->
                     MainScreenNav(modifier = Modifier.padding(innerPadding),session = session)

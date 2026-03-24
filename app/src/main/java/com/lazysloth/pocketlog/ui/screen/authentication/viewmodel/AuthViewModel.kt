@@ -22,12 +22,18 @@ class AuthViewModel(private val userRepository: UserRepository,private val userP
     fun saveUser(userState : SignupUiState) {
         viewModelScope.launch {
             val userId = userPersists.currentId
-            userRepository.saveUser(userState.toUser(userId))
+            userRepository.saveUser(userState.toUser())
 
         }
     }
-    suspend fun getUserIdByUsername(username: String){
-        userPersists.currentId = userRepository.userDao.getIdByUsername(username)!!
+    suspend fun getUserIdByIdentifier(identifier: String){
+        if(identifier.contains("@")){
+            userPersists.currentId = userRepository.getIdByEmailId(identifier)!!
+        }
+        else{
+            userPersists.currentId = userRepository.getIdByUsername(identifier)!!
+        }
+
     }
 
     suspend fun verifyPassword(identifier: String, password: String): Boolean {

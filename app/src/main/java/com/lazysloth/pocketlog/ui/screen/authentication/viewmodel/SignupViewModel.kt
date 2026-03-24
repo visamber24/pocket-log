@@ -71,8 +71,8 @@ data class SignupUiState(
     val confirmPassword: String = "",
     val isError: Boolean = false,
 )
-fun SignupUiState.toUser(userId: Int) : User = User(
-    id = userId,
+fun SignupUiState.toUser() : User = User(
+    id = id,
     username = username,
     emailId = email,
     password = password
