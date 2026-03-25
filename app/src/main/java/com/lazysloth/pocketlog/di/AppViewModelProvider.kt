@@ -7,8 +7,8 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.lazysloth.pocketlog.ExpenseApplication
 import com.lazysloth.pocketlog.ui.screen.authentication.viewmodel.AuthViewModel
-import com.lazysloth.pocketlog.ui.screen.home.viewmodel.AddTransactionScreenViewmodel
-import com.lazysloth.pocketlog.ui.screen.home.viewmodel.DashboardScreenViewModel
+import com.lazysloth.pocketlog.ui.screen.other.viewmodel.AddTransactionScreenViewmodel
+import com.lazysloth.pocketlog.ui.screen.contentscreen.viewmodel.DashboardScreenViewModel
 
 object AppViewModelProvider {
     val Factory = viewModelFactory {

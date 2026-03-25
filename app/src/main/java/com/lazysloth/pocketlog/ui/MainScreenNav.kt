@@ -15,8 +15,9 @@ import com.lazysloth.pocketlog.ui.screen.authentication.CreateNewPasswordScreen
 import com.lazysloth.pocketlog.ui.screen.authentication.ForgetPasswordScreen
 import com.lazysloth.pocketlog.ui.screen.authentication.LoginScreen
 import com.lazysloth.pocketlog.ui.screen.authentication.SignupScreen
+import com.lazysloth.pocketlog.ui.screen.contentscreen.TransactionDetailsScreen
+import com.lazysloth.pocketlog.ui.screen.contentscreen.TransactionEditScreen
 import com.lazysloth.pocketlog.ui.screen.home.HomeScreen
-import com.lazysloth.pocketlog.ui.screen.home.TransactionDetailsScreen
 import com.lazysloth.pocketlog.ui.screen.other.AddTransactionScreen
 import com.lazysloth.pocketlog.ui.screen.other.SettingsScreen
 import com.lazysloth.pocketlog.ui.theme.PocketLogTheme
@@ -96,12 +97,22 @@ fun MainScreenNav(
                 },
                 onClickSetting = {
                     navController.navigate("setting_screen")
+                },
+                onClickEdit = {
+                    navController.navigate("transaction_edit_screen")
+                }
+            )
+        }
+        composable("transaction_edit_screen") {
+            TransactionEditScreen(
+                onSavePopBackStack = {
+                    navController.popBackStack()
                 }
             )
         }
         composable("addTransaction") {
             AddTransactionScreen(
-                popBackStack = { navController.popBackStack() }
+                popBackStack = {navController.popBackStack()}
             )
         }
         composable("transactionDetails") {

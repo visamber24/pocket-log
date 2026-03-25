@@ -22,25 +22,25 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.lazysloth.pocketlog.R
 import com.lazysloth.pocketlog.ui.navigationitem.ApplicationBottomNavigation
-import com.lazysloth.pocketlog.ui.navigationitem.NavigationDestination
 import com.lazysloth.pocketlog.ui.screen.contentscreen.DashboardScreenContent
-import com.lazysloth.pocketlog.ui.screen.home.viewmodel.DashboardScreenViewModel
+import com.lazysloth.pocketlog.ui.screen.contentscreen.viewmodel.DashboardScreenViewModel
 import com.lazysloth.pocketlog.ui.theme.PocketLogTheme
 import org.koin.androidx.compose.koinViewModel
 
-object DashboardScreenDestination : NavigationDestination {
-    override val route = "item_details"
-    override val titleRes = R.string.dashboard_screen
-    const val itemIdArg = "dashboardId"
-    val routeWithArgs = "$route/{$itemIdArg}"
-}
+//object DashboardScreenDestination : NavigationDestination {
+//    override val route = "item_details"
+//    override val titleRes = R.string.dashboard_screen
+//    const val itemIdArg = "dashboardId"
+//    val routeWithArgs = "$route/{$itemIdArg}"
+//}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DashboardScreen(
-    onClickTransactionDetails:(Int) -> Unit,
+    onClickEdit: () -> Unit,
+    onClickTransactionDetails: (Int) -> Unit,
     onClickAdd: () -> Unit,
-    onClickSetting :() ->  Unit,
+    onClickSetting: () -> Unit,
     viewmodel: DashboardScreenViewModel = koinViewModel()
 ) {
     Scaffold(
@@ -85,10 +85,16 @@ fun DashboardScreen(
                 }
             }
         }
-    ) {innerPadding ->
+    ) { innerPadding ->
         val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
         val uiStateList by viewmodel.uiStateList.collectAsState()
-        DashboardScreenContent(viewmodel,onClickDetails = {},uiStateList.transList,Modifier.padding(innerPadding))
+        DashboardScreenContent(
+            onClickEdit = { onClickEdit() },
+            viewmodel,
+            onClickDetails = {},
+            uiStateList.transList,
+            Modifier.padding(innerPadding)
+        )
     }
 }
 
@@ -96,5 +102,11 @@ fun DashboardScreen(
 @Preview(showSystemUi = true)
 @Composable
 fun DashboardPreview() {
-    PocketLogTheme { DashboardScreen(onClickAdd = {}, onClickSetting = {}, onClickTransactionDetails = {}) }
+    PocketLogTheme {
+        DashboardScreen(
+            onClickEdit ={},
+            onClickAdd = {},
+            onClickSetting = {},
+            onClickTransactionDetails = {})
+    }
 }

@@ -23,7 +23,7 @@
 //import androidx.lifecycle.viewmodel.initializer
 //import androidx.lifecycle.viewmodel.viewModelFactory
 //import com.lazysloth.pocketlog.ExpenseApplication
-//import com.lazysloth.pocketlog.ui.screen.home.viewmodel.AddTransactionScreenViewmodel
+//import com.lazysloth.pocketlog.ui.screen.other.viewmodel.AddTransactionScreenViewmodel
 //
 ///**
 // * Provides Factory to create instance of ViewModel for the entire Inventory app

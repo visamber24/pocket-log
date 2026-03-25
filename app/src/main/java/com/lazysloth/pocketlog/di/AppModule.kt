@@ -5,8 +5,9 @@ import com.lazysloth.pocketlog.database.repository.PocketLogDatabase
 import com.lazysloth.pocketlog.database.repository.TransactionRepository
 import com.lazysloth.pocketlog.database.repository.UserRepository
 import com.lazysloth.pocketlog.ui.screen.authentication.viewmodel.AuthViewModel
-import com.lazysloth.pocketlog.ui.screen.home.viewmodel.AddTransactionScreenViewmodel
-import com.lazysloth.pocketlog.ui.screen.home.viewmodel.DashboardScreenViewModel
+import com.lazysloth.pocketlog.ui.screen.other.viewmodel.AddTransactionScreenViewmodel
+import com.lazysloth.pocketlog.ui.screen.contentscreen.viewmodel.DashboardScreenViewModel
+import com.lazysloth.pocketlog.ui.screen.contentscreen.viewmodel.EditTransactionScreenViewmodel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -49,6 +50,12 @@ val appModule = module {
     viewModel {
         AddTransactionScreenViewmodel(
             get(),
+            get(),
+
+        )
+    }
+    viewModel{
+        EditTransactionScreenViewmodel(
             get(),
             get()
         )

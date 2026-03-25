@@ -47,7 +47,7 @@ import com.lazysloth.pocketlog.database.data.Category
 import com.lazysloth.pocketlog.database.data.TransactionType
 import com.lazysloth.pocketlog.ui.screen.home.uiState.Account
 import com.lazysloth.pocketlog.ui.screen.home.uiState.AddTransactionUiState
-import com.lazysloth.pocketlog.ui.screen.home.viewmodel.AddTransactionScreenViewmodel
+import com.lazysloth.pocketlog.ui.screen.other.viewmodel.AddTransactionScreenViewmodel
 import com.lazysloth.pocketlog.ui.theme.PocketLogTheme
 import com.lazysloth.pocketlog.ui.theme.inputFieldShape
 import org.koin.androidx.compose.koinViewModel
@@ -55,15 +55,50 @@ import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 import java.util.Date
 
+@Composable
+fun AddTransactionScreen(popBackStack: () -> Unit) {
+    val vm: AddTransactionScreenViewmodel = koinViewModel()
+    val uiState by vm.uiState.collectAsState()
+    val context = LocalContext.current.applicationContext
+    AddTransactionScreenImpl(
+        uiState = uiState,
+        onAccountSelected = vm::onAccountSelected,
+        onAmountChange = vm::onAmountChange,
+        onExpandedChange = vm::onExpandedChange,
+        onOptionSelected = vm::onOptionSelected,
+        onTransactionTypeSelected = vm::onTransactionTypeSelected,
+        onNoteValueChange = vm::onNoteValueChange,
+        onDescriptionChange = vm::onDescriptionChange,
+        onClickDate = vm::onClickDate,
+        onDateChange = vm::onDateChange,
+        onSave = {
+            vm.saveTransaction()
+            popBackStack()
+            Toast.makeText(context, "Transaction Saved", Toast.LENGTH_LONG).show()
+        },
+
+    )
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddTransactionScreen(
-    modifier: Modifier = Modifier, popBackStack: () -> Unit,
-) {
-    val context = LocalContext.current.applicationContext
+fun AddTransactionScreenImpl(
+    uiState: AddTransactionUiState,
+    onAccountSelected: (Account) -> Unit,
+    onAmountChange: (String) -> Unit,
+    onExpandedChange: (Boolean) -> Unit,
+    onOptionSelected: (Category) -> Unit,
+    onTransactionTypeSelected: (TransactionType) -> Unit,
+    onNoteValueChange: (String) -> Unit,
+    onDescriptionChange: (String) -> Unit,
+    onClickDate: (Boolean) -> Unit,
+    onDateChange: (Date) -> Unit,
+    onSave: () -> Unit,
+
+    ) {
+
     // Manually create a factory to provide the ViewModel with its required repository.
-    val viewModel: AddTransactionScreenViewmodel = koinViewModel()
+
 
     Scaffold(
         topBar = {
@@ -79,27 +114,27 @@ fun AddTransactionScreen(
                 .padding(innerPadding)
                 .fillMaxSize()
         ) {
-            val uiState by viewModel.uiState.collectAsState()
+
             AddItems(
                 modifier = Modifier, state = uiState,
-                viewModel::onAccountSelected,
-                viewModel::onAmountChange,
-                viewModel::onExpandedChange,
-                viewModel::onOptionSelected,
-                viewModel::onTransactionTypeSelected,
-                viewModel::onNoteValueChange,
-                viewModel::onDescriptionChange,
-                viewModel::onClickDate,
-                viewModel::onDateChange
+                onAccountSelected,
+                onAmountChange,
+                onExpandedChange,
+                onOptionSelected,
+                onTransactionTypeSelected,
+                onNoteValueChange,
+                onDescriptionChange,
+                onClickDate,
+                onDateChange
             )
 
 
             Spacer(Modifier.height(8.dp))
             Button(
                 onClick = {
-                    viewModel.saveTransaction()
-                    Toast.makeText(context, "Transaction Saved", Toast.LENGTH_LONG).show()
-                    popBackStack()
+                    onSave()
+
+
                 },
                 enabled = (uiState.addAmount.isNotBlank() && uiState.options.isNotEmpty())
             ) {

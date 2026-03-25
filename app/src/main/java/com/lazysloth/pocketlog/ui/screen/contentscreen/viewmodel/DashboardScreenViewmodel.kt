@@ -1,4 +1,4 @@
-package com.lazysloth.pocketlog.ui.screen.home.viewmodel
+package com.lazysloth.pocketlog.ui.screen.contentscreen.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -19,7 +19,7 @@ import kotlinx.coroutines.flow.stateIn
 class DashboardScreenViewModel(
     private val transactionRepository: TransactionRepository,
     private val userRepository: UserRepository,
-    private val userPersists: UserPersists
+    userPersists: UserPersists
 
 ) : ViewModel() {
         //TODO this is not required for this screen but required for details screen
@@ -31,10 +31,6 @@ private val itemId  = MutableStateFlow<Int?>(null)
     //TODO no need for that too because this screen reads only the data from repo not to modify it
 //    private val _uiState = MutableStateFlow(DashboardUiState())
     var userId = MutableStateFlow<Int?>(null)
-
-
-
-
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val uiStateList: StateFlow<DashboardUiState> =
@@ -61,20 +57,20 @@ private val itemId  = MutableStateFlow<Int?>(null)
                 initialValue = TransactionDetailsUiState()
             )
     companion object{
-        private const val TIMEOUT_MILLIS = 5000L
+        const val TIMEOUT_MILLIS = 5000L
     }
-    fun Transaction.toItemDetail() : TransactionDetailsUiState = TransactionDetailsUiState(
-        id = id,
-        amount = amount.toString(),
-        account = account.name,
-        category = category.name,
-        transactionType = transactionType.name,
-        note = note,
-        description = description,
-        dateTime = dateTime.toString()
-    )
+    
 }
-
+fun Transaction.toItemDetail() : TransactionDetailsUiState = TransactionDetailsUiState(
+    id = id,
+    amount = amount.toString(),
+    account = account.name,
+    category = category.name,
+    transactionType = transactionType.name,
+    note = note,
+    description = description,
+    dateTime = dateTime.toString()
+)
 data class DashboardUiState(
     val transList : List<Transaction> = listOf()
 )

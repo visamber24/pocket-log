@@ -1,4 +1,4 @@
-package com.lazysloth.pocketlog.ui.screen.home.viewmodel
+package com.lazysloth.pocketlog.ui.screen.contentscreen.viewmodel
 
 import androidx.lifecycle.ViewModel
 

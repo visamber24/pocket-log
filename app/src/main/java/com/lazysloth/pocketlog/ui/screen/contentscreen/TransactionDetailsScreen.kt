@@ -1,4 +1,4 @@
-package com.lazysloth.pocketlog.ui.screen.home
+package com.lazysloth.pocketlog.ui.screen.contentscreen
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -17,12 +17,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.lazysloth.pocketlog.ui.screen.home.viewmodel.TransactionDetailsUiState
+import com.lazysloth.pocketlog.ui.screen.contentscreen.viewmodel.TransactionDetailsUiState
 import com.lazysloth.pocketlog.ui.theme.PocketLogTheme
 
 
 @Composable
-fun TransactionDetailDialog(uiState : TransactionDetailsUiState){
+fun TransactionDetailDialog(onClickEdit:()-> Unit,onClose: () -> Unit, uiState: TransactionDetailsUiState) {
     Column(
         modifier = Modifier
             .background(MaterialTheme.colorScheme.surface)
@@ -35,8 +35,6 @@ fun TransactionDetailDialog(uiState : TransactionDetailsUiState){
             style = MaterialTheme.typography.titleLarge,
             fontWeight = FontWeight.SemiBold,
         )
-
-
         DetailsRow(label = "Amount", value = uiState.amount)
         DetailsRow(label = "Account", value = uiState.account)
         DetailsRow(label = "Category", value = uiState.category)
@@ -49,7 +47,10 @@ fun TransactionDetailDialog(uiState : TransactionDetailsUiState){
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.End,
         ) {
-            TextButton(onClick = {}) {
+            TextButton(onClick = {onClickEdit()}) {
+                Text(text = "Edit")
+            }
+            TextButton(onClick = { onClose() }) {
                 Text(text = "Close")
             }
         }
@@ -58,7 +59,7 @@ fun TransactionDetailDialog(uiState : TransactionDetailsUiState){
 }
 
 @Composable
-fun TransactionDetailsScreen(onBack:()->Unit) {
+fun TransactionDetailsScreen(onBack: () -> Unit) {
 
 
 }
@@ -90,7 +91,7 @@ private fun DetailsRow(label: String, value: String) {
 @Preview(showSystemUi = true)
 fun DetailsScreenPreview() {
     PocketLogTheme() {
-        TransactionDetailsScreen {  }
+        TransactionDetailsScreen { }
     }
 }
 
@@ -98,10 +99,12 @@ fun DetailsScreenPreview() {
 @Composable
 private fun TransactionDetailsDialogPreview() {
     PocketLogTheme {
-        Box(modifier = Modifier
-            .background(MaterialTheme.colorScheme.background)
-            .fillMaxSize()) {
-            TransactionDetailDialog(
+        Box(
+            modifier = Modifier
+                .background(MaterialTheme.colorScheme.background)
+                .fillMaxSize()
+        ) {
+            TransactionDetailDialog(onClickEdit ={},onClose={},
                 uiState = TransactionDetailsUiState(
                     id = 42,
                     amount = "₹1,250.00",

@@ -18,6 +18,7 @@ import com.lazysloth.pocketlog.ui.navigationitem.ApplicationBottomNavigation
 
 @Composable
 fun HomeScreen(
+    onClickEdit:()-> Unit,
     onClickTransactionDetails: () -> Unit,
     onClickAdd : () -> Unit,
     onClickSetting: () -> Unit,
@@ -54,7 +55,7 @@ fun HomeScreen(
                 {
 
                     ApplicationBottomNavigation.HOME -> {
-                        DashboardScreen(onClickTransactionDetails= { onClickTransactionDetails() },onClickAdd = { onClickAdd() }, onClickSetting = {onClickSetting()})
+                        DashboardScreen(onClickEdit = {onClickEdit()}, onClickTransactionDetails= { onClickTransactionDetails() },onClickAdd = { onClickAdd() }, onClickSetting = {onClickSetting()})
                     }
                     ApplicationBottomNavigation.ACCOUNT ->  {
                         AccountScreen()
@@ -79,5 +80,5 @@ fun HomeScreen(
 @Composable
 fun HomeScreenPreview()
 {
-    HomeScreen(onClickTransactionDetails = {}, onClickAi = {}, onClickAdd = {}, onClickSetting = {})
+    HomeScreen(onClickEdit = {}, onClickTransactionDetails = {}, onClickAi = {}, onClickAdd = {}, onClickSetting = {})
 }

@@ -1,4 +1,4 @@
-package com.lazysloth.pocketlog.ui.screen.home.viewmodel
+package com.lazysloth.pocketlog.ui.screen.other.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -21,16 +21,12 @@ import java.util.Date
 
 class AddTransactionScreenViewmodel(
     private val transactionRepository: TransactionRepository,
-    private val userRepository: UserRepository,
     private val userPersists: UserPersists
 ) : ViewModel() {
 
 
     private val _uiState = MutableStateFlow(AddTransactionUiState())
     val uiState: StateFlow<AddTransactionUiState> = _uiState.asStateFlow()
-
-
-
 
     init {
         viewModelScope.launch {

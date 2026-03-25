@@ -1,5 +1,7 @@
 package com.lazysloth.pocketlog.ui.screen.contentscreen
 
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.ScrollableDefaults
 import androidx.compose.foundation.layout.Column
@@ -14,7 +16,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -45,14 +46,16 @@ import com.lazysloth.pocketlog.R
 import com.lazysloth.pocketlog.database.Transaction
 import com.lazysloth.pocketlog.database.data.Category
 import com.lazysloth.pocketlog.database.data.TransactionType
+import com.lazysloth.pocketlog.ui.screen.contentscreen.viewmodel.DashboardScreenViewModel
+import com.lazysloth.pocketlog.ui.screen.contentscreen.viewmodel.EditTransactionScreenViewmodel
 import com.lazysloth.pocketlog.ui.screen.home.DashboardScreen
-import com.lazysloth.pocketlog.ui.screen.home.TransactionDetailDialog
 import com.lazysloth.pocketlog.ui.screen.home.uiState.Account
-import com.lazysloth.pocketlog.ui.screen.home.viewmodel.DashboardScreenViewModel
 import com.lazysloth.pocketlog.ui.theme.PocketLogTheme
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun DashboardScreenContent(
+    onClickEdit:()->Unit,
     viewModel: DashboardScreenViewModel,
     onClickDetails: (Int) -> Unit,
     transList: List<Transaction>,
@@ -61,6 +64,9 @@ fun DashboardScreenContent(
     val transItem by viewModel.uiStateItem.collectAsState()
     var isDialogOpen by remember() { mutableStateOf(false) }
     var itemId by remember { mutableStateOf(0) }
+    val editTransactionScreenViewmodel : EditTransactionScreenViewmodel = koinViewModel(
+        viewModelStoreOwner = LocalActivity.current as ComponentActivity
+    )
     LazyColumn(
         flingBehavior = ScrollableDefaults.flingBehavior(),
         modifier = modifier
@@ -78,8 +84,8 @@ fun DashboardScreenContent(
                 note = item.note,
                 description = item.description,
                 modifier = Modifier.clickable(enabled = true, onClick = {
-
                     viewModel.getItemId(item.id)
+                    editTransactionScreenViewmodel.getItemId(item.id)
                     isDialogOpen = true
                 })
             )
@@ -108,7 +114,7 @@ fun DashboardScreenContent(
 
                 ) {
                 // your content
-                TransactionDetailDialog(uiState = transItem)
+                TransactionDetailDialog(onClickEdit = {onClickEdit()},onClose = {isDialogOpen = false}, uiState = transItem)
             }
         }
     }
@@ -191,5 +197,5 @@ fun RecordContent(
 @Preview(showSystemUi = true)
 @Composable
 fun DashboardPreview() {
-    PocketLogTheme { DashboardScreen(onClickAdd = {}, onClickTransactionDetails = {}, onClickSetting = {}) }
+    PocketLogTheme { DashboardScreen(onClickEdit = {}, onClickAdd = {}, onClickTransactionDetails = {}, onClickSetting = {}) }
 }
