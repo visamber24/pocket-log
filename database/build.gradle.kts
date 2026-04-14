@@ -5,13 +5,11 @@ plugins {
 
 android {
     namespace = "com.lazysloth.database"
-    compileSdk {
-        version = release(36)
-    }
+    compileSdk  = 36
 
     defaultConfig {
         applicationId = "com.lazysloth.database"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"

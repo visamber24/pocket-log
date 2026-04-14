@@ -21,7 +21,6 @@ class AuthViewModel(private val userRepository: UserRepository,private val userP
 
     fun saveUser(userState : SignupUiState) {
         viewModelScope.launch {
-            val userId = userPersists.currentId
             userRepository.saveUser(userState.toUser())
 
         }

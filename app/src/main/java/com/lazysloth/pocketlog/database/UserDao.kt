@@ -6,8 +6,12 @@ import androidx.room.Query
 
 @Dao
 interface UserDao {
+    @Query("SELECT username FROM users WHERE id=:id")
+    suspend fun getUsernameById(id: Int): String?
     @Insert
     suspend fun saveUser(user: User)
+    @Query("SELECT EXISTS(SELECT * FROM users )")
+    suspend fun checkUsers() : Boolean
     @Query("SELECT id FROM users WHERE username = :username")
     suspend fun getIdByUsername(username: String): Int?
     @Query("SELECT id FROM users WHERE emailId = :emailId")

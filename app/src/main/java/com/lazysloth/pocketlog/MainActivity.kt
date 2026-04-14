@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.sp
 import com.lazysloth.pocketlog.di.UserPersists
 import com.lazysloth.pocketlog.ui.MainScreenNav
 import com.lazysloth.pocketlog.ui.theme.PocketLogTheme
+import kotlinx.coroutines.coroutineScope
 import org.koin.android.ext.android.get
 
 class MainActivity() : ComponentActivity() {

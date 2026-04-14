@@ -1,5 +1,5 @@
 [versions]
-agp = "8.13.2"
+agp = "8.9.1"
 coilCompose = "2.7.0"
 datastorePreferences = "1.2.1"
 foundationLayoutVersion = "1.10.5"
@@ -24,7 +24,7 @@ foundation = "1.10.5"
 navigationRuntimeKtx = "2.9.7"
 navigationCompose = "2.9.7"
 appcompat = "1.7.1"
-roomKtx = "2.6.1"
+roomKtx = "2.7.0-alpha08"
 ui = "1.10.5"
 
 [libraries]

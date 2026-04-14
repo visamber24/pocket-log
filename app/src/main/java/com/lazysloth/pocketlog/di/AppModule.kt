@@ -8,6 +8,7 @@ import com.lazysloth.pocketlog.ui.screen.authentication.viewmodel.AuthViewModel
 import com.lazysloth.pocketlog.ui.screen.other.viewmodel.AddTransactionScreenViewmodel
 import com.lazysloth.pocketlog.ui.screen.contentscreen.viewmodel.DashboardScreenViewModel
 import com.lazysloth.pocketlog.ui.screen.contentscreen.viewmodel.EditTransactionScreenViewmodel
+import com.lazysloth.pocketlog.ui.screen.contentscreen.viewmodel.ProfileScreenViewmodel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -23,7 +24,7 @@ val appModule = module {
     single { get<PocketLogDatabase>().getTransactionItem() }
 
     // 3.Preference
-    single { UserPersists(get()) }
+    single { UserPersists(get(),get()) }
 
     // 4.Repository
     single<TransactionRepository> {
@@ -60,4 +61,11 @@ val appModule = module {
             get()
         )
     }
+    viewModel{
+        ProfileScreenViewmodel(
+            get(),
+            get()
+        )
+    }
+
 }

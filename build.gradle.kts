@@ -7,12 +7,12 @@ plugins {
 
 
 }
-allprojects {
-    configurations.all {
-        resolutionStrategy.eachDependency {
-            if (requested.group == "org.jetbrains.kotlin") {
-                useVersion("2.0.21")
-            }
-        }
-    }
-}
+//allprojects {
+//    configurations.all {
+//        resolutionStrategy.eachDependency {
+//            if (requested.group == "org.jetbrains.kotlin") {
+//                useVersion("2.0.21")
+//            }
+//        }
+//    }
+//}

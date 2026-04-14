@@ -12,13 +12,10 @@ plugins {
 
 android {
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.14"
+        kotlinCompilerExtensionVersion = "1.6.10"
     }
     namespace = "com.lazysloth.pocketlog"
-    compileSdk {
-        version = release(36)
-    }
-
+    compileSdk = 36
     defaultConfig {
         applicationId = "com.lazysloth.pocketlog"
         minSdk = 26
