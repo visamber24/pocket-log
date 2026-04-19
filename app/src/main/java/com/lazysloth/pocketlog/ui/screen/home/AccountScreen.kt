@@ -39,7 +39,7 @@ fun AccountScreen(onClickAdd: ()->Unit) {
                 verticalArrangement = Arrangement.spacedBy(12.dp),
                 horizontalAlignment = Alignment.End,
             ) {
-                FloatingActionButton(onClick = {onClickAdd}){
+                FloatingActionButton(onClick = {onClickAdd()}){
                     Icon(
                         painter = painterResource(R.drawable.add_24px),
                         contentDescription = "add account"
@@ -51,10 +51,10 @@ fun AccountScreen(onClickAdd: ()->Unit) {
         }
     ) {
         val sampleList = listOf(
-            Account1(1, 1, "Cash", Account.Cash, 5000),
-            Account1(2, 1, "HDFC Debit", Account.DEBIT_CARD, 12000),
-            Account1(3, 1, "SBI Credit", Account.CREDIT_CARD, -3000),
-            Account1(4, 1, "GPay", Account.UPI, 2500)
+            Account1(1, 1, "Cash", Account.Cash, 5000.0),
+            Account1(2, 1, "HDFC Debit", Account.DEBIT_CARD, 12000.0),
+            Account1(3, 1, "SBI Credit", Account.CREDIT_CARD, -3000.0),
+            Account1(4, 1, "GPay", Account.UPI, 2500.0)
         )
         AccountScreenContent(accounts = sampleList, modifier = Modifier.padding(it))
     }

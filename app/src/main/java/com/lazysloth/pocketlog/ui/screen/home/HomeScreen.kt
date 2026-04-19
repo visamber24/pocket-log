@@ -59,7 +59,7 @@ fun HomeScreen(
                         DashboardScreen(onClickEdit = {onClickEdit()}, onClickTransactionDetails= { onClickTransactionDetails() },onClickAdd = { onClickAdd() }, onClickSetting = {onClickSetting()})
                     }
                     ApplicationBottomNavigation.ACCOUNT ->  {
-                        AccountScreen(onClickAddAccount)
+                        AccountScreen(onClickAdd={ onClickAddAccount() })
                     }
 
                     ApplicationBottomNavigation.STATS -> {

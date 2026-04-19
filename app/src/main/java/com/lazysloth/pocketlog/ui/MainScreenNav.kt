@@ -22,6 +22,7 @@ import com.lazysloth.pocketlog.ui.screen.authentication.CreateNewPasswordScreen
 import com.lazysloth.pocketlog.ui.screen.authentication.ForgetPasswordScreen
 import com.lazysloth.pocketlog.ui.screen.authentication.LoginScreen
 import com.lazysloth.pocketlog.ui.screen.authentication.SignupScreen
+import com.lazysloth.pocketlog.ui.screen.contentscreen.AddAccountScreen
 import com.lazysloth.pocketlog.ui.screen.contentscreen.TransactionDetailsScreen
 import com.lazysloth.pocketlog.ui.screen.contentscreen.TransactionEditScreen
 import com.lazysloth.pocketlog.ui.screen.home.HomeScreen
@@ -110,7 +111,9 @@ fun MainScreenNav(
                     onClickSetting = {
                         navController.navigate("setting_screen")
                     },
-                    onClickAddAccount = {},
+                    onClickAddAccount = {
+                        navController.navigate("add_account")
+                    },
                     onClickEdit = {
                         navController.navigate("transaction_edit_screen")
                     }
@@ -125,11 +128,11 @@ fun MainScreenNav(
             }
             composable("addTransaction") {
                 AddTransactionScreen(
-                    popBackStack = {navController.popBackStack()}
+                    popBackStack = { navController.popBackStack() }
                 )
             }
             composable("transactionDetails") {
-                TransactionDetailsScreen(onBack = { navController.popBackStack() })
+                TransactionDetailsScreen(onBack = { navController.popBackStack()})
             }
             composable(route = "setting_screen") {
                 SettingsScreen(onClickLogout = {
@@ -143,10 +146,14 @@ fun MainScreenNav(
                     }
                 })
             }
+            composable(route = "add_account") {
+                AddAccountScreen(
+                    popBackStack = { navController.popBackStack() }
+                )
+            }
         }
-    }
-    else{
-        Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center){
+    } else {
+        Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             CircularProgressIndicator()
         }
     }

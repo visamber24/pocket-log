@@ -32,5 +32,5 @@ data class Account1(
     val userId: Int = 0,
     val name: String = "",
     val type: Account,
-    val balance: Int = 0,
+    val balance: Double = 0.0,
 )

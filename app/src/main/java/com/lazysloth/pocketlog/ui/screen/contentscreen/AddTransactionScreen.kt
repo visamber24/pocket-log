@@ -383,10 +383,9 @@ fun <T : Enum<T>> RadioGroup(
 }
 
 @Composable
-@Preview(showSystemUi = true)
+@Preview(showSystemUi = true, )
 fun AddTransactionPreview() {
-    PocketLogTheme {
-
+    PocketLogTheme(darkTheme = true) {
         val fakeUiState = AddTransactionUiState(
             addAmount = "123.45",
             inputNote = "Groceries",
