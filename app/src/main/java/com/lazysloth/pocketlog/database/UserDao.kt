@@ -3,6 +3,7 @@ package com.lazysloth.pocketlog.database
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import com.lazysloth.pocketlog.database.data.User
 
 @Dao
 interface UserDao {

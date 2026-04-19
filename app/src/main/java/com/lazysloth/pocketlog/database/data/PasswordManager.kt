@@ -34,4 +34,5 @@ class PasswordManager(private val context: Context) {
             settings[passwordKey] = password
         }
     }
+
 }

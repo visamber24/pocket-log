@@ -43,13 +43,13 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogWindowProvider
 import com.lazysloth.pocketlog.R
-import com.lazysloth.pocketlog.database.Transaction
+import com.lazysloth.pocketlog.database.data.Account
 import com.lazysloth.pocketlog.database.data.Category
+import com.lazysloth.pocketlog.database.data.Transaction
 import com.lazysloth.pocketlog.database.data.TransactionType
 import com.lazysloth.pocketlog.ui.screen.contentscreen.viewmodel.DashboardScreenViewModel
 import com.lazysloth.pocketlog.ui.screen.contentscreen.viewmodel.EditTransactionScreenViewmodel
 import com.lazysloth.pocketlog.ui.screen.home.DashboardScreen
-import com.lazysloth.pocketlog.ui.screen.home.uiState.Account
 import com.lazysloth.pocketlog.ui.theme.PocketLogTheme
 import org.koin.androidx.compose.koinViewModel
 

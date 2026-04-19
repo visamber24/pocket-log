@@ -23,6 +23,7 @@ fun HomeScreen(
     onClickAdd : () -> Unit,
     onClickSetting: () -> Unit,
     onClickAi: () -> Unit,
+    onClickAddAccount: () -> Unit,
     modifier: Modifier = Modifier) {
     var currentScreen by rememberSaveable { mutableStateOf(ApplicationBottomNavigation.HOME) }
 
@@ -58,7 +59,7 @@ fun HomeScreen(
                         DashboardScreen(onClickEdit = {onClickEdit()}, onClickTransactionDetails= { onClickTransactionDetails() },onClickAdd = { onClickAdd() }, onClickSetting = {onClickSetting()})
                     }
                     ApplicationBottomNavigation.ACCOUNT ->  {
-                        AccountScreen()
+                        AccountScreen(onClickAddAccount)
                     }
 
                     ApplicationBottomNavigation.STATS -> {
@@ -80,5 +81,13 @@ fun HomeScreen(
 @Composable
 fun HomeScreenPreview()
 {
-    HomeScreen(onClickEdit = {}, onClickTransactionDetails = {}, onClickAi = {}, onClickAdd = {}, onClickSetting = {})
+    HomeScreen(
+        onClickEdit = {},
+        onClickTransactionDetails = {},
+        onClickAi = {},
+        onClickAdd = {},
+        onClickSetting = {},
+        onClickAddAccount = TODO(),
+        modifier = TODO()
+    )
 }

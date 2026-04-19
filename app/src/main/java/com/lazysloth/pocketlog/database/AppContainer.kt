@@ -1,6 +1,7 @@
 package com.lazysloth.pocketlog.database
 
 import android.content.Context
+import com.lazysloth.pocketlog.database.repository.AccountRepository
 import com.lazysloth.pocketlog.database.repository.UserRepository
 import com.lazysloth.pocketlog.database.repository.OfflineTransactionRepository
 import com.lazysloth.pocketlog.database.repository.PocketLogDatabase
@@ -9,6 +10,7 @@ import com.lazysloth.pocketlog.database.repository.TransactionRepository
 interface AppContainer {
     val userRepository : UserRepository
     val transactionRepository : TransactionRepository
+
 }
 
 class AppDataContainer(

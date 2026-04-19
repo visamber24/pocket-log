@@ -2,13 +2,12 @@ package com.lazysloth.pocketlog.ui.screen.other.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.lazysloth.pocketlog.database.Transaction
+import com.lazysloth.pocketlog.database.data.Account
 import com.lazysloth.pocketlog.database.data.Category
+import com.lazysloth.pocketlog.database.data.Transaction
 import com.lazysloth.pocketlog.database.data.TransactionType
 import com.lazysloth.pocketlog.database.repository.TransactionRepository
-import com.lazysloth.pocketlog.database.repository.UserRepository
 import com.lazysloth.pocketlog.di.UserPersists
-import com.lazysloth.pocketlog.ui.screen.home.uiState.Account
 import com.lazysloth.pocketlog.ui.screen.home.uiState.AddTransactionUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -40,17 +39,31 @@ class AddTransactionScreenViewmodel(
         }
     }
 
-    fun onExpandedChange(expanded: Boolean) {
+    fun onExpandedAccount(expanded : Boolean){
         _uiState.update {
             it.copy(
-                expanded = expanded
+                expandedAccount = expanded
+            )
+        }
+    }
+    fun onAccountSelected(account: Account){
+        _uiState.update {
+            it.copy(
+                account = account,
+            )
+        }
+    }
+    fun onExpandedCategory(expanded: Boolean) {
+        _uiState.update {
+            it.copy(
+                expandedCategory = expanded
             )
         }
     }
 
     fun onOptionSelected(option: Category) {
         _uiState.update {
-            it.copy(option = option, selectCategoryOption = option.name)
+            it.copy(option = option)
         }
     }
 
@@ -63,11 +76,6 @@ class AddTransactionScreenViewmodel(
         }
     }
 
-    fun onAccountSelected(account: Account) {
-        _uiState.update {
-            it.copy(account = account)
-        }
-    }
 
     fun onNoteValueChange(note: String) {
         _uiState.update {

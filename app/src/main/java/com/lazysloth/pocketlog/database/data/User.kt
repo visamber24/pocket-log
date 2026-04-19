@@ -1,4 +1,4 @@
-package com.lazysloth.pocketlog.database
+package com.lazysloth.pocketlog.database.data
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

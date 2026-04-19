@@ -90,9 +90,9 @@ fun DashboardScreen(
         val uiStateList by viewmodel.uiStateList.collectAsState()
         DashboardScreenContent(
             onClickEdit = { onClickEdit() },
-            viewmodel,
+            viewModel = viewmodel,
             onClickDetails = {},
-            uiStateList.transList,
+            transList = uiStateList.transList,
             Modifier.padding(innerPadding)
         )
     }

@@ -1,25 +1,18 @@
 package com.lazysloth.pocketlog.ui.screen.contentscreen.viewmodel
 
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.lazysloth.pocketlog.database.Transaction
+import com.lazysloth.pocketlog.database.data.Account
 import com.lazysloth.pocketlog.database.data.Category
+import com.lazysloth.pocketlog.database.data.Transaction
 import com.lazysloth.pocketlog.database.data.TransactionType
-import com.lazysloth.pocketlog.database.repository.OfflineTransactionRepository
 import com.lazysloth.pocketlog.database.repository.TransactionRepository
 import com.lazysloth.pocketlog.di.UserPersists
-import com.lazysloth.pocketlog.ui.screen.home.uiState.Account
 import com.lazysloth.pocketlog.ui.screen.home.uiState.AddTransactionUiState
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.ZoneId
@@ -68,17 +61,24 @@ class EditTransactionScreenViewmodel(
         }
     }
 
+    fun onExpandedAccount(expanded: Boolean){
+        _uiState.update {
+            it.copy(
+                expandedAccount = expanded
+            )
+        }
+    }
     fun onExpandedChange(expanded: Boolean) {
         _uiState.update {
             it.copy(
-                expanded = expanded
+                expandedCategory = expanded
             )
         }
     }
 
     fun onOptionSelected(option: Category) {
         _uiState.update {
-            it.copy(option = option, selectCategoryOption = option.name)
+            it.copy(option = option, )
         }
     }
 

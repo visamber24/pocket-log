@@ -25,7 +25,7 @@ import com.lazysloth.pocketlog.ui.screen.authentication.SignupScreen
 import com.lazysloth.pocketlog.ui.screen.contentscreen.TransactionDetailsScreen
 import com.lazysloth.pocketlog.ui.screen.contentscreen.TransactionEditScreen
 import com.lazysloth.pocketlog.ui.screen.home.HomeScreen
-import com.lazysloth.pocketlog.ui.screen.other.AddTransactionScreen
+import com.lazysloth.pocketlog.ui.screen.contentscreen.AddTransactionScreen
 import com.lazysloth.pocketlog.ui.screen.other.SettingsScreen
 
 @Composable
@@ -110,6 +110,7 @@ fun MainScreenNav(
                     onClickSetting = {
                         navController.navigate("setting_screen")
                     },
+                    onClickAddAccount = {},
                     onClickEdit = {
                         navController.navigate("transaction_edit_screen")
                     }

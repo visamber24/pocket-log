@@ -22,6 +22,7 @@ val appModule = module {
     // 2.DAO
     single { get<PocketLogDatabase>().userDao() }
     single { get<PocketLogDatabase>().getTransactionItem() }
+    single { get<PocketLogDatabase>().getAccount()}
 
     // 3.Preference
     single { UserPersists(get(),get()) }

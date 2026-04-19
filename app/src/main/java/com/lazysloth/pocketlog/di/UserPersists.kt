@@ -31,7 +31,7 @@ class UserPersists(
 
     suspend fun checkUser(): Boolean {
 
-        return userRepository.userDao.checkUsers()
+        return userRepository.checkUser()
 
     }
 

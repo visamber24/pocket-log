@@ -1,6 +1,6 @@
 package com.lazysloth.pocketlog.database.repository
 
-import com.lazysloth.pocketlog.database.User
+import com.lazysloth.pocketlog.database.data.User
 import com.lazysloth.pocketlog.database.UserDao
 import kotlinx.coroutines.flow.Flow
 

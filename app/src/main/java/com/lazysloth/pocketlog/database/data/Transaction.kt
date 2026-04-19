@@ -1,15 +1,9 @@
-package com.lazysloth.pocketlog.database
+package com.lazysloth.pocketlog.database.data
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import com.lazysloth.pocketlog.database.data.Category
-import com.lazysloth.pocketlog.database.data.TransactionType
-import com.lazysloth.pocketlog.ui.screen.home.uiState.Account
-import java.util.Date
 import androidx.room.TypeConverter
 import java.time.ZonedDateTime
 

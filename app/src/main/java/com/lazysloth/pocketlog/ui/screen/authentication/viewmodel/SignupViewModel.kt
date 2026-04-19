@@ -2,7 +2,7 @@ package com.lazysloth.pocketlog.ui.screen.authentication.viewmodel
 
 import androidx.lifecycle.ViewModel
 import coil.compose.AsyncImagePainter
-import com.lazysloth.pocketlog.database.User
+import com.lazysloth.pocketlog.database.data.User
 import com.lazysloth.pocketlog.di.UserPersists
 import com.lazysloth.pocketlog.ui.screen.authentication.viewmodel.SignupUiState
 import kotlinx.coroutines.flow.MutableStateFlow

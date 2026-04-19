@@ -1,6 +1,6 @@
 package com.lazysloth.pocketlog.database.repository
 
-import com.lazysloth.pocketlog.database.Transaction
+import com.lazysloth.pocketlog.database.data.Transaction
 import kotlinx.coroutines.flow.Flow
 
 interface TransactionRepository  {

@@ -1,4 +1,4 @@
-package com.lazysloth.pocketlog.ui.screen.other
+package com.lazysloth.pocketlog.ui.screen.contentscreen
 
 import android.widget.Toast
 import androidx.compose.foundation.clickable
@@ -43,9 +43,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.lazysloth.pocketlog.R
+import com.lazysloth.pocketlog.database.data.Account
 import com.lazysloth.pocketlog.database.data.Category
 import com.lazysloth.pocketlog.database.data.TransactionType
-import com.lazysloth.pocketlog.ui.screen.home.uiState.Account
 import com.lazysloth.pocketlog.ui.screen.home.uiState.AddTransactionUiState
 import com.lazysloth.pocketlog.ui.screen.other.viewmodel.AddTransactionScreenViewmodel
 import com.lazysloth.pocketlog.ui.theme.PocketLogTheme
@@ -64,7 +64,8 @@ fun AddTransactionScreen(popBackStack: () -> Unit) {
         uiState = uiState,
         onAccountSelected = vm::onAccountSelected,
         onAmountChange = vm::onAmountChange,
-        onExpandedChange = vm::onExpandedChange,
+        onExpandedAccount = vm::onExpandedAccount,
+        onExpandedCategory = vm::onExpandedCategory,
         onOptionSelected = vm::onOptionSelected,
         onTransactionTypeSelected = vm::onTransactionTypeSelected,
         onNoteValueChange = vm::onNoteValueChange,
@@ -86,7 +87,8 @@ fun AddTransactionScreenImpl(
     uiState: AddTransactionUiState,
     onAccountSelected: (Account) -> Unit,
     onAmountChange: (String) -> Unit,
-    onExpandedChange: (Boolean) -> Unit,
+    onExpandedAccount: (Boolean) -> Unit,
+    onExpandedCategory: (Boolean) -> Unit,
     onOptionSelected: (Category) -> Unit,
     onTransactionTypeSelected: (TransactionType) -> Unit,
     onNoteValueChange: (String) -> Unit,
@@ -119,7 +121,8 @@ fun AddTransactionScreenImpl(
                 modifier = Modifier, state = uiState,
                 onAccountSelected,
                 onAmountChange,
-                onExpandedChange,
+                onExpandedAccount = onExpandedAccount,
+                onExpandedCategory,
                 onOptionSelected,
                 onTransactionTypeSelected,
                 onNoteValueChange,
@@ -152,7 +155,8 @@ fun AddItems(
     state: AddTransactionUiState,
     onAccountSelected: (Account) -> Unit,
     onAmountChange: (String) -> Unit,
-    onExpandedChange: (Boolean) -> Unit,
+    onExpandedAccount: (Boolean) -> Unit,
+    onExpandedCategory: (Boolean) -> Unit,
     onOptionSelected: (Category) -> Unit,
     onTransactionTypeSelected: (TransactionType) -> Unit,
     onNoteValueChange: (String) -> Unit,
@@ -161,17 +165,44 @@ fun AddItems(
     onDateChange: (Date) -> Unit
 ) {
 
-    Text(
-        text = "Account :",
-        style = MaterialTheme.typography.titleMedium,
-        textAlign = TextAlign.Start,
-    )
-    RadioGroup(
-        options = state.accounts,
-        selectedOption = state.account,
-        onOptionSelected = { account -> onAccountSelected(account) },
-//        optionToText =
-    )
+
+    ExposedDropdownMenuBox(
+        expanded = state.expandedAccount,
+        onExpandedChange = { onExpandedAccount(it) }
+    ) {
+        OutlinedTextField(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(dimensionResource(R.dimen.transaction_input_item_padding))
+                .menuAnchor(),
+            readOnly = true,
+            value = state.account.name,
+            onValueChange = {},
+            label = { Text("Account") },
+            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = state.expandedAccount) },
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
+                unfocusedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
+                disabledContainerColor = MaterialTheme.colorScheme.secondaryContainer,
+            ),
+            shape = inputFieldShape
+        )
+        ExposedDropdownMenu(
+            expanded = state.expandedAccount,
+            onDismissRequest = { onExpandedAccount(false) }) {
+            state.accounts.forEach { selectionOption ->
+                DropdownMenuItem(
+                    text = { Text(selectionOption.name) },
+                    onClick = {
+                        onAccountSelected(selectionOption)
+                        onExpandedAccount(false)
+                    },
+                    contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding
+                )
+
+            }
+        }
+    }
     OutlinedTextField(
         value = state.addAmount,
         onValueChange = { onAmountChange(it) },
@@ -193,8 +224,8 @@ fun AddItems(
 
 
     ExposedDropdownMenuBox(
-        expanded = state.expanded,
-        onExpandedChange = { onExpandedChange(it) }
+        expanded = state.expandedCategory,
+        onExpandedChange = { onExpandedCategory(it) }
     ) {
         OutlinedTextField(
             modifier = Modifier
@@ -202,10 +233,10 @@ fun AddItems(
                 .padding(dimensionResource(R.dimen.transaction_input_item_padding))
                 .menuAnchor(),
             readOnly = true,
-            value = state.selectCategoryOption,
+            value = state.option.name,
             onValueChange = {},
             label = { Text("Category") },
-            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = state.expanded) },
+            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = state.expandedCategory) },
             colors = OutlinedTextFieldDefaults.colors(
                 focusedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
                 unfocusedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
@@ -214,14 +245,14 @@ fun AddItems(
             shape = inputFieldShape
         )
         ExposedDropdownMenu(
-            expanded = state.expanded,
-            onDismissRequest = { onExpandedChange(false) }) {
+            expanded = state.expandedCategory,
+            onDismissRequest = { onExpandedCategory(false) }) {
             state.options.forEach { selectionOption ->
                 DropdownMenuItem(
                     text = { Text(selectionOption.name) },
                     onClick = {
                         onOptionSelected(selectionOption)
-                        onExpandedChange(false)
+                        onExpandedCategory(false)
                     },
                     contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding
                 )
@@ -375,11 +406,12 @@ fun AddTransactionPreview() {
                 state = fakeUiState,
                 onAmountChange = {},
                 onAccountSelected = {},
+                onExpandedAccount = {},
+                onExpandedCategory = {},
                 onTransactionTypeSelected = {},
                 onOptionSelected = {},
                 onNoteValueChange = {},
                 onDescriptionChange = {},
-                onExpandedChange = {},
                 onClickDate = {},
                 onDateChange = {}
             )

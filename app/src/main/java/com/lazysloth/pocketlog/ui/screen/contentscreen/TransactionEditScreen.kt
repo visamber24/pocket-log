@@ -9,7 +9,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import com.lazysloth.pocketlog.ui.screen.contentscreen.viewmodel.EditTransactionScreenViewmodel
-import com.lazysloth.pocketlog.ui.screen.other.AddTransactionScreenImpl
 import com.lazysloth.pocketlog.ui.theme.PocketLogTheme
 import org.koin.androidx.compose.koinViewModel
 
@@ -25,7 +24,8 @@ fun TransactionEditScreen(onSavePopBackStack: () -> Unit) {
         uiState = transactionItem,
         onAccountSelected = vm::onAccountSelected,
         onAmountChange = vm::onAmountChange,
-        onExpandedChange = vm::onExpandedChange,
+        onExpandedAccount = vm::onExpandedAccount,
+        onExpandedCategory = vm::onExpandedChange,
         onOptionSelected = vm::onOptionSelected,
         onTransactionTypeSelected = vm::onTransactionTypeSelected,
         onNoteValueChange = vm::onNoteValueChange,
