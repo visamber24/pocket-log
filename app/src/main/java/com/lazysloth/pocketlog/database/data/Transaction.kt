@@ -23,7 +23,7 @@ data class Transaction(
     val id: Int = 0,
     val userId: Int?,
     val amount: Double,
-    val account: Account,
+    val account: String,
     val category: Category,
     val transactionType: TransactionType,
     val note: String,

@@ -1,5 +1,7 @@
 package com.lazysloth.pocketlog.ui.screen.contentscreen
 
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -35,7 +37,9 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun AddAccountScreen(popBackStack: () -> Unit) {
-    val vm: AddAccountViewModel = koinViewModel()
+    val vm: AddAccountViewModel = koinViewModel(
+        viewModelStoreOwner = LocalActivity.current as ComponentActivity
+    )
     val uiState by vm.uiState.collectAsState()
     AddAccountScreenImpl(
         uiState = uiState,
@@ -87,8 +91,6 @@ fun AddAccountScreenImpl(
             Button(
                 onClick = {
                     onSave()
-
-
                 },
                 enabled = (uiState.initialBalance.isNotBlank() && uiState.accountName.isNotEmpty())
             ) {

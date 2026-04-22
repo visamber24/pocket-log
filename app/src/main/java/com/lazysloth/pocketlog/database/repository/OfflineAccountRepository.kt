@@ -2,6 +2,7 @@ package com.lazysloth.pocketlog.database.repository
 
 import com.lazysloth.pocketlog.database.AccountDao
 import com.lazysloth.pocketlog.database.data.Account1
+import kotlinx.coroutines.flow.Flow
 
 class OfflineAccountRepository(
     private val accountDao: AccountDao
@@ -18,7 +19,13 @@ class OfflineAccountRepository(
         accountDao.deleteAccount(account)
     }
 
-    override suspend fun getAccountByUserId(userId: Int) {
-        accountDao.getAccountByUserId(userId)
+    override fun getAccountByUserId(userId: Int): Flow<List<Account1>> {
+        return accountDao.getAccountByUserId(userId)
+    }
+
+    override fun getAccountByAccountId(accountId: Int): Flow<Account1> = accountDao.getAccountByAccountId(accountId)
+
+    override fun getAccountNameByUserId(userId: Int): Flow<List<String>> {
+        return accountDao.getAccountName(userId)
     }
 }

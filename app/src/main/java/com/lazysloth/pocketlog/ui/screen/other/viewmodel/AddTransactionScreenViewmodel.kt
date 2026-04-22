@@ -2,16 +2,19 @@ package com.lazysloth.pocketlog.ui.screen.other.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.lazysloth.pocketlog.database.data.Account
 import com.lazysloth.pocketlog.database.data.Category
 import com.lazysloth.pocketlog.database.data.Transaction
 import com.lazysloth.pocketlog.database.data.TransactionType
+import com.lazysloth.pocketlog.database.repository.AccountRepository
 import com.lazysloth.pocketlog.database.repository.TransactionRepository
 import com.lazysloth.pocketlog.di.UserPersists
 import com.lazysloth.pocketlog.ui.screen.home.uiState.AddTransactionUiState
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.ZoneId
@@ -20,7 +23,8 @@ import java.util.Date
 
 class AddTransactionScreenViewmodel(
     private val transactionRepository: TransactionRepository,
-    private val userPersists: UserPersists
+    private val userPersists: UserPersists,
+    private val accountRepository: AccountRepository
 ) : ViewModel() {
 
 
@@ -28,10 +32,30 @@ class AddTransactionScreenViewmodel(
     val uiState: StateFlow<AddTransactionUiState> = _uiState.asStateFlow()
 
     init {
-        viewModelScope.launch {
 
-        }
+//            loadAccounts()
+
     }
+    val accountList: StateFlow<AddTransactionUiState> =
+        accountRepository.getAccountNameByUserId(userPersists.currentId)
+            .map { accounts ->
+                AddTransactionUiState(accounts = accounts)
+            }
+            .stateIn(
+                viewModelScope,
+                SharingStarted.WhileSubscribed(5000),
+                AddTransactionUiState()
+            )
+//    fun loadAccounts(){
+//        viewModelScope.launch {
+//            val accounts : List<String> = accountRepository.getAccountNameByUserId(userPersists.currentId)
+////                .first()
+//
+//            _uiState.value = _uiState.value.copy(
+//                accounts = accounts
+//            )
+//        }
+//    }
 
     fun onAmountChange(newAmount: String) {
         _uiState.update {
@@ -46,7 +70,7 @@ class AddTransactionScreenViewmodel(
             )
         }
     }
-    fun onAccountSelected(account: Account){
+    fun onAccountSelected(account: String){
         _uiState.update {
             it.copy(
                 account = account,

@@ -8,10 +8,12 @@ import com.lazysloth.pocketlog.database.repository.TransactionRepository
 import com.lazysloth.pocketlog.database.repository.UserRepository
 import com.lazysloth.pocketlog.ui.screen.authentication.viewmodel.AuthViewModel
 import com.lazysloth.pocketlog.ui.screen.contentscreen.viewmodel.AddAccountViewModel
+import com.lazysloth.pocketlog.ui.screen.contentscreen.viewmodel.EditAccountScreenViewModel
 import com.lazysloth.pocketlog.ui.screen.other.viewmodel.AddTransactionScreenViewmodel
-import com.lazysloth.pocketlog.ui.screen.contentscreen.viewmodel.DashboardScreenViewModel
+import com.lazysloth.pocketlog.ui.screen.home.viewmodel.DashboardScreenViewModel
 import com.lazysloth.pocketlog.ui.screen.contentscreen.viewmodel.EditTransactionScreenViewmodel
 import com.lazysloth.pocketlog.ui.screen.contentscreen.viewmodel.ProfileScreenViewmodel
+import com.lazysloth.pocketlog.ui.screen.home.viewmodel.AccountScreenViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -31,6 +33,7 @@ val appModule = module {
     single { UserPersists(get(), get()) }
 
     // 4.Repository
+//    single { TransactionRepository(get()) }
     single<TransactionRepository> {
         OfflineTransactionRepository(get())
     }
@@ -50,20 +53,21 @@ val appModule = module {
         DashboardScreenViewModel(
             get(), // TransactionRepository
             get(), // UserRepository
-            get()  // UserPersists
+             // UserPersists
         )
     }
     viewModel {
         AddTransactionScreenViewmodel(
             get(),
             get(),
-
+            get()
             )
     }
     viewModel {
         EditTransactionScreenViewmodel(
             get(),
-            get()
+            get(),
+            get(),
         )
     }
     viewModel {
@@ -77,6 +81,18 @@ val appModule = module {
             get(),
             get()
 
+        )
+    }
+    viewModel {
+        AccountScreenViewModel(
+            get(),
+            get()
+        )
+    }
+    viewModel {
+        EditAccountScreenViewModel(
+            get(),
+            get()
         )
     }
 

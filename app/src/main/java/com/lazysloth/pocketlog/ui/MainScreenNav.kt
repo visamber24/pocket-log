@@ -27,6 +27,7 @@ import com.lazysloth.pocketlog.ui.screen.contentscreen.TransactionDetailsScreen
 import com.lazysloth.pocketlog.ui.screen.contentscreen.TransactionEditScreen
 import com.lazysloth.pocketlog.ui.screen.home.HomeScreen
 import com.lazysloth.pocketlog.ui.screen.contentscreen.AddTransactionScreen
+import com.lazysloth.pocketlog.ui.screen.contentscreen.EditAccountScreen
 import com.lazysloth.pocketlog.ui.screen.other.SettingsScreen
 
 @Composable
@@ -104,28 +105,26 @@ fun MainScreenNav(
                     onClickAdd = {
                         navController.navigate("addTransaction")
                     },
-                    onClickAi = {},
                     onClickTransactionDetails = {
                         navController.navigate("transactionDetails")
+                    },
+                    onClickEdit = {
+                        navController.navigate("transaction_edit_screen")
                     },
                     onClickSetting = {
                         navController.navigate("setting_screen")
                     },
+                    onClickAi = {},
                     onClickAddAccount = {
                         navController.navigate("add_account")
                     },
-                    onClickEdit = {
-                        navController.navigate("transaction_edit_screen")
+                    onClickEditAccount = {
+                        navController.navigate("edit_account")
                     }
+
                 )
             }
-            composable("transaction_edit_screen") {
-                TransactionEditScreen(
-                    onSavePopBackStack = {
-                        navController.popBackStack()
-                    }
-                )
-            }
+
             composable("addTransaction") {
                 AddTransactionScreen(
                     popBackStack = { navController.popBackStack() }
@@ -133,6 +132,13 @@ fun MainScreenNav(
             }
             composable("transactionDetails") {
                 TransactionDetailsScreen(onBack = { navController.popBackStack()})
+            }
+            composable("transaction_edit_screen") {
+                TransactionEditScreen(
+                    onSavePopBackStack = {
+                        navController.popBackStack()
+                    }
+                )
             }
             composable(route = "setting_screen") {
                 SettingsScreen(onClickLogout = {
@@ -149,6 +155,11 @@ fun MainScreenNav(
             composable(route = "add_account") {
                 AddAccountScreen(
                     popBackStack = { navController.popBackStack() }
+                )
+            }
+            composable(route="edit_account"){
+                EditAccountScreen(
+                    popBackStack = {navController.popBackStack()}
                 )
             }
         }

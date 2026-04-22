@@ -8,8 +8,8 @@ import java.util.Date
 import kotlin.enums.enumEntries
 
 data class AddTransactionUiState(
-    val account: Account = Account.Cash,
-    val accounts : List<Account> = Account.entries,
+    val account: String = "",
+    val accounts : List<String> = listOf(),
     val id: Int = 0,
     val addAmount: String = "0.0",
 

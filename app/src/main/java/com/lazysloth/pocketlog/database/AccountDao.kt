@@ -7,6 +7,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import com.lazysloth.pocketlog.database.data.Account1
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface AccountDao {
@@ -17,5 +18,9 @@ interface AccountDao {
     @Delete
     suspend fun deleteAccount(account: Account1)
     @Query("SELECT * FROM accounts WHERE userId =:userId")
-    suspend fun getAccountByUserId(userId:Int): Account1
+    fun getAccountByUserId(userId:Int): Flow<List<Account1>>
+    @Query("SELECT * FROM accounts WHERE id = :accountId")
+    fun getAccountByAccountId(accountId: Int): Flow<Account1>
+    @Query("SELECT name FROM accounts WHERE userId=:userId")
+    fun getAccountName(userId: Int): Flow<List<String>>
 }

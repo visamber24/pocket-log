@@ -1,5 +1,7 @@
 package com.lazysloth.pocketlog.ui.screen.contentscreen
 
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -32,9 +34,16 @@ import androidx.compose.ui.unit.dp
 import com.lazysloth.pocketlog.R
 import com.lazysloth.pocketlog.database.data.Account
 import com.lazysloth.pocketlog.database.data.Account1
+import com.lazysloth.pocketlog.ui.screen.contentscreen.viewmodel.EditAccountScreenViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun AccountScreenContent(modifier: Modifier = Modifier, accounts: List<Account1>) {
+fun AccountScreenContent(
+    modifier: Modifier = Modifier,
+    accounts: List<Account1>,
+    onClickEdit: () -> Unit
+) {
+
 //    Column(
 //        verticalArrangement = Arrangement.Top,
 //        horizontalAlignment = Alignment.CenterHorizontally,
@@ -46,7 +55,10 @@ fun AccountScreenContent(modifier: Modifier = Modifier, accounts: List<Account1>
         items(accounts) { account ->
             AccountItem(
                 account = account,
-                onEdit = { /* TODO */ },
+                onEdit = {
+
+                    onClickEdit()
+                },
                 onDelete = { /* TODO */ },
                 onIgnore = { /* TODO */ }
             )
@@ -63,6 +75,10 @@ fun AccountItem(
     onIgnore: () -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
+    val vm: EditAccountScreenViewModel = koinViewModel(
+        viewModelStoreOwner = LocalActivity.current as ComponentActivity
+    )
+
 
     Card(
         modifier = Modifier
@@ -70,7 +86,8 @@ fun AccountItem(
             .padding(8.dp),
         elevation = CardDefaults.cardElevation(4.dp)
     ) {
-        Row(modifier = Modifier.fillMaxWidth(),
+        Row(
+            modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
@@ -112,6 +129,8 @@ fun AccountItem(
                     DropdownMenuItem(
                         text = { Text("Edit") },
                         onClick = {
+                            vm.getAccountId(account.id)
+                            println("account id -> ${account.id}")
                             expanded = false
                             onEdit()
                         }
@@ -160,6 +179,6 @@ fun AccountItemPreview() {
         Account1(4, 1, "GPay", Account.UPI, 2500.0)
     )
     MaterialTheme {
-        AccountScreenContent(accounts = sampleList)
+        AccountScreenContent(accounts = sampleList, onClickEdit = {})
     }
 }

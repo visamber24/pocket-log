@@ -1,11 +1,13 @@
-package com.lazysloth.pocketlog.ui.screen.contentscreen.viewmodel
+package com.lazysloth.pocketlog.ui.screen.home.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.lazysloth.pocketlog.database.data.Transaction
+import com.lazysloth.pocketlog.database.repository.OfflineTransactionRepository
 import com.lazysloth.pocketlog.database.repository.TransactionRepository
 import com.lazysloth.pocketlog.database.repository.UserRepository
 import com.lazysloth.pocketlog.di.UserPersists
+import com.lazysloth.pocketlog.ui.screen.contentscreen.viewmodel.TransactionDetailsUiState
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -18,7 +20,6 @@ import kotlinx.coroutines.flow.stateIn
 
 class DashboardScreenViewModel(
     private val transactionRepository: TransactionRepository,
-    private val userRepository: UserRepository,
     userPersists: UserPersists
 
 ) : ViewModel() {
@@ -47,7 +48,7 @@ private val itemId  = MutableStateFlow<Int?>(null)
         itemId
             .filterNotNull()
             .flatMapLatest { id ->
-                transactionRepository.getTransaction(id)
+                transactionRepository.getTransactionByTransactionId(id)
             }
             .filterNotNull()
             .map { it.toItemDetail()  }
@@ -64,7 +65,7 @@ private val itemId  = MutableStateFlow<Int?>(null)
 fun Transaction.toItemDetail() : TransactionDetailsUiState = TransactionDetailsUiState(
     id = id,
     amount = amount.toString(),
-    account = account.name,
+    account = account,
     category = category.name,
     transactionType = transactionType.name,
     note = note,

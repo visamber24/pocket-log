@@ -18,48 +18,56 @@ import com.lazysloth.pocketlog.ui.navigationitem.ApplicationBottomNavigation
 
 @Composable
 fun HomeScreen(
-    onClickEdit:()-> Unit,
+    onClickEdit: () -> Unit,
     onClickTransactionDetails: () -> Unit,
-    onClickAdd : () -> Unit,
+    onClickAdd: () -> Unit,
     onClickSetting: () -> Unit,
     onClickAi: () -> Unit,
     onClickAddAccount: () -> Unit,
-    modifier: Modifier = Modifier) {
+    onClickEditAccount: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     var currentScreen by rememberSaveable { mutableStateOf(ApplicationBottomNavigation.HOME) }
 
     NavigationSuiteScaffold(
-         navigationSuiteItems = {
-             ApplicationBottomNavigation.entries.forEach {
-                 item(
-                     icon =
-                         {
-                             Icon(
-                                 painter = painterResource(id = it.icon ),
-                                 contentDescription = it.label
-                             )
-                         },
-                     selected = it == currentScreen,
-                     onClick = {currentScreen = it}
-                 )
+        navigationSuiteItems = {
+            ApplicationBottomNavigation.entries.forEach {
+                item(
+                    icon =
+                        {
+                            Icon(
+                                painter = painterResource(id = it.icon),
+                                contentDescription = it.label
+                            )
+                        },
+                    selected = it == currentScreen,
+                    onClick = { currentScreen = it }
+                )
 
-             }
-         }
+            }
+        }
     )
     {
-        Scaffold(Modifier.fillMaxSize()) {innerPadding ->
+        Scaffold(Modifier.fillMaxSize()) { innerPadding ->
             Column(
                 modifier = Modifier.padding(
                     bottom = innerPadding.calculateBottomPadding()
                 )
             ) {
-                when(currentScreen)
-                {
+                when (currentScreen) {
 
                     ApplicationBottomNavigation.HOME -> {
-                        DashboardScreen(onClickEdit = {onClickEdit()}, onClickTransactionDetails= { onClickTransactionDetails() },onClickAdd = { onClickAdd() }, onClickSetting = {onClickSetting()})
+                        DashboardScreen(
+                            onClickEdit = { onClickEdit() },
+                            onClickTransactionDetails = { onClickTransactionDetails() },
+                            onClickAdd = { onClickAdd() },
+                            onClickSetting = { onClickSetting() })
                     }
-                    ApplicationBottomNavigation.ACCOUNT ->  {
-                        AccountScreen(onClickAdd={ onClickAddAccount() })
+
+                    ApplicationBottomNavigation.ACCOUNT -> {
+                        AccountScreen(
+                            onClickAdd = { onClickAddAccount() },
+                            onClickEditAccount = { onClickEditAccount() })
                     }
 
                     ApplicationBottomNavigation.STATS -> {
@@ -79,15 +87,15 @@ fun HomeScreen(
 
 @Preview(showSystemUi = true)
 @Composable
-fun HomeScreenPreview()
-{
+fun HomeScreenPreview() {
     HomeScreen(
         onClickEdit = {},
         onClickTransactionDetails = {},
         onClickAi = {},
         onClickAdd = {},
         onClickSetting = {},
-        onClickAddAccount = TODO(),
-        modifier = TODO()
+        onClickAddAccount = {},
+        modifier = Modifier.fillMaxSize(),
+        onClickEditAccount = {}
     )
 }

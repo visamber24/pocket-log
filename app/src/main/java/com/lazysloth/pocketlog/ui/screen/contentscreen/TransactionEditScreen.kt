@@ -19,9 +19,11 @@ fun TransactionEditScreen(onSavePopBackStack: () -> Unit) {
         viewModelStoreOwner = LocalActivity.current as ComponentActivity
     )
     val transactionItem by vm.uiState.collectAsState()
+    val accountList by vm.accountList.collectAsState()
     val context = LocalContext.current.applicationContext
     AddTransactionScreenImpl(
         uiState = transactionItem,
+        accountList = accountList,
         onAccountSelected = vm::onAccountSelected,
         onAmountChange = vm::onAmountChange,
         onExpandedAccount = vm::onExpandedAccount,

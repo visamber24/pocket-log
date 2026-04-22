@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.dp
 import com.lazysloth.pocketlog.R
 import com.lazysloth.pocketlog.ui.navigationitem.ApplicationBottomNavigation
 import com.lazysloth.pocketlog.ui.screen.contentscreen.DashboardScreenContent
-import com.lazysloth.pocketlog.ui.screen.contentscreen.viewmodel.DashboardScreenViewModel
+import com.lazysloth.pocketlog.ui.screen.home.viewmodel.DashboardScreenViewModel
 import com.lazysloth.pocketlog.ui.theme.PocketLogTheme
 import org.koin.androidx.compose.koinViewModel
 

@@ -1,18 +1,28 @@
 package com.lazysloth.pocketlog.ui.screen.contentscreen.viewmodel
 
+import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.lazysloth.pocketlog.database.data.Account
 import com.lazysloth.pocketlog.database.data.Category
 import com.lazysloth.pocketlog.database.data.Transaction
 import com.lazysloth.pocketlog.database.data.TransactionType
+import com.lazysloth.pocketlog.database.repository.AccountRepository
 import com.lazysloth.pocketlog.database.repository.TransactionRepository
 import com.lazysloth.pocketlog.di.UserPersists
 import com.lazysloth.pocketlog.ui.screen.home.uiState.AddTransactionUiState
+import com.lazysloth.pocketlog.ui.screen.home.viewmodel.DashboardScreenViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.WhileSubscribed
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.ZoneId
@@ -22,6 +32,7 @@ import java.util.Date
 class EditTransactionScreenViewmodel(
     private val transactionRepository: TransactionRepository,
     private val userPersists: UserPersists,
+    private val accountRepository: AccountRepository
 ) : ViewModel(){
     private val _uiState = MutableStateFlow(AddTransactionUiState())
     val uiState: StateFlow<AddTransactionUiState> = _uiState.asStateFlow()
@@ -32,15 +43,35 @@ class EditTransactionScreenViewmodel(
 //    }
     fun getItemId(id: Int) {
         viewModelScope.launch {
-            transactionRepository.getTransaction(id)
-                .filterNotNull()
-                .collect { transaction ->
-                    _uiState.value = transaction.toAddTransactionUiState()
-                    itemId.value = id
-                }
+            try {
+                val transaction = transactionRepository.getTransactionByTransactionId(id)
+                    .filterNotNull()
+                    .first()  // Takes only the first emission and cancels the flow
+
+                _uiState.value = transaction.toAddTransactionUiState()
+            } catch (e: Exception) {
+                // Handle errors (e.g., no data, network issue)
+                println("Exception $e occurs")
+            }
         }
     }
-//    @OptIn(ExperimentalCoroutinesApi::class)
+
+
+
+
+    // TODO : for non-flow loading transaction instead we are using it in both edit and dashboard for getting transaction
+//    fun loadTransaction(id: Int) {
+//        viewModelScope.launch {
+//            val transaction  = transactionRepository.getTransaction(id)
+//            transaction.let {
+//                _uiState.value = it.toAddTransactionUiState()
+//                itemId.value = id
+//            }
+//
+//
+//        }
+//    }
+//    @OptIn( ExperimentalCoroutinesApi::class)
 //    val uiStateItem : StateFlow<AddTransactionUiState> =
 //        itemId
 //            .filterNotNull()
@@ -54,6 +85,17 @@ class EditTransactionScreenViewmodel(
 //                started = SharingStarted.WhileSubscribed(DashboardScreenViewModel.TIMEOUT_MILLIS),
 //                initialValue = AddTransactionUiState()
 //            )
+
+    val accountList : StateFlow<AddTransactionUiState> =
+        accountRepository.getAccountNameByUserId(userPersists.currentId)
+            .map {
+                AddTransactionUiState(accounts=it)
+            }
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5000),
+                initialValue = AddTransactionUiState()
+            )
 
     fun onAmountChange(newAmount: String) {
         _uiState.update {
@@ -91,7 +133,7 @@ class EditTransactionScreenViewmodel(
         }
     }
 
-    fun onAccountSelected(account: Account) {
+    fun onAccountSelected(account: String) {
         _uiState.update {
             it.copy(account = account)
         }
@@ -149,7 +191,7 @@ fun Transaction.toAddTransactionUiState(): AddTransactionUiState {
     return AddTransactionUiState(
         id = id,
         addAmount = amount.toString(),
-        account = Account.valueOf(account.name),
+        account = account,
         option = category,
         selectedType = transactionType,
         inputNote = note,

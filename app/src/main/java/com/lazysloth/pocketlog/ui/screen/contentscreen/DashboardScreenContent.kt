@@ -43,13 +43,12 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogWindowProvider
 import com.lazysloth.pocketlog.R
-import com.lazysloth.pocketlog.database.data.Account
 import com.lazysloth.pocketlog.database.data.Category
 import com.lazysloth.pocketlog.database.data.Transaction
 import com.lazysloth.pocketlog.database.data.TransactionType
-import com.lazysloth.pocketlog.ui.screen.contentscreen.viewmodel.DashboardScreenViewModel
 import com.lazysloth.pocketlog.ui.screen.contentscreen.viewmodel.EditTransactionScreenViewmodel
 import com.lazysloth.pocketlog.ui.screen.home.DashboardScreen
+import com.lazysloth.pocketlog.ui.screen.home.viewmodel.DashboardScreenViewModel
 import com.lazysloth.pocketlog.ui.theme.PocketLogTheme
 import org.koin.androidx.compose.koinViewModel
 
@@ -78,7 +77,7 @@ fun DashboardScreenContent(
             RecordContent(
                 icon = painterResource(R.drawable.donut_large_24px),
                 typeOfTransaction = item.transactionType,
-                amount = item.amount.toInt(),
+                amount = item.amount,
                 category = item.category,
                 account = item.account,
                 note = item.note,
@@ -86,7 +85,6 @@ fun DashboardScreenContent(
                 modifier = Modifier.clickable(enabled = true, onClick = {
                     viewModel.getItemId(item.id)
                     editTransactionScreenViewmodel.getItemId(item.id)
-
                     isDialogOpen = true
                 })
             )
@@ -137,9 +135,9 @@ object DialogDestination {
 fun RecordContent(
     icon: Painter,
     typeOfTransaction: TransactionType,
-    amount: Int,
+    amount: Double,
     category: Category,
-    account: Account,
+    account: String,
     note: String,
     description: String,
     modifier: Modifier = Modifier
@@ -195,7 +193,7 @@ fun RecordContent(
                     fontWeight = FontWeight.Bold
                 )
                 Text(
-                    text = account.name,
+                    text = account,
                     fontSize = 11.sp,
                     color = Color.Gray,
                     maxLines = 1

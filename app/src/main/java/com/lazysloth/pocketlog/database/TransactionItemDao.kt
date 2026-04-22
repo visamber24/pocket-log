@@ -22,7 +22,7 @@ interface TransactionItemDao {
     suspend fun update(transaction: Transaction)
 
     @Query("SELECT * from items WHERE id = :id ")
-    fun getTransaction(id: Int) : Flow<Transaction?>
+     fun getTransactionByTransactionId(id: Int) : Flow<Transaction?>
     @androidx.room.Transaction
     @Query("SELECT * FROM items WHERE userId = :userId ORDER BY id ASC")
     fun getAllTransactionByUserId(userId: Int?) : Flow<List<Transaction>>

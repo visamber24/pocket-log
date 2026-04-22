@@ -10,6 +10,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -19,10 +21,15 @@ import com.lazysloth.pocketlog.database.data.Account
 import com.lazysloth.pocketlog.database.data.Account1
 import com.lazysloth.pocketlog.ui.navigationitem.ApplicationBottomNavigation
 import com.lazysloth.pocketlog.ui.screen.contentscreen.AccountScreenContent
+import com.lazysloth.pocketlog.ui.screen.home.viewmodel.AccountScreenViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AccountScreen(onClickAdd: ()->Unit) {
+fun AccountScreen(
+    onClickAdd: () -> Unit,
+    onClickEditAccount: () -> Unit
+) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -39,7 +46,7 @@ fun AccountScreen(onClickAdd: ()->Unit) {
                 verticalArrangement = Arrangement.spacedBy(12.dp),
                 horizontalAlignment = Alignment.End,
             ) {
-                FloatingActionButton(onClick = {onClickAdd()}){
+                FloatingActionButton(onClick = { onClickAdd() }) {
                     Icon(
                         painter = painterResource(R.drawable.add_24px),
                         contentDescription = "add account"
@@ -50,12 +57,18 @@ fun AccountScreen(onClickAdd: ()->Unit) {
 
         }
     ) {
+        val vm: AccountScreenViewModel = koinViewModel()
+        val uiState by vm.uiStateList.collectAsState()
         val sampleList = listOf(
             Account1(1, 1, "Cash", Account.Cash, 5000.0),
             Account1(2, 1, "HDFC Debit", Account.DEBIT_CARD, 12000.0),
             Account1(3, 1, "SBI Credit", Account.CREDIT_CARD, -3000.0),
             Account1(4, 1, "GPay", Account.UPI, 2500.0)
         )
-        AccountScreenContent(accounts = sampleList, modifier = Modifier.padding(it))
+        AccountScreenContent(
+            accounts = uiState.accountList,
+            onClickEdit = { onClickEditAccount() },
+            modifier = Modifier.padding(it)
+        )
     }
 }
