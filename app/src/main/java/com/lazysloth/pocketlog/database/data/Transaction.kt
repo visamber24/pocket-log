@@ -8,7 +8,7 @@ import androidx.room.TypeConverter
 import java.time.ZonedDateTime
 
 @Entity(
-    tableName = "items",
+    tableName = "transactionItem",
     foreignKeys = [ForeignKey(
         entity = User::class,
         parentColumns = arrayOf("id"),
@@ -23,7 +23,7 @@ data class Transaction(
     val id: Int = 0,
     val userId: Int?,
     val amount: Double,
-    val account: String,
+    val accountId: Int,
     val category: Category,
     val transactionType: TransactionType,
     val note: String,

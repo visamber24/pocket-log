@@ -4,6 +4,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.lazysloth.pocketlog.database.data.Account
+import com.lazysloth.pocketlog.database.data.Account1
 import com.lazysloth.pocketlog.database.data.Category
 import com.lazysloth.pocketlog.database.data.Transaction
 import com.lazysloth.pocketlog.database.data.TransactionType
@@ -32,7 +33,7 @@ import java.util.Date
 class EditTransactionScreenViewmodel(
     private val transactionRepository: TransactionRepository,
     private val userPersists: UserPersists,
-    private val accountRepository: AccountRepository
+    accountRepository: AccountRepository
 ) : ViewModel(){
     private val _uiState = MutableStateFlow(AddTransactionUiState())
     val uiState: StateFlow<AddTransactionUiState> = _uiState.asStateFlow()
@@ -53,6 +54,18 @@ class EditTransactionScreenViewmodel(
                 // Handle errors (e.g., no data, network issue)
                 println("Exception $e occurs")
             }
+        }
+    }
+    init {
+        viewModelScope.launch {
+            accountRepository.getAccountByUserId(userPersists.currentId)
+                .collect { accounts ->
+                    _uiState.update {
+                        it.copy(
+                            accounts = accounts
+                        )
+                    }
+                }
         }
     }
 
@@ -89,7 +102,7 @@ class EditTransactionScreenViewmodel(
     val accountList : StateFlow<AddTransactionUiState> =
         accountRepository.getAccountNameByUserId(userPersists.currentId)
             .map {
-                AddTransactionUiState(accounts=it)
+                AddTransactionUiState()
             }
             .stateIn(
                 scope = viewModelScope,
@@ -133,9 +146,9 @@ class EditTransactionScreenViewmodel(
         }
     }
 
-    fun onAccountSelected(account: String) {
+    fun onAccountSelected(account: Account1) {
         _uiState.update {
-            it.copy(account = account)
+            it.copy(selectedAccountId = account.id)
         }
     }
 
@@ -191,7 +204,6 @@ fun Transaction.toAddTransactionUiState(): AddTransactionUiState {
     return AddTransactionUiState(
         id = id,
         addAmount = amount.toString(),
-        account = account,
         option = category,
         selectedType = transactionType,
         inputNote = note,
@@ -203,7 +215,7 @@ fun AddTransactionUiState.toItem(userId: Int): Transaction = Transaction(
     id = id,
     userId = userId,
     amount = addAmount.toDoubleOrNull() ?: 0.0,
-    account = account,
+    accountId = selectedAccountId!!,
     category = option,
     transactionType = selectedType,
     note = inputNote,

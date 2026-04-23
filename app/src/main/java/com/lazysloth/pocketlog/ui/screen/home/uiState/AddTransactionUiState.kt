@@ -1,15 +1,13 @@
 package com.lazysloth.pocketlog.ui.screen.home.uiState
 
-import com.lazysloth.pocketlog.database.data.Account
+import com.lazysloth.pocketlog.database.data.Account1
 import com.lazysloth.pocketlog.database.data.Category
 import com.lazysloth.pocketlog.database.data.TransactionType
 import java.time.ZonedDateTime
-import java.util.Date
-import kotlin.enums.enumEntries
 
 data class AddTransactionUiState(
-    val account: String = "",
-    val accounts : List<String> = listOf(),
+    val selectedAccountId: Int? = null,
+    val accounts : List<Account1> = listOf(),
     val id: Int = 0,
     val addAmount: String = "0.0",
 

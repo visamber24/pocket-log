@@ -52,8 +52,8 @@ val appModule = module {
     viewModel {
         DashboardScreenViewModel(
             get(), // TransactionRepository
-            get(), // UserRepository
-             // UserPersists
+            get(), // UserPersists
+            get() //accountRepository
         )
     }
     viewModel {

@@ -6,7 +6,6 @@ import com.lazysloth.pocketlog.database.data.Account
 import com.lazysloth.pocketlog.database.repository.AccountRepository
 import com.lazysloth.pocketlog.di.UserPersists
 import com.lazysloth.pocketlog.ui.screen.home.uiState.AddAccountUiState
-import com.lazysloth.pocketlog.ui.screen.home.uiState.AddTransactionUiState
 import com.lazysloth.pocketlog.ui.screen.home.uiState.toAccount
 import com.lazysloth.pocketlog.ui.screen.home.uiState.toAddAccountUiState
 import kotlinx.coroutines.flow.MutableStateFlow

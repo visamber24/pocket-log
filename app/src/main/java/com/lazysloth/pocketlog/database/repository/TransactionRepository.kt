@@ -1,6 +1,7 @@
 package com.lazysloth.pocketlog.database.repository
 
 import com.lazysloth.pocketlog.database.data.Transaction
+import com.lazysloth.pocketlog.database.data.TransactionWithAccount
 import kotlinx.coroutines.flow.Flow
 
 interface TransactionRepository  {
@@ -17,6 +18,7 @@ interface TransactionRepository  {
 
     fun getAllTransactions(userId: Int?) : Flow<List<Transaction>>
 
+    fun getTransactionWithAccount(userId: Int) : Flow<List<TransactionWithAccount>>
 
 
 }

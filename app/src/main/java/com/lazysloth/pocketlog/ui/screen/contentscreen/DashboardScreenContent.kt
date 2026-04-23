@@ -44,8 +44,8 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogWindowProvider
 import com.lazysloth.pocketlog.R
 import com.lazysloth.pocketlog.database.data.Category
-import com.lazysloth.pocketlog.database.data.Transaction
 import com.lazysloth.pocketlog.database.data.TransactionType
+import com.lazysloth.pocketlog.database.data.TransactionWithAccount
 import com.lazysloth.pocketlog.ui.screen.contentscreen.viewmodel.EditTransactionScreenViewmodel
 import com.lazysloth.pocketlog.ui.screen.home.DashboardScreen
 import com.lazysloth.pocketlog.ui.screen.home.viewmodel.DashboardScreenViewModel
@@ -57,7 +57,7 @@ fun DashboardScreenContent(
     onClickEdit: () -> Unit,
     viewModel: DashboardScreenViewModel,
     onClickDetails: (Int) -> Unit,
-    transList: List<Transaction>,
+    transList: List<TransactionWithAccount>,
     modifier: Modifier = Modifier
 ) {
     val transItem by viewModel.uiStateItem.collectAsState()
@@ -66,6 +66,7 @@ fun DashboardScreenContent(
     val editTransactionScreenViewmodel: EditTransactionScreenViewmodel = koinViewModel(
         viewModelStoreOwner = LocalActivity.current as ComponentActivity
     )
+
     LazyColumn(
         flingBehavior = ScrollableDefaults.flingBehavior(),
         modifier = modifier
@@ -76,15 +77,15 @@ fun DashboardScreenContent(
 
             RecordContent(
                 icon = painterResource(R.drawable.donut_large_24px),
-                typeOfTransaction = item.transactionType,
-                amount = item.amount,
-                category = item.category,
-                account = item.account,
-                note = item.note,
-                description = item.description,
+                typeOfTransaction = item.transaction.transactionType,
+                amount = item.transaction.amount,
+                category = item.transaction.category,
+                account =item.account.name ,
+                note = item.transaction.note,
+                description = item.transaction.description,
                 modifier = Modifier.clickable(enabled = true, onClick = {
-                    viewModel.getItemId(item.id)
-                    editTransactionScreenViewmodel.getItemId(item.id)
+                    viewModel.getItemId(item.transaction.id)
+                    editTransactionScreenViewmodel.getItemId(item.transaction.id)
                     isDialogOpen = true
                 })
             )

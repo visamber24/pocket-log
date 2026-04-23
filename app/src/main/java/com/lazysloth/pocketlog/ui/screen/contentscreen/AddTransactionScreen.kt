@@ -43,11 +43,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.lazysloth.pocketlog.R
-import com.lazysloth.pocketlog.database.data.Account
+import com.lazysloth.pocketlog.database.data.Account1
 import com.lazysloth.pocketlog.database.data.Category
 import com.lazysloth.pocketlog.database.data.TransactionType
 import com.lazysloth.pocketlog.ui.screen.home.uiState.AddTransactionUiState
-import com.lazysloth.pocketlog.ui.screen.home.viewmodel.AccountUiState
 import com.lazysloth.pocketlog.ui.screen.other.viewmodel.AddTransactionScreenViewmodel
 import com.lazysloth.pocketlog.ui.theme.PocketLogTheme
 import com.lazysloth.pocketlog.ui.theme.inputFieldShape
@@ -55,17 +54,15 @@ import org.koin.androidx.compose.koinViewModel
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 import java.util.Date
-import kotlin.collections.listOf
 
 @Composable
 fun AddTransactionScreen(popBackStack: () -> Unit) {
     val vm: AddTransactionScreenViewmodel = koinViewModel()
     val uiState by vm.uiState.collectAsState()
-    val accountList by vm.accountList.collectAsState()
+
     val context = LocalContext.current.applicationContext
     AddTransactionScreenImpl(
         uiState = uiState,
-        accountList = accountList,
         onAccountSelected = vm::onAccountSelected,
         onAmountChange = vm::onAmountChange,
         onExpandedAccount = vm::onExpandedAccount,
@@ -89,8 +86,7 @@ fun AddTransactionScreen(popBackStack: () -> Unit) {
 @Composable
 fun AddTransactionScreenImpl(
     uiState: AddTransactionUiState,
-    accountList:AddTransactionUiState,
-    onAccountSelected: (String) -> Unit,
+    onAccountSelected: (Account1) -> Unit,
     onAmountChange: (String) -> Unit,
     onExpandedAccount: (Boolean) -> Unit,
     onExpandedCategory: (Boolean) -> Unit,
@@ -125,7 +121,6 @@ fun AddTransactionScreenImpl(
             AddItems(
                 modifier = Modifier,
                 state = uiState,
-                accountList=accountList,
                 onAccountSelected,
                 onAmountChange,
                 onExpandedAccount = onExpandedAccount,
@@ -158,8 +153,7 @@ fun AddTransactionScreenImpl(
 fun AddItems(
     modifier: Modifier,
     state: AddTransactionUiState,
-    accountList: AddTransactionUiState,
-    onAccountSelected: (String) -> Unit,
+    onAccountSelected: (Account1) -> Unit,
     onAmountChange: (String) -> Unit,
     onExpandedAccount: (Boolean) -> Unit,
     onExpandedCategory: (Boolean) -> Unit,
@@ -170,7 +164,8 @@ fun AddItems(
     onClickDate: (Boolean) -> Unit,
     onDateChange: (Date) -> Unit
 ) {
-
+    val selectedAccountName =
+        state.accounts.find { it.id == state.selectedAccountId }?.name ?: ""
 
     ExposedDropdownMenuBox(
         expanded = state.expandedAccount,
@@ -182,7 +177,7 @@ fun AddItems(
                 .padding(dimensionResource(R.dimen.transaction_input_item_padding))
                 .menuAnchor(),
             readOnly = true,
-            value = state.account,
+            value = selectedAccountName,
             onValueChange = {},
             label = { Text("Account") },
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = state.expandedAccount) },
@@ -196,11 +191,10 @@ fun AddItems(
         ExposedDropdownMenu(
             expanded = state.expandedAccount,
             onDismissRequest = { onExpandedAccount(false) }) {
-            accountList.accounts.forEach { selectionOption ->
+            state.accounts.forEach { selectionOption ->
                 DropdownMenuItem(
-                    text = { Text(selectionOption) },
+                    text = { Text(selectionOption.name) },
                     onClick = {
-
                         onAccountSelected(selectionOption)
                         onExpandedAccount(false)
                     },
@@ -397,7 +391,7 @@ fun AddTransactionPreview() {
             addAmount = "123.45",
             inputNote = "Groceries",
             inputDescription = "Weekly shopping at the supermarket",
-            account = Account.Cash.name,
+            accounts = listOf(),
             selectedType = TransactionType.DEBIT,
         )
         Column(
@@ -410,7 +404,6 @@ fun AddTransactionPreview() {
             AddItems(
                 modifier = Modifier.padding(16.dp),
                 state = fakeUiState,
-                accountList = AddTransactionUiState(),
                 onAmountChange = {},
                 onAccountSelected = {},
                 onExpandedAccount = {},

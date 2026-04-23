@@ -5,8 +5,10 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
 import androidx.room.Update
 import com.lazysloth.pocketlog.database.data.Account1
+import com.lazysloth.pocketlog.database.data.TransactionWithAccount
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -23,4 +25,6 @@ interface AccountDao {
     fun getAccountByAccountId(accountId: Int): Flow<Account1>
     @Query("SELECT name FROM accounts WHERE userId=:userId")
     fun getAccountName(userId: Int): Flow<List<String>>
+
+
 }

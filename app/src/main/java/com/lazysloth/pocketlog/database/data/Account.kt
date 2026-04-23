@@ -5,7 +5,8 @@ import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 
-enum class Account(
+enum class
+Account(
 ) {
     Cash,
     DEBIT_CARD,

@@ -87,7 +87,7 @@ fun DashboardScreen(
         }
     ) { innerPadding ->
         val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior()
-        val uiStateList by viewmodel.uiStateList.collectAsState()
+        val uiStateList by viewmodel.transactionList.collectAsState()
         DashboardScreenContent(
             onClickEdit = { onClickEdit() },
             viewModel = viewmodel,

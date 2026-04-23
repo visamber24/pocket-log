@@ -7,6 +7,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import com.lazysloth.pocketlog.database.data.Transaction
+import com.lazysloth.pocketlog.database.data.TransactionWithAccount
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -16,14 +17,21 @@ interface TransactionItemDao {
 
     @Delete
     suspend fun delete(transaction: Transaction)
-    @Query("DELETE FROM items WHERE id=:id")
-    suspend fun deleteById(id:Int?)
+
+    @Query("DELETE FROM transactionItem WHERE id=:id")
+    suspend fun deleteById(id: Int?)
+
     @Update
     suspend fun update(transaction: Transaction)
 
-    @Query("SELECT * from items WHERE id = :id ")
-     fun getTransactionByTransactionId(id: Int) : Flow<Transaction?>
+    @Query("SELECT * from transactionItem WHERE id = :id ")
+    fun getTransactionByTransactionId(id: Int): Flow<Transaction?>
+
     @androidx.room.Transaction
-    @Query("SELECT * FROM items WHERE userId = :userId ORDER BY id ASC")
-    fun getAllTransactionByUserId(userId: Int?) : Flow<List<Transaction>>
+    @Query("SELECT * FROM transactionItem WHERE userId = :userId ORDER BY id ASC")
+    fun getAllTransactionByUserId(userId: Int?): Flow<List<Transaction>>
+
+    @androidx.room.Transaction
+    @Query("SELECT * FROM transactionItem WHERE userId=:userId ORDER BY id DESC")
+    fun getTransactionWithAccount(userId: Int): Flow<List<TransactionWithAccount>>
 }

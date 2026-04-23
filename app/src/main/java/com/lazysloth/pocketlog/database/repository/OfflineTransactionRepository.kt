@@ -2,6 +2,7 @@ package com.lazysloth.pocketlog.database.repository
 
 import com.lazysloth.pocketlog.database.data.Transaction
 import com.lazysloth.pocketlog.database.TransactionItemDao
+import com.lazysloth.pocketlog.database.data.TransactionWithAccount
 import kotlinx.coroutines.flow.Flow
 
 class OfflineTransactionRepository(
@@ -26,5 +27,9 @@ class OfflineTransactionRepository(
 
     override  fun getTransactionByTransactionId(id: Int): Flow<Transaction?> {
         return transactionItemDao.getTransactionByTransactionId(id)
+    }
+
+    override fun getTransactionWithAccount(userId: Int): Flow<List<TransactionWithAccount>> {
+        return transactionItemDao.getTransactionWithAccount(userId)
     }
 }

@@ -2,6 +2,7 @@ package com.lazysloth.pocketlog.ui.screen.other.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.lazysloth.pocketlog.database.data.Account1
 import com.lazysloth.pocketlog.database.data.Category
 import com.lazysloth.pocketlog.database.data.Transaction
 import com.lazysloth.pocketlog.database.data.TransactionType
@@ -27,7 +28,6 @@ class AddTransactionScreenViewmodel(
     private val accountRepository: AccountRepository
 ) : ViewModel() {
 
-
     private val _uiState = MutableStateFlow(AddTransactionUiState())
     val uiState: StateFlow<AddTransactionUiState> = _uiState.asStateFlow()
 
@@ -36,16 +36,17 @@ class AddTransactionScreenViewmodel(
 //            loadAccounts()
 
     }
-    val accountList: StateFlow<AddTransactionUiState> =
-        accountRepository.getAccountNameByUserId(userPersists.currentId)
-            .map { accounts ->
-                AddTransactionUiState(accounts = accounts)
-            }
-            .stateIn(
-                viewModelScope,
-                SharingStarted.WhileSubscribed(5000),
-                AddTransactionUiState()
-            )
+    init {
+        viewModelScope.launch {
+            accountRepository
+                .getAccountByUserId(userPersists.currentId)
+                .collect { accounts ->
+                    _uiState.update {
+                        it.copy(accounts = accounts)
+                    }
+                }
+        }
+    }
 //    fun loadAccounts(){
 //        viewModelScope.launch {
 //            val accounts : List<String> = accountRepository.getAccountNameByUserId(userPersists.currentId)
@@ -70,10 +71,10 @@ class AddTransactionScreenViewmodel(
             )
         }
     }
-    fun onAccountSelected(account: String){
+    fun onAccountSelected(account: Account1){
         _uiState.update {
             it.copy(
-                account = account,
+                selectedAccountId = account.id,
             )
         }
     }
@@ -147,7 +148,7 @@ class AddTransactionScreenViewmodel(
         id = id,
         userId = userId,
         amount = addAmount.toDoubleOrNull() ?: 0.0,
-        account = account,
+        accountId = selectedAccountId!!,
         category = option,
         transactionType = selectedType,
         note = inputNote,
