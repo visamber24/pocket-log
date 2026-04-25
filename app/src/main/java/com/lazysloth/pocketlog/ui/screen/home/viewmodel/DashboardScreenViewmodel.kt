@@ -2,7 +2,6 @@ package com.lazysloth.pocketlog.ui.screen.home.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.lazysloth.pocketlog.database.data.Transaction
 import com.lazysloth.pocketlog.database.data.TransactionWithAccount
 import com.lazysloth.pocketlog.database.repository.AccountRepository
 import com.lazysloth.pocketlog.database.repository.TransactionRepository
@@ -76,7 +75,7 @@ class DashboardScreenViewModel(
         itemId
             .filterNotNull()
             .flatMapLatest { id ->
-                transactionRepository.getTransactionByTransactionId(id)
+                transactionRepository.getTransactionWithAccountByTransactionId(id)
             }
             .filterNotNull()
             .map { it.toItemDetail() }
@@ -92,15 +91,16 @@ class DashboardScreenViewModel(
 
 }
 
-fun Transaction.toItemDetail(): TransactionDetailsUiState = TransactionDetailsUiState(
-    id = id,
-    amount = amount.toString(),
-    account = accountId.toString(),
-    category = category.name,
-    transactionType = transactionType.name,
-    note = note,
-    description = description,
-    dateTime = dateTime.toString()
+fun TransactionWithAccount.toItemDetail(): TransactionDetailsUiState = TransactionDetailsUiState(
+    id = transaction.id,
+    amount = transaction.amount.toString(),
+
+    accountName = account.name,
+    category = transaction.category.name,
+    transactionType = transaction.transactionType.name,
+    note = transaction.note,
+    description = transaction.description,
+    dateTime = transaction.dateTime.toString()
 )
 
 data class DashboardUiState(

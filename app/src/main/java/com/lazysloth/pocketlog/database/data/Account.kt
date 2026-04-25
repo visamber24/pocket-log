@@ -29,9 +29,10 @@ Account(
 )
 data class Account1(
     @PrimaryKey(autoGenerate = true)
-    val id: Int = 0,
+    val id: Long = 0,
     val userId: Int = 0,
     val name: String = "",
     val type: Account,
     val balance: Double = 0.0,
+    val currentBalance: Double = balance,
 )

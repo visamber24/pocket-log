@@ -10,8 +10,8 @@ class OfflineTransactionRepository(
 ) : TransactionRepository {
 
 
-    override suspend fun insertTransaction(transaction: Transaction) =
-        transactionItemDao.insert(transaction)
+    override suspend fun insertTransaction(transaction: Transaction,balanceDelta: Double) =
+        transactionItemDao.insertTransactionAndUpdateAccountBalance(transaction, balanceDelta = balanceDelta)
 
     override suspend fun deleteTransaction(transaction: Transaction) =
         transactionItemDao.delete(transaction)
@@ -25,8 +25,8 @@ class OfflineTransactionRepository(
     override fun getAllTransactions(userId: Int?) =
         transactionItemDao.getAllTransactionByUserId(userId)
 
-    override  fun getTransactionByTransactionId(id: Int): Flow<Transaction?> {
-        return transactionItemDao.getTransactionByTransactionId(id)
+    override  fun getTransactionWithAccountByTransactionId(id: Int): Flow<TransactionWithAccount?> {
+        return transactionItemDao.getTransactionWithAccountByTransactionId(id)
     }
 
     override fun getTransactionWithAccount(userId: Int): Flow<List<TransactionWithAccount>> {

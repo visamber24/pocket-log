@@ -22,7 +22,7 @@ interface AccountDao {
     @Query("SELECT * FROM accounts WHERE userId =:userId")
     fun getAccountByUserId(userId:Int): Flow<List<Account1>>
     @Query("SELECT * FROM accounts WHERE id = :accountId")
-    fun getAccountByAccountId(accountId: Int): Flow<Account1>
+    fun getAccountByAccountId(accountId: Long?): Flow<Account1>
     @Query("SELECT name FROM accounts WHERE userId=:userId")
     fun getAccountName(userId: Int): Flow<List<String>>
 

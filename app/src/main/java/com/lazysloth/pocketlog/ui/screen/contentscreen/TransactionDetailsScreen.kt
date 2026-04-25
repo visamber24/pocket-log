@@ -65,7 +65,7 @@ fun TransactionDetailDialog(onClickDelete:()->Unit,onClickEdit:()-> Unit,onClose
                 fontWeight = FontWeight.SemiBold,
             )
             DetailsRow(label = "Amount", value = uiState.amount)
-            DetailsRow(label = "Account", value = uiState.account)
+            DetailsRow(label = "Account", value = uiState.accountName)
             DetailsRow(label = "Category", value = uiState.category)
             DetailsRow(label = "Type", value = uiState.transactionType)
             DetailsRow(label = "Note", value = uiState.note)
@@ -138,7 +138,7 @@ private fun TransactionDetailsDialogPreview() {
                 uiState = TransactionDetailsUiState(
                     id = 42,
                     amount = "₹1,250.00",
-                    account = "Cash",
+                    accountName = "Cash",
                     category = "Groceries",
                     transactionType = "Expense",
                     note = "Weekly run",

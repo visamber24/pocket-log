@@ -11,11 +11,8 @@ import com.lazysloth.pocketlog.database.repository.TransactionRepository
 import com.lazysloth.pocketlog.di.UserPersists
 import com.lazysloth.pocketlog.ui.screen.home.uiState.AddTransactionUiState
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.ZoneId
@@ -36,6 +33,7 @@ class AddTransactionScreenViewmodel(
 //            loadAccounts()
 
     }
+
     init {
         viewModelScope.launch {
             accountRepository
@@ -64,20 +62,22 @@ class AddTransactionScreenViewmodel(
         }
     }
 
-    fun onExpandedAccount(expanded : Boolean){
+    fun onExpandedAccount(expanded: Boolean) {
         _uiState.update {
             it.copy(
                 expandedAccount = expanded
             )
         }
     }
-    fun onAccountSelected(account: Account1){
+
+    fun onAccountSelected(account: Account1) {
         _uiState.update {
             it.copy(
                 selectedAccountId = account.id,
             )
         }
     }
+
     fun onExpandedCategory(expanded: Boolean) {
         _uiState.update {
             it.copy(
@@ -94,6 +94,7 @@ class AddTransactionScreenViewmodel(
 
 
     fun onTransactionTypeSelected(type: TransactionType) {
+
         _uiState.update {
             it.copy(
                 selectedType = type
@@ -112,18 +113,33 @@ class AddTransactionScreenViewmodel(
         _uiState.update { it.copy(inputDescription = description) }
     }
 
-    fun saveTransaction() {
-        viewModelScope.launch {
-            val userId = userPersists.currentId
-            println("the currentUserid = ${userPersists.currentId}")
-            transactionRepository.insertTransaction(_uiState.value.toItem(userId))
-
-        }
-    }
 
     fun onClickDate(isOpen: Boolean) {
         _uiState.update {
             it.copy(dateOpen = isOpen)
+        }
+    }
+
+
+
+    fun saveTransaction() {
+        viewModelScope.launch {
+            val userId = userPersists.currentId
+            val typeOfTransaction = _uiState.value.selectedType
+            val amount = _uiState.value.addAmount.toDouble()
+
+            val balanceDelta = if (typeOfTransaction == TransactionType.CREDIT) {
+                amount
+            } else {
+                -amount
+            }
+
+            println("the currentUserid = ${userPersists.currentId}")
+            transactionRepository.insertTransaction(
+                transaction = _uiState.value.toItem(userId),
+                balanceDelta = balanceDelta
+            )
+
         }
     }
 

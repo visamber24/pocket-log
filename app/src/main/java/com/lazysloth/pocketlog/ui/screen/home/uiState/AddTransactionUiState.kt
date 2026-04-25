@@ -6,11 +6,11 @@ import com.lazysloth.pocketlog.database.data.TransactionType
 import java.time.ZonedDateTime
 
 data class AddTransactionUiState(
-    val selectedAccountId: Int? = null,
+    val selectedAccountId: Long? = null,
     val accounts : List<Account1> = listOf(),
     val id: Int = 0,
     val addAmount: String = "0.0",
-
+    val accountName: String = "",
     val options: List<Category> = Category.entries,
     val option : Category = Category.HEALTHCARE,
 

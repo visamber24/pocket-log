@@ -17,10 +17,7 @@ interface TransactionItemDao {
     @Query("UPDATE accounts SET currentBalance = currentBalance + :amount WHERE id=:accountId")
     suspend fun updateAccountBalance(accountId: Long, amount: Double)
     @androidx.room.Transaction
-    suspend fun insertTransactionAndUpdateAccountBalance(transaction: Transaction,balanceDelta: Double){
-        insert(transaction)
-        updateAccountBalance(accountId = transaction.accountId,balanceDelta)
-    }
+    suspend fun insertTransactionAndUpdateAccountBalance(transaction: Transaction,amount: Double)
     @Delete
     suspend fun delete(transaction: Transaction)
 

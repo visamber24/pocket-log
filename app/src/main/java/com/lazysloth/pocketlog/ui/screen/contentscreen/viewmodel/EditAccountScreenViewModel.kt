@@ -22,7 +22,7 @@ class EditAccountScreenViewModel(
     private val _uiState = MutableStateFlow(AddAccountUiState())
     val uiState: StateFlow<AddAccountUiState> = _uiState.asStateFlow()
 
-    fun getAccountId(id: Int) {
+    fun getAccountId(id: Long?) {
         viewModelScope.launch {
             try {
                 val account = accountRepository.getAccountByAccountId(id).filterNotNull().first()

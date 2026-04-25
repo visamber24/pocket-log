@@ -4,7 +4,7 @@ import com.lazysloth.pocketlog.database.data.Account
 import com.lazysloth.pocketlog.database.data.Account1
 
 data class AddAccountUiState(
-    val id: Int = 0,
+    val id: Long = 0,
     val accountName: String = "",
     val initialBalance: String = "0.0",
     val accountTypeExpanded: Boolean = false,

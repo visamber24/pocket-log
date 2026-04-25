@@ -23,7 +23,7 @@ class OfflineAccountRepository(
         return accountDao.getAccountByUserId(userId)
     }
 
-    override fun getAccountByAccountId(accountId: Int): Flow<Account1> = accountDao.getAccountByAccountId(accountId)
+    override fun getAccountByAccountId(accountId: Long?): Flow<Account1> = accountDao.getAccountByAccountId(accountId)
 
     override fun getAccountNameByUserId(userId: Int): Flow<List<String>> {
         return accountDao.getAccountName(userId)

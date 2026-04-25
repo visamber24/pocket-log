@@ -37,9 +37,7 @@ import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun AddAccountScreen(popBackStack: () -> Unit) {
-    val vm: AddAccountViewModel = koinViewModel(
-        viewModelStoreOwner = LocalActivity.current as ComponentActivity
-    )
+    val vm: AddAccountViewModel = koinViewModel()
     val uiState by vm.uiState.collectAsState()
     AddAccountScreenImpl(
         uiState = uiState,

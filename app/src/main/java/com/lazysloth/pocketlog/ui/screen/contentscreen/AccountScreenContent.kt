@@ -111,7 +111,7 @@ fun AccountItem(
                     Spacer(modifier = Modifier.height(8.dp))
 
                     Text(
-                        text = "₹${account.balance}",
+                        text = "₹${account.currentBalance}",
                         style = MaterialTheme.typography.titleLarge
                     )
                 }
