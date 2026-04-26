@@ -1,15 +1,15 @@
 package com.lazysloth.pocketlog.ui.screen.home.uiState
 
-import com.lazysloth.pocketlog.database.data.Account1
+import com.lazysloth.pocketlog.database.data.Account
 import com.lazysloth.pocketlog.database.data.Category
 import com.lazysloth.pocketlog.database.data.TransactionType
 import java.time.ZonedDateTime
 
 data class AddTransactionUiState(
     val selectedAccountId: Long? = null,
-    val accounts : List<Account1> = listOf(),
+    val accounts : List<Account> = listOf(),
     val id: Int = 0,
-    val addAmount: String = "0.0",
+    val addAmount: String = "",
     val accountName: String = "",
     val options: List<Category> = Category.entries,
     val option : Category = Category.HEALTHCARE,

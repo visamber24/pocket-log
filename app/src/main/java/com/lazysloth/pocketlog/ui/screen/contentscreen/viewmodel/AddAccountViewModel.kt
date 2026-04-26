@@ -2,10 +2,9 @@ package com.lazysloth.pocketlog.ui.screen.contentscreen.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.lazysloth.pocketlog.database.data.AccountType
 import com.lazysloth.pocketlog.database.data.Account
-import com.lazysloth.pocketlog.database.data.Account1
 import com.lazysloth.pocketlog.database.repository.AccountRepository
-import com.lazysloth.pocketlog.database.repository.OfflineAccountRepository
 import com.lazysloth.pocketlog.di.UserPersists
 import com.lazysloth.pocketlog.ui.screen.home.uiState.AddAccountUiState
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -45,7 +44,7 @@ class AddAccountViewModel(
         }
     }
 
-    fun onAccountSelected(accountType: Account) {
+    fun onAccountSelected(accountType: AccountType) {
         _uiState.update {
             it.copy(
                 accountType = accountType
@@ -60,7 +59,7 @@ class AddAccountViewModel(
         }
     }
 
-    fun AddAccountUiState.toAccount(userId: Int): Account1 = Account1(
+    fun AddAccountUiState.toAccount(userId: Int): Account = Account(
         name = accountName,
         balance = initialBalance.toDoubleOrNull() ?: 0.0,
         type = accountType,

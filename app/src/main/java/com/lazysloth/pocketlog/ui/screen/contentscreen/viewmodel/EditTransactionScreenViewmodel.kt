@@ -2,7 +2,7 @@ package com.lazysloth.pocketlog.ui.screen.contentscreen.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.lazysloth.pocketlog.database.data.Account1
+import com.lazysloth.pocketlog.database.data.Account
 import com.lazysloth.pocketlog.database.data.Category
 import com.lazysloth.pocketlog.database.data.Transaction
 import com.lazysloth.pocketlog.database.data.TransactionType
@@ -105,16 +105,7 @@ class EditTransactionScreenViewmodel(
 //                initialValue = AddTransactionUiState()
 //            )
 
-    val accountList : StateFlow<AddTransactionUiState> =
-        accountRepository.getAccountNameByUserId(userPersists.currentId)
-            .map {
-                AddTransactionUiState()
-            }
-            .stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(5000),
-                initialValue = AddTransactionUiState()
-            )
+
 
     fun onAmountChange(newAmount: String) {
         _uiState.update {
@@ -152,7 +143,7 @@ class EditTransactionScreenViewmodel(
         }
     }
 
-    fun onAccountSelected(account: Account1) {
+    fun onAccountSelected(account: Account) {
         _uiState.update {
             it.copy(selectedAccountId = account.id)
         }

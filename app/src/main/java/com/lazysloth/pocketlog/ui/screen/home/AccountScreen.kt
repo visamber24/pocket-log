@@ -17,8 +17,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.lazysloth.pocketlog.R
+import com.lazysloth.pocketlog.database.data.AccountType
 import com.lazysloth.pocketlog.database.data.Account
-import com.lazysloth.pocketlog.database.data.Account1
 import com.lazysloth.pocketlog.ui.navigationitem.ApplicationBottomNavigation
 import com.lazysloth.pocketlog.ui.screen.contentscreen.AccountScreenContent
 import com.lazysloth.pocketlog.ui.screen.home.viewmodel.AccountScreenViewModel
@@ -60,10 +60,10 @@ fun AccountScreen(
         val vm: AccountScreenViewModel = koinViewModel()
         val uiState by vm.uiStateList.collectAsState()
         val sampleList = listOf(
-            Account1(1, 1, "Cash", Account.Cash, 5000.0),
-            Account1(2, 1, "HDFC Debit", Account.DEBIT_CARD, 12000.0),
-            Account1(3, 1, "SBI Credit", Account.CREDIT_CARD, -3000.0),
-            Account1(4, 1, "GPay", Account.UPI, 2500.0)
+            Account(1, 1, "Cash", AccountType.Cash, 5000.0),
+            Account(2, 1, "HDFC Debit", AccountType.DEBIT_CARD, 12000.0),
+            Account(3, 1, "SBI Credit", AccountType.CREDIT_CARD, -3000.0),
+            Account(4, 1, "GPay", AccountType.UPI, 2500.0)
         )
         AccountScreenContent(
             accounts = uiState.accountList,

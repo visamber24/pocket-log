@@ -43,7 +43,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.lazysloth.pocketlog.R
-import com.lazysloth.pocketlog.database.data.Account1
+import com.lazysloth.pocketlog.database.data.Account
 import com.lazysloth.pocketlog.database.data.Category
 import com.lazysloth.pocketlog.database.data.TransactionType
 import com.lazysloth.pocketlog.ui.screen.home.uiState.AddTransactionUiState
@@ -86,7 +86,7 @@ fun AddTransactionScreen(popBackStack: () -> Unit) {
 @Composable
 fun AddTransactionScreenImpl(
     uiState: AddTransactionUiState,
-    onAccountSelected: (Account1) -> Unit,
+    onAccountSelected: (Account) -> Unit,
     onAmountChange: (String) -> Unit,
     onExpandedAccount: (Boolean) -> Unit,
     onExpandedCategory: (Boolean) -> Unit,
@@ -153,7 +153,7 @@ fun AddTransactionScreenImpl(
 fun AddItems(
     modifier: Modifier,
     state: AddTransactionUiState,
-    onAccountSelected: (Account1) -> Unit,
+    onAccountSelected: (Account) -> Unit,
     onAmountChange: (String) -> Unit,
     onExpandedAccount: (Boolean) -> Unit,
     onExpandedCategory: (Boolean) -> Unit,

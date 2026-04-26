@@ -1,7 +1,5 @@
 package com.lazysloth.pocketlog.ui.screen.contentscreen
 
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -29,7 +27,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.lazysloth.pocketlog.R
-import com.lazysloth.pocketlog.database.data.Account
+import com.lazysloth.pocketlog.database.data.AccountType
 import com.lazysloth.pocketlog.ui.screen.contentscreen.viewmodel.AddAccountViewModel
 import com.lazysloth.pocketlog.ui.screen.home.uiState.AddAccountUiState
 import com.lazysloth.pocketlog.ui.theme.inputFieldShape
@@ -60,7 +58,7 @@ fun AddAccountScreenImpl(
     onInitialBalanceChange: (String) -> Unit,
     onAccountNameChange: (String) -> Unit,
     onExpandedAccountType: (Boolean) -> Unit,
-    onAccountSelected: (Account) -> Unit
+    onAccountSelected: (AccountType) -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -105,7 +103,7 @@ fun AddItems(
     onInitialBalanceChange: (String) -> Unit,
     onAccountNameChange: (String) -> Unit,
     onExpandedAccountType:(Boolean)->Unit,
-    onAccountSelected: (Account)-> Unit,
+    onAccountSelected: (AccountType)-> Unit,
 ) {
 
     OutlinedTextField(
@@ -164,7 +162,7 @@ fun AddItems(
         ExposedDropdownMenu(
             expanded = uiState.accountTypeExpanded,
             onDismissRequest = { onExpandedAccountType(false) }) {
-            uiState.accounts.forEach { selectionOption ->
+            uiState.accountTypes.forEach { selectionOption ->
                 DropdownMenuItem(
                     text = { Text(selectionOption.name) },
                     onClick = {

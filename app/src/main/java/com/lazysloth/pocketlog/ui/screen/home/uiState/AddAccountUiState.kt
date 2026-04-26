@@ -1,19 +1,19 @@
 package com.lazysloth.pocketlog.ui.screen.home.uiState
 
+import com.lazysloth.pocketlog.database.data.AccountType
 import com.lazysloth.pocketlog.database.data.Account
-import com.lazysloth.pocketlog.database.data.Account1
 
 data class AddAccountUiState(
     val id: Long = 0,
     val accountName: String = "",
     val initialBalance: String = "0.0",
     val accountTypeExpanded: Boolean = false,
-    val accountType: Account = Account.Cash,
-    val accounts: List<Account> = Account.entries
+    val accountType: AccountType = AccountType.Cash,
+    val accountTypes: List<AccountType> = AccountType.entries
 ) {
 }
 
-fun AddAccountUiState.toAccount(userId: Int): Account1 = Account1(
+fun AddAccountUiState.toAccount(userId: Int): Account = Account(
     id = id,
     userId = userId,
     name = accountName,
@@ -21,7 +21,7 @@ fun AddAccountUiState.toAccount(userId: Int): Account1 = Account1(
     type = accountType
 )
 
-fun Account1.toAddAccountUiState(): AddAccountUiState = AddAccountUiState(
+fun Account.toAddAccountUiState(): AddAccountUiState = AddAccountUiState(
     id = id,
     accountName = name,
     initialBalance = balance.toString(),

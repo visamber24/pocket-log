@@ -32,15 +32,15 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.lazysloth.pocketlog.R
+import com.lazysloth.pocketlog.database.data.AccountType
 import com.lazysloth.pocketlog.database.data.Account
-import com.lazysloth.pocketlog.database.data.Account1
 import com.lazysloth.pocketlog.ui.screen.contentscreen.viewmodel.EditAccountScreenViewModel
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun AccountScreenContent(
     modifier: Modifier = Modifier,
-    accounts: List<Account1>,
+    accounts: List<Account>,
     onClickEdit: () -> Unit
 ) {
 
@@ -69,7 +69,7 @@ fun AccountScreenContent(
 
 @Composable
 fun AccountItem(
-    account: Account1,
+    account: Account,
     onEdit: () -> Unit,
     onDelete: () -> Unit,
     onIgnore: () -> Unit
@@ -173,10 +173,10 @@ fun AccountItem(
 @Composable
 fun AccountItemPreview() {
     val sampleList = listOf(
-        Account1(1, 1, "Cash", Account.Cash, 5000.0),
-        Account1(2, 1, "HDFC Debit", Account.DEBIT_CARD, 12000.0),
-        Account1(3, 1, "SBI Credit", Account.CREDIT_CARD, -3000.0),
-        Account1(4, 1, "GPay", Account.UPI, 2500.0)
+        Account(1, 1, "Cash", AccountType.Cash, 5000.0),
+        Account(2, 1, "HDFC Debit", AccountType.DEBIT_CARD, 12000.0),
+        Account(3, 1, "SBI Credit", AccountType.CREDIT_CARD, -3000.0),
+        Account(4, 1, "GPay", AccountType.UPI, 2500.0)
     )
     MaterialTheme {
         AccountScreenContent(accounts = sampleList, onClickEdit = {})

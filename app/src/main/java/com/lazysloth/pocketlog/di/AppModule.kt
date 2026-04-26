@@ -1,13 +1,16 @@
 package com.lazysloth.pocketlog.di
 
 import com.lazysloth.pocketlog.database.repository.AccountRepository
+import com.lazysloth.pocketlog.database.repository.CategoryRepository
 import com.lazysloth.pocketlog.database.repository.OfflineAccountRepository
+import com.lazysloth.pocketlog.database.repository.OfflineCategoryRepository
 import com.lazysloth.pocketlog.database.repository.OfflineTransactionRepository
 import com.lazysloth.pocketlog.database.repository.PocketLogDatabase
 import com.lazysloth.pocketlog.database.repository.TransactionRepository
 import com.lazysloth.pocketlog.database.repository.UserRepository
 import com.lazysloth.pocketlog.ui.screen.authentication.viewmodel.AuthViewModel
 import com.lazysloth.pocketlog.ui.screen.contentscreen.viewmodel.AddAccountViewModel
+import com.lazysloth.pocketlog.ui.screen.contentscreen.viewmodel.AddCategoryScreenViewModel
 import com.lazysloth.pocketlog.ui.screen.contentscreen.viewmodel.EditAccountScreenViewModel
 import com.lazysloth.pocketlog.ui.screen.other.viewmodel.AddTransactionScreenViewmodel
 import com.lazysloth.pocketlog.ui.screen.home.viewmodel.DashboardScreenViewModel
@@ -28,6 +31,7 @@ val appModule = module {
     single { get<PocketLogDatabase>().userDao() }
     single { get<PocketLogDatabase>().getTransactionItem() }
     single { get<PocketLogDatabase>().getAccount() }
+    single { get<PocketLogDatabase>().getCategory() }
 
     // 3.Preference
     single { UserPersists(get(), get()) }
@@ -39,6 +43,7 @@ val appModule = module {
     }
     single<UserRepository> { UserRepository(get()) }
     single <AccountRepository>{ OfflineAccountRepository(get()) }
+    single <CategoryRepository>{ OfflineCategoryRepository(get()) }
 
     // 5.viewmodel
 
@@ -92,6 +97,11 @@ val appModule = module {
     viewModel {
         EditAccountScreenViewModel(
             get(),
+            get()
+        )
+    }
+    viewModel{
+        AddCategoryScreenViewModel(
             get()
         )
     }
