@@ -38,7 +38,7 @@ import com.lazysloth.pocketlog.ui.screen.contentscreen.viewmodel.EditAccountScre
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun AccountScreenContent(
+fun AccountContentScreen(
     modifier: Modifier = Modifier,
     accounts: List<Account>,
     onClickEdit: () -> Unit
@@ -171,7 +171,7 @@ fun AccountItem(
     showSystemUi = true
 )
 @Composable
-fun AccountItemPreview() {
+fun AccountItemPreviewScreen() {
     val sampleList = listOf(
         Account(1, 1, "Cash", AccountType.Cash, 5000.0),
         Account(2, 1, "HDFC Debit", AccountType.DEBIT_CARD, 12000.0),
@@ -179,6 +179,6 @@ fun AccountItemPreview() {
         Account(4, 1, "GPay", AccountType.UPI, 2500.0)
     )
     MaterialTheme {
-        AccountScreenContent(accounts = sampleList, onClickEdit = {})
+        AccountContentScreen(accounts = sampleList, onClickEdit = {})
     }
 }

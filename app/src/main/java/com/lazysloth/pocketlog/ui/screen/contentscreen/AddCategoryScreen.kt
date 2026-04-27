@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -18,6 +20,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -27,10 +31,16 @@ import androidx.compose.ui.unit.sp
 import com.lazysloth.pocketlog.R
 import com.lazysloth.pocketlog.database.data.CategoryType
 import com.lazysloth.pocketlog.ui.screen.contentscreen.viewmodel.AddCategoryScreenViewModel
+import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddCategoryScreen(modifier: Modifier = Modifier,viewModel: AddCategoryScreenViewModel) {
+fun AddCategoryScreen(
+    popBackStack: () -> Unit,
+    modifier: Modifier = Modifier,
+    viewModel: AddCategoryScreenViewModel = koinViewModel()
+) {
+    val uiState by viewModel.uiState.collectAsState()
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -52,7 +62,12 @@ fun AddCategoryScreen(modifier: Modifier = Modifier,viewModel: AddCategoryScreen
             placeholder = { Text("e.g. Groceries") },
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(12.dp),
-            leadingIcon = { Icon(painter = painterResource( R.drawable.edit_24px), contentDescription = null) }
+            leadingIcon = {
+                Icon(
+                    painter = painterResource(R.drawable.edit_24px),
+                    contentDescription = null
+                )
+            }
         )
 
         // Type Selection (Simplified Radio Group)
@@ -66,7 +81,7 @@ fun AddCategoryScreen(modifier: Modifier = Modifier,viewModel: AddCategoryScreen
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            CategoryType.values().forEach { type ->
+            CategoryType.entries.forEach { type ->
                 FilterChip(
                     selected = viewModel.selectedType == type,
                     onClick = { viewModel.onTypeChange(type) },
@@ -78,10 +93,21 @@ fun AddCategoryScreen(modifier: Modifier = Modifier,viewModel: AddCategoryScreen
         }
 
         Spacer(modifier = Modifier.height(24.dp))
+        LazyRow() {
+            items(uiState.categoryIcon) { icon ->
+                Icon(
+                    painter = painterResource(icon.iconRes),
+                    contentDescription = null
+                )
+            }
+        }
 
         // Save Button
         Button(
-            onClick = { viewModel.saveCategory(userId = 1) }, // Replace with actual userId
+            onClick = {
+                viewModel.saveCategory(userId = 1)
+                popBackStack()
+            }, // Replace with actual userId
             modifier = Modifier
                 .fillMaxWidth()
                 .height(56.dp),

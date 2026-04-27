@@ -68,9 +68,7 @@ fun DashboardScreenContent(
     )
 
     LazyColumn(
-        flingBehavior = ScrollableDefaults.flingBehavior(),
-        modifier = modifier
-            .fillMaxSize()
+        flingBehavior = ScrollableDefaults.flingBehavior(), modifier = modifier.fillMaxSize()
 
     ) {
         items(transList) { item ->
@@ -80,7 +78,7 @@ fun DashboardScreenContent(
                 typeOfTransaction = item.transaction.transactionType,
                 amount = item.transaction.amount,
                 category = item.transaction.category,
-                account =item.account.name ,
+                account = item.account.name,
                 note = item.transaction.note,
                 description = item.transaction.description,
                 modifier = Modifier.clickable(enabled = true, onClick = {
@@ -95,8 +93,7 @@ fun DashboardScreenContent(
 
     if (isDialogOpen) {
         Dialog(
-            onDismissRequest = { isDialogOpen = false }
-        ) {
+            onDismissRequest = { isDialogOpen = false }) {
             val window = (LocalView.current.parent as DialogWindowProvider).window
             SideEffect {
                 window.setDimAmount(0.5f) // <- no dark overlay
@@ -158,9 +155,7 @@ fun RecordContent(
 
             // Icon
             Icon(
-                painter = icon,
-                contentDescription = null,
-                modifier = Modifier.size(24.dp)
+                painter = icon, contentDescription = null, modifier = Modifier.size(24.dp)
             )
 
             Spacer(modifier = Modifier.width(8.dp))
@@ -170,15 +165,10 @@ fun RecordContent(
                 modifier = Modifier.weight(1f)
             ) {
                 Text(
-                    text = category.name,
-                    fontSize = 14.sp,
-                    maxLines = 1
+                    text = category.name, fontSize = 14.sp, maxLines = 1
                 )
                 Text(
-                    text = note,
-                    fontSize = 11.sp,
-                    color = Color.Gray,
-                    maxLines = 1
+                    text = note, fontSize = 11.sp, color = Color.Gray, maxLines = 1
                 )
             }
 
@@ -189,15 +179,10 @@ fun RecordContent(
                 horizontalAlignment = Alignment.End
             ) {
                 Text(
-                    text = "₹$amount",
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Bold
+                    text = "₹$amount", fontSize = 14.sp, fontWeight = FontWeight.Bold
                 )
                 Text(
-                    text = account,
-                    fontSize = 11.sp,
-                    color = Color.Gray,
-                    maxLines = 1
+                    text = account, fontSize = 11.sp, color = Color.Gray, maxLines = 1
                 )
             }
         }

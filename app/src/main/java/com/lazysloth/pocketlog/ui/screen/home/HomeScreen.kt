@@ -25,6 +25,7 @@ fun HomeScreen(
     onClickAi: () -> Unit,
     onClickAddAccount: () -> Unit,
     onClickEditAccount: () -> Unit,
+    onClickAddCategory: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     var currentScreen by rememberSaveable { mutableStateOf(ApplicationBottomNavigation.HOME) }
@@ -74,6 +75,10 @@ fun HomeScreen(
                         StatsScreen()
                     }
 
+                    ApplicationBottomNavigation.CATEGORY -> {
+                        CategoryScreen(onClickAdd = { onClickAddCategory() })
+                    }
+
                     ApplicationBottomNavigation.PROFILE -> {
                         ProfileScreen()
                     }
@@ -96,6 +101,7 @@ fun HomeScreenPreview() {
         onClickSetting = {},
         onClickAddAccount = {},
         modifier = Modifier.fillMaxSize(),
-        onClickEditAccount = {}
+        onClickEditAccount = {},
+        onClickAddCategory = {},
     )
 }

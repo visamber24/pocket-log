@@ -17,28 +17,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.lazysloth.pocketlog.R
-import com.lazysloth.pocketlog.database.data.AccountType
-import com.lazysloth.pocketlog.database.data.Account
-import com.lazysloth.pocketlog.ui.navigationitem.ApplicationBottomNavigation
-import com.lazysloth.pocketlog.ui.screen.contentscreen.AccountContentScreen
-import com.lazysloth.pocketlog.ui.screen.home.viewmodel.AccountScreenViewModel
+import com.lazysloth.pocketlog.ui.screen.contentscreen.CategoryContentScreen
+import com.lazysloth.pocketlog.ui.screen.home.viewmodel.CategoryScreenViewModel
 import org.koin.androidx.compose.koinViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AccountScreen(
+fun CategoryScreen(
     onClickAdd: () -> Unit,
-    onClickEditAccount: () -> Unit
+
 ) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = {
-                    Text(
-                        text = ApplicationBottomNavigation.ACCOUNT.name,
-//                        modifier = Modifier.padding(20.dp)
-                    )
-                },
+                title = { Text("Category") }
             )
         },
         floatingActionButton = {
@@ -46,29 +38,17 @@ fun AccountScreen(
                 verticalArrangement = Arrangement.spacedBy(12.dp),
                 horizontalAlignment = Alignment.End,
             ) {
-                FloatingActionButton(onClick = { onClickAdd() }) {
+                FloatingActionButton(onClick = {onClickAdd()}) {
                     Icon(
                         painter = painterResource(R.drawable.add_24px),
-                        contentDescription = "add account"
+                        contentDescription = "add Category"
                     )
                 }
             }
-
-
         }
-    ) {
-        val vm: AccountScreenViewModel = koinViewModel()
-        val uiState by vm.uiStateList.collectAsState()
-        val sampleList = listOf(
-            Account(1, 1, "Cash", AccountType.Cash, 5000.0),
-            Account(2, 1, "HDFC Debit", AccountType.DEBIT_CARD, 12000.0),
-            Account(3, 1, "SBI Credit", AccountType.CREDIT_CARD, -3000.0),
-            Account(4, 1, "GPay", AccountType.UPI, 2500.0)
-        )
-        AccountContentScreen(
-            accounts = uiState.accountList,
-            onClickEdit = { onClickEditAccount() },
-            modifier = Modifier.padding(it)
-        )
+    ) {innerPadding ->
+        val vm: CategoryScreenViewModel = koinViewModel()
+        val uiState by vm.uiState.collectAsState()
+        CategoryContentScreen(modifier = Modifier.padding(innerPadding),uiState.categoryList,viewModel = vm)
     }
 }

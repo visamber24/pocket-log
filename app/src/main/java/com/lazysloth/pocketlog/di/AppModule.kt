@@ -17,6 +17,7 @@ import com.lazysloth.pocketlog.ui.screen.home.viewmodel.DashboardScreenViewModel
 import com.lazysloth.pocketlog.ui.screen.contentscreen.viewmodel.EditTransactionScreenViewmodel
 import com.lazysloth.pocketlog.ui.screen.contentscreen.viewmodel.ProfileScreenViewmodel
 import com.lazysloth.pocketlog.ui.screen.home.viewmodel.AccountScreenViewModel
+import com.lazysloth.pocketlog.ui.screen.home.viewmodel.CategoryScreenViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
@@ -103,6 +104,11 @@ val appModule = module {
     viewModel{
         AddCategoryScreenViewModel(
             get()
+        )
+    }
+    viewModel {
+        CategoryScreenViewModel(
+
         )
     }
 

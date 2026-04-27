@@ -23,6 +23,7 @@ import com.lazysloth.pocketlog.ui.screen.authentication.ForgetPasswordScreen
 import com.lazysloth.pocketlog.ui.screen.authentication.LoginScreen
 import com.lazysloth.pocketlog.ui.screen.authentication.SignupScreen
 import com.lazysloth.pocketlog.ui.screen.contentscreen.AddAccountScreen
+import com.lazysloth.pocketlog.ui.screen.contentscreen.AddCategoryScreen
 import com.lazysloth.pocketlog.ui.screen.contentscreen.TransactionDetailsScreen
 import com.lazysloth.pocketlog.ui.screen.contentscreen.TransactionEditScreen
 import com.lazysloth.pocketlog.ui.screen.home.HomeScreen
@@ -120,6 +121,9 @@ fun MainScreenNav(
                     },
                     onClickEditAccount = {
                         navController.navigate("edit_account")
+                    },
+                    onClickAddCategory = {
+                        navController.navigate("add_category_screen")
                     }
 
                 )
@@ -159,6 +163,11 @@ fun MainScreenNav(
             }
             composable(route="edit_account"){
                 EditAccountScreen(
+                    popBackStack = {navController.popBackStack()}
+                )
+            }
+            composable(route= "add_category_screen") {
+                AddCategoryScreen(
                     popBackStack = {navController.popBackStack()}
                 )
             }

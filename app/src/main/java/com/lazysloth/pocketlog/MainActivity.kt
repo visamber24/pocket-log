@@ -23,10 +23,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.lazysloth.pocketlog.di.UserPersists
 import com.lazysloth.pocketlog.ui.MainScreenNav
-import com.lazysloth.pocketlog.ui.screen.contentscreen.AddCategoryScreen
 import com.lazysloth.pocketlog.ui.screen.contentscreen.viewmodel.AddCategoryScreenViewModel
 import com.lazysloth.pocketlog.ui.theme.PocketLogTheme
-import kotlinx.coroutines.coroutineScope
 import org.koin.android.ext.android.get
 import org.koin.androidx.compose.koinViewModel
 
@@ -42,7 +40,7 @@ class MainActivity() : ComponentActivity() {
                 Scaffold(modifier = Modifier) { innerPadding ->
 //                    MainScreenNav(modifier = Modifier.padding(innerPadding),session = session)
                     val vm : AddCategoryScreenViewModel = koinViewModel()
-                    AddCategoryScreen(viewModel = vm, modifier = Modifier.padding(innerPadding))
+                    MainScreenNav(modifier = Modifier.padding(innerPadding),session = session)
                 }
             }
         }

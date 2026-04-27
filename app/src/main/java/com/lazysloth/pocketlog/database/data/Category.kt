@@ -23,8 +23,9 @@ data class Category1(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
 //    val userId: Int = 0,
+    val icon: String = "",
     val name: String = "",
-    val type: CategoryType
+    val type: CategoryType = CategoryType.EXPENSE
 )
 enum class CategoryType{
     INCOME,EXPENSE
