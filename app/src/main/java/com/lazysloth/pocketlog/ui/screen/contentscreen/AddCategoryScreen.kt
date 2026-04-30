@@ -105,7 +105,7 @@ fun AddCategoryScreen(
 
         LazyRow() {
 
-            items(uiState.categoryIcon) { icon ->
+            items(uiState.categoryIcon) { icon  ->
                 val isSelected = selectedIconKey == icon.key
                 Icon(
                     painter = painterResource(icon.iconRes),
