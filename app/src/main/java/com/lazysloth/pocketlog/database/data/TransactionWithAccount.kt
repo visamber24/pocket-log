@@ -12,5 +12,10 @@ val transaction: Transaction,
         parentColumn = "accountId",
         entityColumn = "id"
     )
-    val account: Account
+    val account: Account,
+    @Relation(
+        parentColumn = "categoryId",
+        entityColumn = "id"
+    )
+    val category: Category1?,
 )

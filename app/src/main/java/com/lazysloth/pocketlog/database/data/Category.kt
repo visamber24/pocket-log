@@ -10,19 +10,19 @@ enum class Category(val string : String) {
 }
 @Entity(
     tableName = "category",
-//    foreignKeys = [ForeignKey(
-//        entity = User::class,
-//        parentColumns = arrayOf("id"),
-//        childColumns = arrayOf("userId"),
-//        onUpdate = ForeignKey.CASCADE,
-//        onDelete = ForeignKey.CASCADE
-//    )],
-//    indices = [Index("userId")]
+    foreignKeys = [ForeignKey(
+        entity = User::class,
+        parentColumns = arrayOf("id"),
+        childColumns = arrayOf("userId"),
+        onUpdate = ForeignKey.CASCADE,
+        onDelete = ForeignKey.CASCADE
+    )],
+    indices = [Index("userId")]
 )
 data class Category1(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
-//    val userId: Int = 0,
+    val userId: Int = 0,
     val icon: String = "",
     val name: String = "",
     val type: CategoryType = CategoryType.EXPENSE

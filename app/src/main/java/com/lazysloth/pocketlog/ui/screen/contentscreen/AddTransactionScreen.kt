@@ -1,5 +1,6 @@
 package com.lazysloth.pocketlog.ui.screen.contentscreen
 
+import android.os.SystemClock
 import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -13,6 +14,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material3.Button
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
@@ -32,7 +34,9 @@ import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -44,7 +48,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.lazysloth.pocketlog.R
 import com.lazysloth.pocketlog.database.data.Account
-import com.lazysloth.pocketlog.database.data.Category
+import com.lazysloth.pocketlog.database.data.Category1
 import com.lazysloth.pocketlog.database.data.TransactionType
 import com.lazysloth.pocketlog.ui.screen.home.uiState.AddTransactionUiState
 import com.lazysloth.pocketlog.ui.screen.other.viewmodel.AddTransactionScreenViewmodel
@@ -67,15 +71,15 @@ fun AddTransactionScreen(popBackStack: () -> Unit) {
         onAmountChange = vm::onAmountChange,
         onExpandedAccount = vm::onExpandedAccount,
         onExpandedCategory = vm::onExpandedCategory,
-        onOptionSelected = vm::onOptionSelected,
+        onCategorySelected = vm::onCategorySelected,
         onTransactionTypeSelected = vm::onTransactionTypeSelected,
         onNoteValueChange = vm::onNoteValueChange,
         onDescriptionChange = vm::onDescriptionChange,
         onClickDate = vm::onClickDate,
         onDateChange = vm::onDateChange,
         onSave = {
-            vm.saveTransaction()
-            popBackStack()
+            vm.saveTransaction(popBackStack)
+
             Toast.makeText(context, "Transaction Saved", Toast.LENGTH_LONG).show()
         },
 
@@ -90,7 +94,7 @@ fun AddTransactionScreenImpl(
     onAmountChange: (String) -> Unit,
     onExpandedAccount: (Boolean) -> Unit,
     onExpandedCategory: (Boolean) -> Unit,
-    onOptionSelected: (Category) -> Unit,
+    onCategorySelected: (Category1) -> Unit,
     onTransactionTypeSelected: (TransactionType) -> Unit,
     onNoteValueChange: (String) -> Unit,
     onDescriptionChange: (String) -> Unit,
@@ -106,10 +110,8 @@ fun AddTransactionScreenImpl(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(stringResource(R.string.add_transaction)) }
-            )
-        }
-    ) { innerPadding ->
+                title = { Text(stringResource(R.string.add_transaction)) })
+        }) { innerPadding ->
         Column(
 //            verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -125,7 +127,7 @@ fun AddTransactionScreenImpl(
                 onAmountChange,
                 onExpandedAccount = onExpandedAccount,
                 onExpandedCategory,
-                onOptionSelected,
+                onCategorySelected,
                 onTransactionTypeSelected,
                 onNoteValueChange,
                 onDescriptionChange,
@@ -135,13 +137,23 @@ fun AddTransactionScreenImpl(
 
 
             Spacer(Modifier.height(8.dp))
+
             Button(
                 onClick = {
-                    onSave()
+                    if (!uiState.isSaving) {
+                        onSave()
+                    }
+
                 },
-                enabled = (uiState.addAmount.isNotBlank() && uiState.options.isNotEmpty())
+                enabled = (uiState.addAmount.isNotBlank() && uiState.categoryList.isNotEmpty() && !uiState.isSaving)
             ) {
-                Text("Save")
+                Text(
+                    if (uiState.isSaving) {
+                        "Saving.."
+                    } else {
+                        "Save"
+                    }
+                )
             }
         }
     }
@@ -157,20 +169,17 @@ fun AddItems(
     onAmountChange: (String) -> Unit,
     onExpandedAccount: (Boolean) -> Unit,
     onExpandedCategory: (Boolean) -> Unit,
-    onOptionSelected: (Category) -> Unit,
+    onCategorySelected: (Category1) -> Unit,
     onTransactionTypeSelected: (TransactionType) -> Unit,
     onNoteValueChange: (String) -> Unit,
     onDescriptionChange: (String) -> Unit,
     onClickDate: (Boolean) -> Unit,
     onDateChange: (Date) -> Unit
 ) {
-    val selectedAccountName =
-        state.accounts.find { it.id == state.selectedAccountId }?.name ?: ""
+    val selectedAccountName = state.accounts.find { it.id == state.selectedAccountId }?.name ?: ""
 
     ExposedDropdownMenuBox(
-        expanded = state.expandedAccount,
-        onExpandedChange = { onExpandedAccount(it) }
-    ) {
+        expanded = state.expandedAccount, onExpandedChange = { onExpandedAccount(it) }) {
         OutlinedTextField(
             modifier = Modifier
                 .fillMaxWidth()
@@ -189,16 +198,13 @@ fun AddItems(
             shape = inputFieldShape
         )
         ExposedDropdownMenu(
-            expanded = state.expandedAccount,
-            onDismissRequest = { onExpandedAccount(false) }) {
+            expanded = state.expandedAccount, onDismissRequest = { onExpandedAccount(false) }) {
             state.accounts.forEach { selectionOption ->
                 DropdownMenuItem(
-                    text = { Text(selectionOption.name) },
-                    onClick = {
+                    text = { Text(selectionOption.name) }, onClick = {
                         onAccountSelected(selectionOption)
                         onExpandedAccount(false)
-                    },
-                    contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding
+                    }, contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding
                 )
 
             }
@@ -223,18 +229,17 @@ fun AddItems(
     )
 
 
-
+    val selectedCategoryName =
+        state.categoryList.find { it.id == state.selectedCategoryId }?.name ?: ""
     ExposedDropdownMenuBox(
-        expanded = state.expandedCategory,
-        onExpandedChange = { onExpandedCategory(it) }
-    ) {
+        expanded = state.expandedCategory, onExpandedChange = { onExpandedCategory(it) }) {
         OutlinedTextField(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(dimensionResource(R.dimen.transaction_input_item_padding))
                 .menuAnchor(),
             readOnly = true,
-            value = state.option.name,
+            value = selectedCategoryName,
             onValueChange = {},
             label = { Text("Category") },
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = state.expandedCategory) },
@@ -246,16 +251,13 @@ fun AddItems(
             shape = inputFieldShape
         )
         ExposedDropdownMenu(
-            expanded = state.expandedCategory,
-            onDismissRequest = { onExpandedCategory(false) }) {
-            state.options.forEach { selectionOption ->
+            expanded = state.expandedCategory, onDismissRequest = { onExpandedCategory(false) }) {
+            state.categoryList.forEach { selectionOption ->
                 DropdownMenuItem(
-                    text = { Text(selectionOption.name) },
-                    onClick = {
-                        onOptionSelected(selectionOption)
+                    text = { Text(selectionOption.name) }, onClick = {
+                        onCategorySelected(selectionOption)
                         onExpandedCategory(false)
-                    },
-                    contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding
+                    }, contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding
                 )
 
             }
@@ -270,9 +272,7 @@ fun AddItems(
         )
 
     RadioGroup(
-        options = state.transactionType,
-        selectedOption = state.selectedType,
-        onOptionSelected = {
+        options = state.transactionType, selectedOption = state.selectedType, onOptionSelected = {
             onTransactionTypeSelected(it)
         })
 
@@ -318,8 +318,7 @@ fun AddItems(
             onValueChange = {},
             readOnly = true,
             enabled = false,
-            modifier = Modifier
-                .width(dimensionResource(R.dimen.date_button_padding))
+            modifier = Modifier.width(dimensionResource(R.dimen.date_button_padding))
         )
     }
 
@@ -327,17 +326,14 @@ fun AddItems(
     val datePickerState = rememberDatePickerState()
     println("dateOpen = ${state.dateOpen}")
     if (state.dateOpen) {
-        DatePickerDialog(
-            onDismissRequest = { onClickDate(false) },
-            confirmButton = {
-                TextButton(onClick = { onClickDate(false) }) {
-                    datePickerState.selectedDateMillis?.let { millis ->
-                        onDateChange(Date(millis))
-                    }
-                    Text("OK")
+        DatePickerDialog(onDismissRequest = { onClickDate(false) }, confirmButton = {
+            TextButton(onClick = { onClickDate(false) }) {
+                datePickerState.selectedDateMillis?.let { millis ->
+                    onDateChange(Date(millis))
                 }
+                Text("OK")
             }
-        ) {
+        }) {
             DatePicker(
                 showModeToggle = true,
                 state = datePickerState,
@@ -365,8 +361,7 @@ fun <T : Enum<T>> RadioGroup(
 
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .clickable { onOptionSelected(option) } // make whole row clickable
+                modifier = Modifier.clickable { onOptionSelected(option) } // make whole row clickable
             ) {
 
                 RadioButton(
@@ -375,8 +370,7 @@ fun <T : Enum<T>> RadioGroup(
                 )
 
                 Text(
-                    text = option.name,
-                    modifier = Modifier.padding(start = 4.dp)
+                    text = option.name, modifier = Modifier.padding(start = 4.dp)
                 )
             }
         }
@@ -392,6 +386,8 @@ fun AddTransactionPreview() {
             inputNote = "Groceries",
             inputDescription = "Weekly shopping at the supermarket",
             accounts = listOf(),
+            categoryList = listOf(),
+            category = Category1(),
             selectedType = TransactionType.DEBIT,
         )
         Column(
@@ -409,12 +405,11 @@ fun AddTransactionPreview() {
                 onExpandedAccount = {},
                 onExpandedCategory = {},
                 onTransactionTypeSelected = {},
-                onOptionSelected = {},
+                onCategorySelected = {},
                 onNoteValueChange = {},
                 onDescriptionChange = {},
                 onClickDate = {},
-                onDateChange = {}
-            )
+                onDateChange = {})
         }
     }
 }

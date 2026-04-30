@@ -7,7 +7,7 @@ data class TransactionDetailsUiState(
     val amount: String = "",
     val accountList: List<String> = listOf(),
     val accountName: String = "",
-    val category: String = "",
+    val category: String? = "",
     val transactionType: String = "",
     val note: String = "",
     val description: String = "",

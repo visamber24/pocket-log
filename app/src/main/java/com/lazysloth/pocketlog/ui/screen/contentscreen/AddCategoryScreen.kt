@@ -1,5 +1,8 @@
 package com.lazysloth.pocketlog.ui.screen.contentscreen
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -8,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -22,8 +26,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -79,25 +87,46 @@ fun AddCategoryScreen(
 
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             CategoryType.entries.forEach { type ->
                 FilterChip(
                     selected = viewModel.selectedType == type,
                     onClick = { viewModel.onTypeChange(type) },
                     label = { Text(type.name) },
-                    modifier = Modifier.weight(1f),
+                    modifier = Modifier.weight(2f),
                     shape = RoundedCornerShape(8.dp)
                 )
             }
         }
-
         Spacer(modifier = Modifier.height(24.dp))
+        val selectedIconKey by viewModel.selectedIcon.collectAsState()
+        val colorScheme = MaterialTheme.colorScheme
+
         LazyRow() {
+
             items(uiState.categoryIcon) { icon ->
+                val isSelected = selectedIconKey == icon.key
                 Icon(
                     painter = painterResource(icon.iconRes),
-                    contentDescription = null
+                    contentDescription = null,
+                    modifier = Modifier
+                        .padding(horizontal = 12.dp)
+                        .size(70.dp, 50.dp)
+                        .background(
+                            if (isSelected) colorScheme.primary.copy(alpha = 0.2f)
+                            else Color.Transparent
+                        )
+                        .border(
+                            width = if (isSelected) 2.dp else 0.dp,
+                            color = if (isSelected) colorScheme.primary
+                            else Color.Transparent,
+//                            shape = RoundedCornerShape(12.dp)
+                        )
+                        .clickable(enabled = true, onClick = {
+                            viewModel.selectedIcon.value = icon.key
+                        })
+                        .padding(8.dp)
                 )
             }
         }
@@ -105,14 +134,14 @@ fun AddCategoryScreen(
         // Save Button
         Button(
             onClick = {
-                viewModel.saveCategory(userId = 1)
+                viewModel.saveCategory()
                 popBackStack()
             }, // Replace with actual userId
             modifier = Modifier
                 .fillMaxWidth()
                 .height(56.dp),
             shape = RoundedCornerShape(12.dp),
-            enabled = viewModel.name.isNotBlank()
+            enabled = viewModel.name.isNotBlank() && viewModel.selectedIcon.collectAsState().value != null
         ) {
             Icon(painter = painterResource(R.drawable.check_24px), contentDescription = null)
             Spacer(Modifier.width(8.dp))

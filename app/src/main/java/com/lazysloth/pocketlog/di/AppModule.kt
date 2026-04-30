@@ -43,8 +43,8 @@ val appModule = module {
         OfflineTransactionRepository(get())
     }
     single<UserRepository> { UserRepository(get()) }
-    single <AccountRepository>{ OfflineAccountRepository(get()) }
-    single <CategoryRepository>{ OfflineCategoryRepository(get()) }
+    single<AccountRepository> { OfflineAccountRepository(get()) }
+    single<CategoryRepository> { OfflineCategoryRepository(get()) }
 
     // 5.viewmodel
 
@@ -66,14 +66,16 @@ val appModule = module {
         AddTransactionScreenViewmodel(
             get(),
             get(),
+            get(),
             get()
-            )
+        )
     }
     viewModel {
         EditTransactionScreenViewmodel(
             get(),
             get(),
             get(),
+            get()
         )
     }
     viewModel {
@@ -101,14 +103,16 @@ val appModule = module {
             get()
         )
     }
-    viewModel{
+    viewModel {
         AddCategoryScreenViewModel(
+            get(),
             get()
         )
     }
     viewModel {
         CategoryScreenViewModel(
-
+            get(),
+            get()
         )
     }
 

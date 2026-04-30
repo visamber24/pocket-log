@@ -96,7 +96,7 @@ fun TransactionDetailsScreen(onBack: () -> Unit) {
 
 
 @Composable
-private fun DetailsRow(label: String, value: String) {
+private fun DetailsRow(label: String, value: String?) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.Top,
@@ -108,12 +108,14 @@ private fun DetailsRow(label: String, value: String) {
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.weight(0.35f),
         )
-        Text(
-            text = value,
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurface,
-            modifier = Modifier.weight(0.65f),
-        )
+        if (value != null) {
+            Text(
+                text = value,
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurface,
+                modifier = Modifier.weight(0.65f),
+            )
+        }
     }
 }
 

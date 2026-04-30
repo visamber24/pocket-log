@@ -43,7 +43,6 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogWindowProvider
 import com.lazysloth.pocketlog.R
-import com.lazysloth.pocketlog.database.data.Category
 import com.lazysloth.pocketlog.database.data.TransactionType
 import com.lazysloth.pocketlog.database.data.TransactionWithAccount
 import com.lazysloth.pocketlog.ui.screen.contentscreen.viewmodel.EditTransactionScreenViewmodel
@@ -77,8 +76,8 @@ fun DashboardScreenContent(
                 icon = painterResource(R.drawable.donut_large_24px),
                 typeOfTransaction = item.transaction.transactionType,
                 amount = item.transaction.amount,
-                category = item.transaction.category,
-                account = item.account.name,
+                accountName = item.account.name,
+                categoryName = item.category?.name,
                 note = item.transaction.note,
                 description = item.transaction.description,
                 modifier = Modifier.clickable(enabled = true, onClick = {
@@ -134,8 +133,8 @@ fun RecordContent(
     icon: Painter,
     typeOfTransaction: TransactionType,
     amount: Double,
-    category: Category,
-    account: String,
+    categoryName: String?,
+    accountName: String,
     note: String,
     description: String,
     modifier: Modifier = Modifier
@@ -164,9 +163,11 @@ fun RecordContent(
             Column(
                 modifier = Modifier.weight(1f)
             ) {
-                Text(
-                    text = category.name, fontSize = 14.sp, maxLines = 1
-                )
+                if (categoryName != null) {
+                    Text(
+                        text = categoryName, fontSize = 14.sp, maxLines = 1
+                    )
+                }
                 Text(
                     text = note, fontSize = 11.sp, color = Color.Gray, maxLines = 1
                 )
@@ -182,7 +183,7 @@ fun RecordContent(
                     text = "₹$amount", fontSize = 14.sp, fontWeight = FontWeight.Bold
                 )
                 Text(
-                    text = account, fontSize = 11.sp, color = Color.Gray, maxLines = 1
+                    text = accountName, fontSize = 11.sp, color = Color.Gray, maxLines = 1
                 )
             }
         }

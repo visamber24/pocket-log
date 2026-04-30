@@ -96,7 +96,7 @@ fun TransactionWithAccount.toItemDetail(): TransactionDetailsUiState = Transacti
     amount = transaction.amount.toString(),
 
     accountName = account.name,
-    category = transaction.category.name,
+    category = category?.name,
     transactionType = transaction.transactionType.name,
     note = transaction.note,
     description = transaction.description,

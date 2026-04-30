@@ -27,7 +27,7 @@ fun TransactionEditScreen(onSavePopBackStack: () -> Unit) {
         onAmountChange = vm::onAmountChange,
         onExpandedAccount = vm::onExpandedAccount,
         onExpandedCategory = vm::onExpandedChange,
-        onOptionSelected = vm::onOptionSelected,
+        onCategorySelected = vm::onOptionSelected,
         onTransactionTypeSelected = vm::onTransactionTypeSelected,
         onNoteValueChange = vm::onNoteValueChange,
         onDescriptionChange = vm::onDescriptionChange,

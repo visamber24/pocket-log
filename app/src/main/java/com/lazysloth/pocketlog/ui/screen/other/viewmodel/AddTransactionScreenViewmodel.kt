@@ -1,12 +1,14 @@
 package com.lazysloth.pocketlog.ui.screen.other.viewmodel
 
+import androidx.compose.runtime.Composable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.lazysloth.pocketlog.database.data.Account
-import com.lazysloth.pocketlog.database.data.Category
+import com.lazysloth.pocketlog.database.data.Category1
 import com.lazysloth.pocketlog.database.data.Transaction
 import com.lazysloth.pocketlog.database.data.TransactionType
 import com.lazysloth.pocketlog.database.repository.AccountRepository
+import com.lazysloth.pocketlog.database.repository.CategoryRepository
 import com.lazysloth.pocketlog.database.repository.TransactionRepository
 import com.lazysloth.pocketlog.di.UserPersists
 import com.lazysloth.pocketlog.ui.screen.home.uiState.AddTransactionUiState
@@ -15,6 +17,8 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import java.time.ZoneId
 import java.time.ZonedDateTime
 import java.util.Date
@@ -22,17 +26,13 @@ import java.util.Date
 class AddTransactionScreenViewmodel(
     private val transactionRepository: TransactionRepository,
     private val userPersists: UserPersists,
-    private val accountRepository: AccountRepository
+    private val accountRepository: AccountRepository,
+    private val categoryRepository: CategoryRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(AddTransactionUiState())
     val uiState: StateFlow<AddTransactionUiState> = _uiState.asStateFlow()
 
-    init {
-
-//            loadAccounts()
-
-    }
 
     init {
         viewModelScope.launch {
@@ -44,6 +44,16 @@ class AddTransactionScreenViewmodel(
                     }
                 }
         }
+        viewModelScope.launch {
+            categoryRepository
+                .getCategoryByUserId(userPersists.currentId)
+                .collect { categories ->
+                    _uiState.update {
+                        it.copy(categoryList = categories)
+                    }
+                }
+        }
+
     }
 //    fun loadAccounts(){
 //        viewModelScope.launch {
@@ -86,9 +96,9 @@ class AddTransactionScreenViewmodel(
         }
     }
 
-    fun onOptionSelected(option: Category) {
+    fun onCategorySelected(category: Category1) {
         _uiState.update {
-            it.copy(option = option)
+            it.copy(selectedCategoryId = category.id)
         }
     }
 
@@ -120,26 +130,39 @@ class AddTransactionScreenViewmodel(
         }
     }
 
-
-
-    fun saveTransaction() {
-        viewModelScope.launch {
-            val userId = userPersists.currentId
-            val typeOfTransaction = _uiState.value.selectedType
-            val amount = _uiState.value.addAmount.toDouble()
-
-            val balanceDelta = if (typeOfTransaction == TransactionType.CREDIT) {
-                amount
-            } else {
-                -amount
-            }
-
-            println("the currentUserid = ${userPersists.currentId}")
-            transactionRepository.insertTransaction(
-                transaction = _uiState.value.toItem(userId),
-                balanceDelta = balanceDelta
+    //    private val _isSaving = MutableStateFlow(false)
+//    val isSaving: StateFlow<Boolean> = _isSaving
+    private val saveMutex = Mutex()
+    fun saveTransaction(pop: () -> Unit) {
+        if (_uiState.value.isSaving) return
+        _uiState.update {
+            it.copy(
+                isSaving = true
             )
+        }
+        pop()
+        viewModelScope.launch {
+            saveMutex.withLock {
+                try {
+                    val userId = userPersists.currentId
+                    val typeOfTransaction = _uiState.value.selectedType
+                    val amount = _uiState.value.addAmount.toDouble()
 
+                    val balanceDelta = if (typeOfTransaction == TransactionType.CREDIT) {
+                        amount
+                    } else {
+                        -amount
+                    }
+
+//            println("the currentUserid = ${userPersists.currentId}")
+                    transactionRepository.insertTransaction(
+                        transaction = _uiState.value.toItem(userId),
+                        balanceDelta = balanceDelta
+                    )
+                } finally {
+                    _uiState.value.isSaving = false
+                }
+            }
         }
     }
 
@@ -165,7 +188,7 @@ class AddTransactionScreenViewmodel(
         userId = userId,
         amount = addAmount.toDoubleOrNull() ?: 0.0,
         accountId = selectedAccountId!!,
-        category = option,
+        categoryId = selectedCategoryId!!,
         transactionType = selectedType,
         note = inputNote,
         description = inputDescription,
