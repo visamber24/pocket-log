@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "335513869848",
+    "project_id": "pocket-log",
+    "storage_bucket": "pocket-log.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:335513869848:android:da2a4bc53b62cb6ca3ed6d",
+        "android_client_info": {
+          "package_name": "com.lazysloth.pocketlog"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAWmhvkv6JN6hoQZFGXmrr4Q9uTyiiKkhU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

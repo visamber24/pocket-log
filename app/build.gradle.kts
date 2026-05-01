@@ -2,12 +2,12 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-
     alias(libs.plugins.ksp)
-
     //serialization plugin
     id("org.jetbrains.kotlin.plugin.serialization") version "2.0.21"
-    //room
+    //firebase
+//    id("com.android.application")
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -48,6 +48,9 @@ android {
 }
 
 dependencies {
+    //firebase
+    implementation(platform("com.google.firebase:firebase-bom:34.12.0"))
+    implementation("com.google.firebase:firebase-analytics")
     implementation(libs.androidx.ui.tooling)
     implementation(libs.androidx.ui.tooling.preview)
     //coil for display image
