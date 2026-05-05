@@ -21,9 +21,9 @@ class UserPersists(
         context.getSharedPreferences("session", Context.MODE_PRIVATE)
     private val prefs2 =
         context.getSharedPreferences("id", Context.MODE_PRIVATE)
-    var currentId: Int
-        get() = prefs.getInt("user_id", -1)
-        set(value) = prefs.edit { putInt("user_id", value) }
+    var currentId: String?
+        get() = prefs.getString("user_id", null)
+        set(value) = prefs.edit { putString("user_id", value) }
 
     var transactionId: Int
         get() = prefs2.getInt("transaction_id", -1)

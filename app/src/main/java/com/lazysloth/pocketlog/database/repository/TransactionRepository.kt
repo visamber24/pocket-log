@@ -18,7 +18,7 @@ interface TransactionRepository  {
 
     fun getAllTransactions(userId: Int?) : Flow<List<Transaction>>
 
-    fun getTransactionWithAccount(userId: Int) : Flow<List<TransactionWithAccount>>
+    fun getTransactionWithAccount(userId: String?) : Flow<List<TransactionWithAccount>>
 
 
 }

@@ -22,7 +22,7 @@ import androidx.room.PrimaryKey
 data class Account(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
-    val userId: Int = 0,
+    val userId: String? = "",
     val name: String = "",
     val type: AccountType,
     val balance: Double = 0.0,

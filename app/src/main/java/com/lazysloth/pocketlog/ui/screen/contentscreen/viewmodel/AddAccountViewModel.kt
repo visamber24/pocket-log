@@ -59,7 +59,7 @@ class AddAccountViewModel(
         }
     }
 
-    fun AddAccountUiState.toAccount(userId: Int): Account = Account(
+    fun AddAccountUiState.toAccount(userId: String?): Account = Account(
         name = accountName,
         balance = initialBalance.toDoubleOrNull() ?: 0.0,
         type = accountType,

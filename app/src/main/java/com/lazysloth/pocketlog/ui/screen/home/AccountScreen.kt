@@ -60,10 +60,10 @@ fun AccountScreen(
         val vm: AccountScreenViewModel = koinViewModel()
         val uiState by vm.uiStateList.collectAsState()
         val sampleList = listOf(
-            Account(1, 1, "Cash", AccountType.Cash, 5000.0),
-            Account(2, 1, "HDFC Debit", AccountType.DEBIT_CARD, 12000.0),
-            Account(3, 1, "SBI Credit", AccountType.CREDIT_CARD, -3000.0),
-            Account(4, 1, "GPay", AccountType.UPI, 2500.0)
+            Account(1, "", "Cash", AccountType.Cash, 5000.0),
+            Account(2, "", "HDFC Debit", AccountType.DEBIT_CARD, 12000.0),
+            Account(3, "", "SBI Credit", AccountType.CREDIT_CARD, -3000.0),
+            Account(4, "", "GPay", AccountType.UPI, 2500.0)
         )
         AccountContentScreen(
             accounts = uiState.accountList,

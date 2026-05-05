@@ -18,11 +18,11 @@ interface AccountDao {
     @Delete
     suspend fun deleteAccount(account: Account)
     @Query("SELECT * FROM accounts WHERE userId =:userId")
-    fun getAccountByUserId(userId:Int): Flow<List<Account>>
+    fun getAccountByUserId(userId: String?): Flow<List<Account>>
     @Query("SELECT * FROM accounts WHERE id = :accountId")
     fun getAccountByAccountId(accountId: Long?): Flow<Account>
     @Query("SELECT name FROM accounts WHERE userId=:userId")
-    fun getAccountName(userId: Int): Flow<List<String>>
+    fun getAccountName(userId: String?): Flow<List<String>>
 
 
 }

@@ -22,7 +22,7 @@ enum class Category(val string : String) {
 data class Category1(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
-    val userId: Int = 0,
+    val userId: String? = "",
     val icon: String = "",
     val name: String = "",
     val type: CategoryType = CategoryType.EXPENSE

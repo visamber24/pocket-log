@@ -40,5 +40,5 @@ interface TransactionItemDao {
 
     @androidx.room.Transaction
     @Query("SELECT * FROM transactionItem WHERE userId=:userId ORDER BY id DESC")
-    fun getTransactionWithAccount(userId: Int): Flow<List<TransactionWithAccount>>
+    fun getTransactionWithAccount(userId: String?): Flow<List<TransactionWithAccount>>
 }

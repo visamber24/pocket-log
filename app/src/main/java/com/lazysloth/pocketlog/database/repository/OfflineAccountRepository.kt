@@ -19,13 +19,13 @@ class OfflineAccountRepository(
         accountDao.deleteAccount(account)
     }
 
-    override fun getAccountByUserId(userId: Int): Flow<List<Account>> {
+    override fun getAccountByUserId(userId: String?): Flow<List<Account>> {
         return accountDao.getAccountByUserId(userId)
     }
 
     override fun getAccountByAccountId(accountId: Long?): Flow<Account> = accountDao.getAccountByAccountId(accountId)
 
-    override fun getAccountNameByUserId(userId: Int): Flow<List<String>> {
+    override fun getAccountNameByUserId(userId: String?): Flow<List<String>> {
         return accountDao.getAccountName(userId)
     }
 

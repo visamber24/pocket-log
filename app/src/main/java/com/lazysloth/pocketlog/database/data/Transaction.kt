@@ -21,7 +21,7 @@ import java.time.ZonedDateTime
 data class Transaction(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
-    val userId: Int?,
+    val userId: String?,
     val amount: Double,
     val accountId: Long,
     val categoryId: Long,

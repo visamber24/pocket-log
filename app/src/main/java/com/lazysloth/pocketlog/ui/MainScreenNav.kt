@@ -42,7 +42,7 @@ fun MainScreenNav(
 
     LaunchedEffect(Unit) {
         val userExists = session.checkUser()
-        startRoute = if (session.currentId != -1 && userExists) {
+        startRoute = if (session.currentId != null && userExists) {
             AuthenticationNavigation.HOME_SCREEN.name
         } else {
             "login"

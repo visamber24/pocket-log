@@ -17,7 +17,7 @@ class OfflineCategoryRepository(private val categoryDao: CategoryDao) : Category
         categoryDao.delete(category1)
     }
 
-    override fun getCategoryByUserId(userId: Int): Flow<List<Category1>> {
+    override fun getCategoryByUserId(userId: String?): Flow<List<Category1>> {
         return categoryDao.getCategoryByUserId(userId)
     }
 

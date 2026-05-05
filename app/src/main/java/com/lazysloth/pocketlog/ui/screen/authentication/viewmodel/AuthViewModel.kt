@@ -15,6 +15,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
@@ -35,7 +37,24 @@ class AuthViewModel(
     private var auth = Firebase.auth
     private var db: FirebaseAuth = FirebaseAuth.getInstance()
 
+    val _uiState = MutableStateFlow(LoginUiState())
+    val uiState: StateFlow<LoginUiState> = _uiState.asStateFlow()
 
+
+    fun onIdentifierChange(identifier: String){
+        _uiState.update {
+            it.copy(
+                identifier = identifier
+            )
+        }
+    }
+    fun onPasswordChange(password: String){
+        _uiState.update {
+            it.copy(
+                password = password
+            )
+        }
+    }
     fun hashPassword(password: String): String {
         val bytes = MessageDigest.getInstance("SHA-256").digest(password.toByteArray())
         return bytes.joinToString("") { "%02x".format(it) }
@@ -60,7 +79,7 @@ class AuthViewModel(
                 )
                 Log.d("AuthViewModel", "Signup successful -> UID: ${firebaseUser.uid}")
                 println("firebaseUid = ${firebaseUser.uid}")
-                userPersists.currentId = firebaseUser.uid.toInt()
+                userPersists.currentId = firebaseUser.uid
                 _signUpUiState.update { it.copy(isSuccess = true, error = null) }
             } catch (e: Exception) {
                 Log.e("AuthViewModel", "Signup failed", e)
@@ -79,14 +98,16 @@ class AuthViewModel(
         }
     }
 
-    private fun signIn(email: String, password: String) {
+    fun signIn(email: String, password: String) {
         // [START sign_in_with_email]
         auth.signInWithEmailAndPassword(email, password).addOnCompleteListener() { task ->
             if (task.isSuccessful) {
                 // Sign in success, update UI with the signed-in user's information
                 Log.d(TAG, "signInWithEmail:success")
-                val user = auth.currentUser
-//                    updateUI(user)
+//                val user = auth.currentUser
+                    _uiState.update { it.copy(
+                        isPasswordMatch = true
+                    ) }
             } else {
                 // If sign in fails, display a message to the user.
                 Log.w(TAG, "signInWithEmail:failure", task.exception)
@@ -96,6 +117,9 @@ class AuthViewModel(
 //                        Toast.LENGTH_SHORT,
 //                    ).show()
 //                    updateUI(null)
+                _uiState.update { it.copy(
+                    isPasswordMatch = false
+                ) }
             }
         }
         // [END sign_in_with_email]
@@ -120,9 +144,9 @@ class AuthViewModel(
     fun getUserIdByIdentifier(identifier: String) {
         viewModelScope.launch {
             if (identifier.contains("@")) {
-                userPersists.currentId = userRepository.getIdByEmailId(identifier)!!
+                userPersists.currentId = userRepository.getIdByEmailId(identifier)
             } else {
-                userPersists.currentId = userRepository.getIdByUsername(identifier)!!
+                userPersists.currentId = userRepository.getIdByUsername(identifier)
             }
         }
 

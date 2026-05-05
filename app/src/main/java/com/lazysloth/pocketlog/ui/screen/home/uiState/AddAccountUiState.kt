@@ -13,7 +13,7 @@ data class AddAccountUiState(
 ) {
 }
 
-fun AddAccountUiState.toAccount(userId: Int): Account = Account(
+fun AddAccountUiState.toAccount(userId: String?): Account = Account(
     id = id,
     userId = userId,
     name = accountName,

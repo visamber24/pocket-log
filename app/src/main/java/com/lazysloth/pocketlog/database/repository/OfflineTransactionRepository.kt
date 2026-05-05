@@ -29,7 +29,7 @@ class OfflineTransactionRepository(
         return transactionItemDao.getTransactionWithAccountByTransactionId(id)
     }
 
-    override fun getTransactionWithAccount(userId: Int): Flow<List<TransactionWithAccount>> {
+    override fun getTransactionWithAccount(userId: String?): Flow<List<TransactionWithAccount>> {
         return transactionItemDao.getTransactionWithAccount(userId)
     }
 }

@@ -14,49 +14,32 @@ class LoginViewModel(
     private val userRepository: UserRepository,
     private val userPersists: UserPersists
 ): ViewModel() {
-    val _uiState = MutableStateFlow(LoginUiState())
-    val uiState: StateFlow<LoginUiState> = _uiState.asStateFlow()
 
-
-    fun onIdentifierChange(identifier: String){
-        _uiState.update {
-            it.copy(
-                identifier = identifier
-            )
-        }
-    }
-    fun onPasswordChange(password: String){
-        _uiState.update {
-            it.copy(
-                password = password
-            )
-        }
-    }
-    fun verifyPassword(identifier: String, password: String) {
-        viewModelScope.launch {
-            if (identifier.contains("@")) {
-                val savedPassword = userRepository.getUserPasswordByEmail(identifier)
-                val isPasswordCorrect = savedPassword == password
-                _uiState.update {
-                    it.copy(
-                        checkPassword = isPasswordCorrect
-                    )
-                }
-            } else {
-                val savedPassword = userRepository.getUserPasswordByUsername(identifier)
-                val isPasswordCorrect = savedPassword == password
-                _uiState.update {
-                    it.copy(
-                        checkPassword = isPasswordCorrect
-                    )
-                }
-            }
-        }
-    }
+//    fun verifyPassword(identifier: String, password: String) {
+//        viewModelScope.launch {
+//            if (identifier.contains("@")) {
+//                val savedPassword = userRepository.getUserPasswordByEmail(identifier)
+//                val isPasswordCorrect = savedPassword == password
+//                _uiState.update {
+//                    it.copy(
+//                        checkPassword = isPasswordCorrect
+//                    )
+//                }
+//            } else {
+//                val savedPassword = userRepository.getUserPasswordByUsername(identifier)
+//                val isPasswordCorrect = savedPassword == password
+//                _uiState.update {
+//                    it.copy(
+//                        checkPassword = isPasswordCorrect
+//                    )
+//                }
+//            }
+//        }
+//    }
 }
 data class LoginUiState(
     val identifier: String = "",
     val password: String = "",
     val firebaseUid : String = "",
-    val checkPassword: Boolean = false,
+    val isPasswordMatch: Boolean = false,
 )

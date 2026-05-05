@@ -57,23 +57,26 @@ fun LoginScreen(
 ) {
     val context = LocalContext.current
     val viewModel: AuthViewModel = koinViewModel()
-    val loginViewModel : LoginViewModel = koinViewModel()
-    val loginUiState by loginViewModel.uiState.collectAsState()
-//    val uiState by viewModel.uiState.collectAsState()
-//    val signupViewModel: SignupViewModel = viewModel()
-//    val loginUiState by signupViewModel.uiState.collectAsState()
+    val loginUiState by viewModel.uiState.collectAsState()
     val focusManager = LocalFocusManager.current
 
     val onDone = {
-        loginViewModel.verifyPassword(loginUiState.identifier, loginUiState.password)
+        viewModel.signIn(loginUiState.identifier, loginUiState.password)
+//        loginViewModel.verifyPassword(loginUiState.identifier, loginUiState.password)
     }
         //check if password matches
 
-        LaunchedEffect(loginUiState.checkPassword) {
-            if (loginUiState.checkPassword) {
+        LaunchedEffect(loginUiState.isPasswordMatch) {
+            if (loginUiState.isPasswordMatch) {
                 Toast.makeText(context, "Login Successful!", Toast.LENGTH_LONG).show()
                 viewModel.getUserIdByIdentifier(loginUiState.identifier)
+
+
                 onClickGo()
+
+            }
+            else {
+                Toast.makeText(context, "Login failed ", Toast.LENGTH_SHORT).show()
 
             }
         }
@@ -89,7 +92,7 @@ fun LoginScreen(
     ) {
         TextField(
             value = loginUiState.identifier,
-            onValueChange = { loginViewModel.onIdentifierChange(it) },
+            onValueChange = { viewModel.onIdentifierChange(it) },
 
             leadingIcon = {
                 Icon(
@@ -126,7 +129,7 @@ fun LoginScreen(
 //            val visualTransform = if(password.value)
             OutlinedTextField(
                 value = loginUiState.password,
-                onValueChange = { loginViewModel.onPasswordChange(it) },
+                onValueChange = { viewModel.onPasswordChange(it) },
                 leadingIcon = {
                     Icon(
                         painter = painterResource(R.drawable.password_person_24px),

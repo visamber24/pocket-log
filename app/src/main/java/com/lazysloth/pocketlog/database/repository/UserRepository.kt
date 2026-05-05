@@ -6,7 +6,7 @@ import kotlinx.coroutines.flow.Flow
 
 class UserRepository(val userDao: UserDao) {
     suspend fun checkUser() = userDao.checkUsers()
-    suspend fun getUsernameById(id:Int) = userDao.getUsernameById(id)
+    suspend fun getUsernameById(id: String?) = userDao.getUsernameById(id)
     suspend fun getIdByUsername(username: String)  = userDao.getIdByUsername(username)
     suspend fun getIdByEmailId(emailId: String) = userDao.getIdByEmail(emailId)
     suspend fun saveUser(user: User) = userDao.saveUser(user)

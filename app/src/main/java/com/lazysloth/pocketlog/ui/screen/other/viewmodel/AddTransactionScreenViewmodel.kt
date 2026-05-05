@@ -183,7 +183,7 @@ class AddTransactionScreenViewmodel(
     }
 
 
-    fun AddTransactionUiState.toItem(userId: Int): Transaction = Transaction(
+    fun AddTransactionUiState.toItem(userId: String?): Transaction = Transaction(
         id = id,
         userId = userId,
         amount = addAmount.toDoubleOrNull() ?: 0.0,
