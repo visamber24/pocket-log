@@ -71,6 +71,7 @@ class SignupViewModel() : ViewModel() {
 
 data class SignupUiState(
     val id: Int = 0,
+    val firebaseUid: String = "",
     val identifier: String = "",
     val username: String = "",
     val firstName: String = "",
@@ -79,11 +80,14 @@ data class SignupUiState(
     val password: String = "",
     val confirmPassword: String = "",
     val isError: Boolean = false,
+    val isSuccess: Boolean = false,
+    val error: String? = ""
 )
 
-fun SignupUiState.toUser(): User = User(
-    id = id,
+fun SignupUiState.toUser(firebaseUid: String): User = User(
+//    id = id,
     username = username,
+    firebaseUid = firebaseUid,
     firstName = firstName,
     lastName = lastName,
     emailId = email,

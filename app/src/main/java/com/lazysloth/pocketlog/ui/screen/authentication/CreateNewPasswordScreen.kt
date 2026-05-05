@@ -48,7 +48,7 @@ fun CreateNewPasswordScreen(
 
     val onDone = {
         if (uiState.password.isNotEmpty() && uiState.password == uiState.confirmPassword) {
-            authViewModel.saveUser(uiState)
+//            authViewModel.saveUser(uiState)
             Toast.makeText(context, "Password Saved!", Toast.LENGTH_SHORT).show()
             onClickNext()
         } else {

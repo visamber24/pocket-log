@@ -24,6 +24,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -39,12 +40,11 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.lazysloth.pocketlog.R
 import com.lazysloth.pocketlog.ui.screen.authentication.viewmodel.AuthViewModel
+import com.lazysloth.pocketlog.ui.screen.authentication.viewmodel.LoginViewModel
 import com.lazysloth.pocketlog.ui.screen.authentication.viewmodel.SignupViewModel
-import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -56,25 +56,29 @@ fun LoginScreen(
 
 ) {
     val context = LocalContext.current
-    val viewModel : AuthViewModel = koinViewModel()
-    val signupViewModel: SignupViewModel = viewModel()
-    val loginUiState by signupViewModel.uiState.collectAsState()
+    val viewModel: AuthViewModel = koinViewModel()
+    val loginViewModel : LoginViewModel = koinViewModel()
+    val loginUiState by loginViewModel.uiState.collectAsState()
+//    val uiState by viewModel.uiState.collectAsState()
+//    val signupViewModel: SignupViewModel = viewModel()
+//    val loginUiState by signupViewModel.uiState.collectAsState()
     val focusManager = LocalFocusManager.current
 
     val onDone = {
-        viewModel.viewModelScope.launch {
-            if (loginUiState.password.isNotEmpty() && loginUiState.identifier.isNotEmpty() && viewModel.verifyPassword(
-                    loginUiState.identifier, loginUiState.password
-                )
-            ) {
+        loginViewModel.verifyPassword(loginUiState.identifier, loginUiState.password)
+    }
+        //check if password matches
+
+        LaunchedEffect(loginUiState.checkPassword) {
+            if (loginUiState.checkPassword) {
                 Toast.makeText(context, "Login Successful!", Toast.LENGTH_LONG).show()
                 viewModel.getUserIdByIdentifier(loginUiState.identifier)
                 onClickGo()
-            } else {
-                Toast.makeText(context, "Invalid password or username/Email or both.", Toast.LENGTH_SHORT).show()
+
             }
         }
-    }
+
+
     Column(
 
         verticalArrangement = Arrangement.Center,
@@ -85,7 +89,7 @@ fun LoginScreen(
     ) {
         TextField(
             value = loginUiState.identifier,
-            onValueChange = { signupViewModel.onIdentifierChange(it) },
+            onValueChange = { loginViewModel.onIdentifierChange(it) },
 
             leadingIcon = {
                 Icon(
@@ -122,7 +126,7 @@ fun LoginScreen(
 //            val visualTransform = if(password.value)
             OutlinedTextField(
                 value = loginUiState.password,
-                onValueChange = { signupViewModel.onPasswordChange(it) },
+                onValueChange = { loginViewModel.onPasswordChange(it) },
                 leadingIcon = {
                     Icon(
                         painter = painterResource(R.drawable.password_person_24px),
@@ -146,7 +150,10 @@ fun LoginScreen(
             )
             Spacer(modifier = Modifier.width(10.dp))
             Button(
-                onClick = { onDone() },
+                onClick = {
+                    onDone()
+
+                },
                 modifier = Modifier
                     .width(59.dp)
                     .height(50.dp)

@@ -9,6 +9,7 @@ import com.lazysloth.pocketlog.database.repository.PocketLogDatabase
 import com.lazysloth.pocketlog.database.repository.TransactionRepository
 import com.lazysloth.pocketlog.database.repository.UserRepository
 import com.lazysloth.pocketlog.ui.screen.authentication.viewmodel.AuthViewModel
+import com.lazysloth.pocketlog.ui.screen.authentication.viewmodel.LoginViewModel
 import com.lazysloth.pocketlog.ui.screen.contentscreen.viewmodel.AddAccountViewModel
 import com.lazysloth.pocketlog.ui.screen.contentscreen.viewmodel.AddCategoryScreenViewModel
 import com.lazysloth.pocketlog.ui.screen.contentscreen.viewmodel.EditAccountScreenViewModel
@@ -50,6 +51,12 @@ val appModule = module {
 
     viewModel {
         AuthViewModel(
+            get(),
+            get()
+        )
+    }
+    viewModel {
+        LoginViewModel(
             get(),
             get()
         )

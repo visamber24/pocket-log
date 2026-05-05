@@ -10,6 +10,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -39,17 +41,21 @@ fun ProfileScreen(){
 fun ProfileContentScreen(modifier : Modifier = Modifier)
 {
     val viewModel : ProfileScreenViewmodel = koinViewModel()
+    val uiState by viewModel.uiState.collectAsState()
+    val username = uiState.username
     Column(
         modifier = modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ){
-        Text(
-            text = viewModel.username,
-            fontSize = 24.sp,
-            fontWeight = FontWeight.Bold
 
-        )
+            Text(
+                text = username,
+                fontSize = 24.sp,
+                fontWeight = FontWeight.Bold
+
+            )
+
         Log.d("Usernamee", viewModel.username + "haha")
     }
 }

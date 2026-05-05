@@ -57,7 +57,9 @@ fun SignupScreen(
     val onGo = {
         if (!uiState.username.contains(Regex("""[\p{Punct}\p{S}]""")) && uiState.username.isNotEmpty() && uiState.firstName.isNotEmpty() && uiState.lastName.isNotEmpty() && uiState.email.isNotEmpty() && uiState.password.isNotEmpty()
         ) {
-            authViewModel.saveUser(uiState)
+//            authViewModel.saveUser(uiState)
+            authViewModel.signUp(uiState)
+//            authViewModel.getUserIdByIdentifier(uiState.username)
             Toast.makeText(context, "Account Created", Toast.LENGTH_SHORT).show()
             onClickGo()
         } else {

@@ -21,6 +21,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.google.firebase.Firebase
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.auth
 import com.lazysloth.pocketlog.di.UserPersists
 import com.lazysloth.pocketlog.ui.MainScreenNav
 import com.lazysloth.pocketlog.ui.screen.contentscreen.viewmodel.AddCategoryScreenViewModel
@@ -29,10 +32,13 @@ import org.koin.android.ext.android.get
 import org.koin.androidx.compose.koinViewModel
 
 class MainActivity() : ComponentActivity() {
-
     val session : UserPersists = get()
+    private lateinit var auth: FirebaseAuth
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        //auth firebase
+        auth = Firebase.auth
+
         enableEdgeToEdge()
         setContent {
             println("current userId is ${session.currentId}")
