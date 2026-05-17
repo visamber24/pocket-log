@@ -17,6 +17,17 @@
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.PocketLog">
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:scheme="https"
+                    android:host="pocket-log.firebaseapp.com"
+                    android:pathPrefix="/__/auth/links" />
+            </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

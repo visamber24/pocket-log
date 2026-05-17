@@ -1,25 +1,28 @@
 package com.lazysloth.pocketlog.ui.screen.home.viewmodel
 
-import androidx.compose.runtime.MutableState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.lazysloth.pocketlog.R
-import com.lazysloth.pocketlog.database.data.Category1
-import com.lazysloth.pocketlog.database.data.CategoryType
+import com.lazysloth.pocketlog.data.Category1
+import com.lazysloth.pocketlog.data.CategoryType
 import com.lazysloth.pocketlog.database.repository.CategoryRepository
 import com.lazysloth.pocketlog.di.UserPersists
 import com.lazysloth.pocketlog.ui.screen.home.uiState.AddCategoryUiState
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 
 class CategoryScreenViewModel(
     private val categoryRepository: CategoryRepository,
-    private val userPersists: UserPersists
+    userPersists: UserPersists
 ) : ViewModel() {
+
+    fun delete(category: Category1) {
+        viewModelScope.launch { categoryRepository.deleteCategory(category) }
+    }
 
     val uiState: StateFlow<CategoryListUiState> =
         categoryRepository.getCategoryByUserId(userPersists.currentId)

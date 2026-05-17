@@ -33,11 +33,13 @@ import org.koin.androidx.compose.koinViewModel
 
 class MainActivity() : ComponentActivity() {
     val session : UserPersists = get()
+
     private lateinit var auth: FirebaseAuth
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //auth firebase
         auth = Firebase.auth
+        val emailLink = intent.data.toString()
 
         enableEdgeToEdge()
         setContent {
@@ -46,7 +48,7 @@ class MainActivity() : ComponentActivity() {
                 Scaffold(modifier = Modifier) { innerPadding ->
 //                    MainScreenNav(modifier = Modifier.padding(innerPadding),session = session)
                     val vm : AddCategoryScreenViewModel = koinViewModel()
-                    MainScreenNav(modifier = Modifier.padding(innerPadding),session = session)
+                    MainScreenNav(modifier = Modifier.padding(innerPadding),session = session,link = emailLink)
                 }
             }
         }

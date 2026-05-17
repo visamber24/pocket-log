@@ -17,8 +17,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.lazysloth.pocketlog.R
-import com.lazysloth.pocketlog.database.data.AccountType
-import com.lazysloth.pocketlog.database.data.Account
+import com.lazysloth.pocketlog.data.AccountType
+import com.lazysloth.pocketlog.data.Account
 import com.lazysloth.pocketlog.ui.navigationitem.ApplicationBottomNavigation
 import com.lazysloth.pocketlog.ui.screen.contentscreen.AccountContentScreen
 import com.lazysloth.pocketlog.ui.screen.home.viewmodel.AccountScreenViewModel

@@ -1,7 +1,7 @@
 package com.lazysloth.pocketlog.database.repository
 
 import com.lazysloth.pocketlog.database.AccountDao
-import com.lazysloth.pocketlog.database.data.Account
+import com.lazysloth.pocketlog.data.Account
 import kotlinx.coroutines.flow.Flow
 
 class OfflineAccountRepository(

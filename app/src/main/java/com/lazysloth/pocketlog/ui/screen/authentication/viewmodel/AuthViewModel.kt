@@ -1,5 +1,6 @@
 package com.lazysloth.pocketlog.ui.screen.authentication.viewmodel
 
+import android.content.ContentValues.TAG
 import android.util.Log
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
@@ -8,7 +9,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthException
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import com.lazysloth.pocketlog.database.data.User
+import com.lazysloth.pocketlog.data.User
 import com.lazysloth.pocketlog.database.repository.UserRepository
 import com.lazysloth.pocketlog.di.UserPersists
 import kotlinx.coroutines.Dispatchers
@@ -20,7 +21,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
-import okhttp3.Dispatcher
 import java.security.MessageDigest
 
 class AuthViewModel(
@@ -31,34 +31,61 @@ class AuthViewModel(
 //        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
 
 
-        val _signUpUiState = MutableStateFlow(SignupUiState())
-//    val signUpUiState: StateFlow<SignupUiState> = _signUpUiState.asStateFlow()
+    val _signUpUiState = MutableStateFlow(SignupUiState())
+    val signUpUiState = _signUpUiState.asStateFlow()
+
+    //    val signUpUiState: StateFlow<SignupUiState> = _signUpUiState.asStateFlow()
     val context = LocalContext
     private var auth = Firebase.auth
     private var db: FirebaseAuth = FirebaseAuth.getInstance()
 
-    val _uiState = MutableStateFlow(LoginUiState())
-    val uiState: StateFlow<LoginUiState> = _uiState.asStateFlow()
+    val _loginUiState = MutableStateFlow(LoginUiState())
+    val loginUiState: StateFlow<LoginUiState> = _loginUiState.asStateFlow()
 
 
-    fun onIdentifierChange(identifier: String){
-        _uiState.update {
+    fun onIdentifierChange(identifier: String) {
+        _loginUiState.update {
             it.copy(
                 identifier = identifier
             )
         }
     }
-    fun onPasswordChange(password: String){
-        _uiState.update {
+
+    fun onPasswordChange(password: String) {
+        _loginUiState.update {
             it.copy(
                 password = password
             )
         }
     }
+
+    fun verifyOtp(otp: String) {
+
+    }
+
+    fun resendVerificationEmail() {
+
+    }
+
+    fun resendOtp(emailOrPhone: String) {
+
+    }
+
+    fun checkEmailVerification(emailLink: String) {
+        if (auth.isSignInWithEmailLink(emailLink)) {
+            _signUpUiState.update {
+                it.copy(
+                    isSuccess = true
+                )
+            }
+        }
+    }
+
     fun hashPassword(password: String): String {
         val bytes = MessageDigest.getInstance("SHA-256").digest(password.toByteArray())
         return bytes.joinToString("") { "%02x".format(it) }
     }
+
 
     fun signUp(signupState: SignupUiState) {
         // [START create_user_with_email]
@@ -70,13 +97,22 @@ class AuthViewModel(
                         .await()
                 val firebaseUser = result.user ?: throw Exception("user creation failed ")
                 println("firebaseUser = $firebaseUser")
+                firebaseUser.sendEmailVerification()
+                    .addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            Log.d("EMAIL", "Verification email sent.")
+                        } else {
+                            Log.e("EMAIL", "Failed: ${task.exception}")
+                        }
+                    }
 
                 val firebaseUid = firebaseUser.uid
-                userRepository.saveUser(
-                    signupState.toUser(
-                        firebaseUid
-                    )
-                )
+                userPersists.currentId = firebaseUid
+//                userRepository.saveUser(
+//                    signupState.toUser(
+//                        firebaseUid
+//                    )
+//                )
                 Log.d("AuthViewModel", "Signup successful -> UID: ${firebaseUser.uid}")
                 println("firebaseUid = ${firebaseUser.uid}")
                 userPersists.currentId = firebaseUser.uid
@@ -86,9 +122,11 @@ class AuthViewModel(
                 val errorMessage = when {
                     e.message?.contains("already in use", ignoreCase = true) == true ->
                         "This email is already registered. Try logging in."
+
                     e.message?.contains("weak password", ignoreCase = true) == true ||
                             e.message?.contains("password", ignoreCase = true) == true ->
                         "Password should be at least 6 characters long."
+
                     e is FirebaseAuthException -> e.message ?: "Authentication error"
                     e is Job -> "Operation cancelled. Please try again."
                     else -> e.message ?: "Something went wrong. Please try again."
@@ -100,29 +138,39 @@ class AuthViewModel(
 
     fun signIn(email: String, password: String) {
         // [START sign_in_with_email]
-        auth.signInWithEmailAndPassword(email, password).addOnCompleteListener() { task ->
-            if (task.isSuccessful) {
-                // Sign in success, update UI with the signed-in user's information
-                Log.d(TAG, "signInWithEmail:success")
+        viewModelScope.launch(Dispatchers.IO + SupervisorJob()) {
+            val result =
+                auth.signInWithEmailAndPassword(email, password).addOnCompleteListener() { task ->
+
+                    if (task.isSuccessful) {
+                        // Sign in success, update UI with the signed-in user's information
+                        Log.d(TAG, "signInWithEmail:success")
 //                val user = auth.currentUser
-                    _uiState.update { it.copy(
-                        isPasswordMatch = true
-                    ) }
-            } else {
-                // If sign in fails, display a message to the user.
-                Log.w(TAG, "signInWithEmail:failure", task.exception)
-//                    Toast.makeText(
-//                        baseContext,
-//                        "Authentication failed.",
-//                        Toast.LENGTH_SHORT,
-//                    ).show()
-//                    updateUI(null)
-                _uiState.update { it.copy(
-                    isPasswordMatch = false
-                ) }
-            }
+                        _loginUiState.update {
+                            it.copy(
+                                isPasswordMatch = true
+                            )
+                        }
+                    } else {
+                        // If sign in fails, display a message to the user.
+                        Log.w(TAG, "signInWithEmail:failure", task.exception)
+
+                        _loginUiState.update {
+                            it.copy(
+                                isPasswordMatch = false
+                            )
+                        }
+                    }
+                }
+                    .await()
+            val firebaseUser = result.user ?: throw Exception("user login failed..")
+            userPersists.currentId = firebaseUser.uid
+            // [END sign_in_with_email]}
         }
-        // [END sign_in_with_email]
+    }
+    fun logOut(){
+        auth.signOut()
+        userPersists.logout()
     }
 
     private fun sendEmailVerification() {
@@ -143,11 +191,13 @@ class AuthViewModel(
 
     fun getUserIdByIdentifier(identifier: String) {
         viewModelScope.launch {
+
             if (identifier.contains("@")) {
                 userPersists.currentId = userRepository.getIdByEmailId(identifier)
             } else {
                 userPersists.currentId = userRepository.getIdByUsername(identifier)
             }
+            println("current id : ${userPersists.currentId}")
         }
 
     }

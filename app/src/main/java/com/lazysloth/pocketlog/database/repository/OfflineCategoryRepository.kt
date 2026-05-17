@@ -1,7 +1,7 @@
 package com.lazysloth.pocketlog.database.repository
 
 import com.lazysloth.pocketlog.database.CategoryDao
-import com.lazysloth.pocketlog.database.data.Category1
+import com.lazysloth.pocketlog.data.Category1
 import kotlinx.coroutines.flow.Flow
 
 class OfflineCategoryRepository(private val categoryDao: CategoryDao) : CategoryRepository{

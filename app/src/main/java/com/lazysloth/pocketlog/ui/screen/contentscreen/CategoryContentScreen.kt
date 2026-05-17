@@ -31,7 +31,7 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.lazysloth.pocketlog.R
-import com.lazysloth.pocketlog.database.data.Category1
+import com.lazysloth.pocketlog.data.Category1
 import com.lazysloth.pocketlog.ui.screen.home.viewmodel.CategoryScreenViewModel
 
 @Composable
@@ -45,6 +45,8 @@ fun CategoryContentScreen(
             CategoryItem(
                 icon = painterResource(viewModel.getIconRes(category.icon)),
                 name = category.name,
+                category = category,
+                onDelete = {viewModel.delete(it)}
 
                 )
         }
@@ -53,9 +55,10 @@ fun CategoryContentScreen(
 
 @Composable
 fun CategoryItem(
+    category: Category1,
     icon: Painter, name: String,
     onEdit: () -> Unit = {},
-    onDelete: () -> Unit = {},
+    onDelete: (Category1) -> Unit = {},
     onIgnore: () -> Unit = {},
     modifier: Modifier = Modifier,
 
@@ -102,7 +105,7 @@ fun CategoryItem(
 
                     DropdownMenuItem(text = { Text("Delete") }, onClick = {
                         expanded = false
-                        onDelete()
+                        onDelete(category)
                     })
 
                     DropdownMenuItem(text = { Text("Ignore") }, onClick = {

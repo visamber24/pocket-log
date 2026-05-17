@@ -1,4 +1,4 @@
-package com.lazysloth.pocketlog.database.data
+package com.lazysloth.pocketlog.data
 
 import android.content.Context
 import androidx.datastore.core.DataStore

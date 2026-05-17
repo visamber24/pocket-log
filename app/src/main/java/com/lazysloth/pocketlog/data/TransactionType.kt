@@ -1,4 +1,4 @@
-package com.lazysloth.pocketlog.database.data
+package com.lazysloth.pocketlog.data
 
 enum class TransactionType(
 

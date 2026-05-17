@@ -1,14 +1,12 @@
 package com.lazysloth.pocketlog.ui.screen.authentication.viewmodel
 
 import androidx.lifecycle.ViewModel
-import coil.compose.AsyncImagePainter
-import com.lazysloth.pocketlog.database.data.User
-import com.lazysloth.pocketlog.di.UserPersists
-import com.lazysloth.pocketlog.ui.screen.authentication.viewmodel.SignupUiState
+import com.lazysloth.pocketlog.data.User
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import org.koin.core.logger.MESSAGE
 
 class SignupViewModel() : ViewModel() {
     private val _uiState = MutableStateFlow(SignupUiState())
@@ -56,11 +54,11 @@ class SignupViewModel() : ViewModel() {
         }
     }
 
-    fun onIdentifierChange(value: String) {
-        _uiState.update {
-            it.copy(identifier = value)
-        }
-    }
+//    fun onIdentifierChange(value: String) {
+//        _uiState.update {
+//            it.copy(identifier = value)
+//        }
+//    }
 
     fun changeIsError(isError: Boolean) {
         _uiState.update {
@@ -72,7 +70,7 @@ class SignupViewModel() : ViewModel() {
 data class SignupUiState(
     val id: Int = 0,
     val firebaseUid: String = "",
-    val identifier: String = "",
+//    val identifier: String = "",
     val username: String = "",
     val firstName: String = "",
     val lastName: String = "",
@@ -81,7 +79,10 @@ data class SignupUiState(
     val confirmPassword: String = "",
     val isError: Boolean = false,
     val isSuccess: Boolean = false,
-    val error: String? = ""
+    val error: String? = "",
+    val isOtpSent: Boolean = false,
+    val isLoading: Boolean = false,
+    val message: String = "",
 )
 
 fun SignupUiState.toUser(firebaseUid: String): User = User(

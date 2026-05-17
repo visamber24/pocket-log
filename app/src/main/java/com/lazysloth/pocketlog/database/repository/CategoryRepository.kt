@@ -1,6 +1,6 @@
 package com.lazysloth.pocketlog.database.repository
 
-import com.lazysloth.pocketlog.database.data.Category1
+import com.lazysloth.pocketlog.data.Category1
 import kotlinx.coroutines.flow.Flow
 
 interface CategoryRepository {

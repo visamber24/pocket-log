@@ -32,8 +32,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.lazysloth.pocketlog.R
-import com.lazysloth.pocketlog.database.data.AccountType
-import com.lazysloth.pocketlog.database.data.Account
+import com.lazysloth.pocketlog.data.AccountType
+import com.lazysloth.pocketlog.data.Account
 import com.lazysloth.pocketlog.ui.screen.contentscreen.viewmodel.EditAccountScreenViewModel
 import org.koin.androidx.compose.koinViewModel
 

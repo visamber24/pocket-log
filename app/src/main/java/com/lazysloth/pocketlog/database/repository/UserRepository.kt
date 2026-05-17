@@ -1,8 +1,7 @@
 package com.lazysloth.pocketlog.database.repository
 
-import com.lazysloth.pocketlog.database.data.User
+import com.lazysloth.pocketlog.data.User
 import com.lazysloth.pocketlog.database.UserDao
-import kotlinx.coroutines.flow.Flow
 
 class UserRepository(val userDao: UserDao) {
     suspend fun checkUser() = userDao.checkUsers()

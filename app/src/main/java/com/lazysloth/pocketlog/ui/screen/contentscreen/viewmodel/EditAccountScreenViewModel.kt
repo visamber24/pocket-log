@@ -2,7 +2,7 @@ package com.lazysloth.pocketlog.ui.screen.contentscreen.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.lazysloth.pocketlog.database.data.AccountType
+import com.lazysloth.pocketlog.data.AccountType
 import com.lazysloth.pocketlog.database.repository.AccountRepository
 import com.lazysloth.pocketlog.di.UserPersists
 import com.lazysloth.pocketlog.ui.screen.home.uiState.AddAccountUiState

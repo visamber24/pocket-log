@@ -2,10 +2,10 @@ package com.lazysloth.pocketlog.ui.screen.contentscreen.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.lazysloth.pocketlog.database.data.Account
-import com.lazysloth.pocketlog.database.data.Category1
-import com.lazysloth.pocketlog.database.data.Transaction
-import com.lazysloth.pocketlog.database.data.TransactionType
+import com.lazysloth.pocketlog.data.Account
+import com.lazysloth.pocketlog.data.Category1
+import com.lazysloth.pocketlog.data.Transaction
+import com.lazysloth.pocketlog.data.TransactionType
 import com.lazysloth.pocketlog.database.repository.AccountRepository
 import com.lazysloth.pocketlog.database.repository.CategoryRepository
 import com.lazysloth.pocketlog.database.repository.TransactionRepository

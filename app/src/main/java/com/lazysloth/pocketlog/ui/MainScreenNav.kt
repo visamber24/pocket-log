@@ -22,6 +22,8 @@ import com.lazysloth.pocketlog.ui.screen.authentication.CreateNewPasswordScreen
 import com.lazysloth.pocketlog.ui.screen.authentication.ForgetPasswordScreen
 import com.lazysloth.pocketlog.ui.screen.authentication.LoginScreen
 import com.lazysloth.pocketlog.ui.screen.authentication.SignupScreen
+import com.lazysloth.pocketlog.ui.screen.authentication.VerificationScreen
+import com.lazysloth.pocketlog.ui.screen.authentication.viewmodel.AuthViewModel
 import com.lazysloth.pocketlog.ui.screen.contentscreen.AddAccountScreen
 import com.lazysloth.pocketlog.ui.screen.contentscreen.AddCategoryScreen
 import com.lazysloth.pocketlog.ui.screen.contentscreen.TransactionDetailsScreen
@@ -30,13 +32,16 @@ import com.lazysloth.pocketlog.ui.screen.home.HomeScreen
 import com.lazysloth.pocketlog.ui.screen.contentscreen.AddTransactionScreen
 import com.lazysloth.pocketlog.ui.screen.contentscreen.EditAccountScreen
 import com.lazysloth.pocketlog.ui.screen.other.SettingsScreen
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun MainScreenNav(
     session: UserPersists,
     navController: NavHostController = rememberNavController(),
+    link : String,
     modifier: Modifier
 ) {
+    val authViewModel : AuthViewModel = koinViewModel()
     var startRoute by remember { mutableStateOf<String?>(null) }
 
 
@@ -74,13 +79,22 @@ fun MainScreenNav(
             composable(route = AuthenticationNavigation.SIGNUP.name) {
                 SignupScreen(
                     onClickGo = {
-                        navController.navigate(AuthenticationNavigation.LOGIN.name) {
+                        navController.navigate(AuthenticationNavigation.VERIFYING_SCREEN.name) {
                             popUpTo(
                                 navController.graph.findStartDestination().id
                             ) { inclusive = true }
                         }
                     },
                     onClickAlreadyAUser = { navController.navigate(AuthenticationNavigation.LOGIN.name) },
+                )
+            }
+            composable(route = AuthenticationNavigation.VERIFYING_SCREEN.name) {
+                VerificationScreen(
+                    emailLink = link,
+                    onVerificationSuccess ={
+                        navController.navigate(AuthenticationNavigation.HOME_SCREEN.name)
+                    } ,
+                    onBackClick = { navController.popBackStack() }
                 )
             }
             composable(route = AuthenticationNavigation.FORGET.name) {
@@ -146,7 +160,8 @@ fun MainScreenNav(
             }
             composable(route = "setting_screen") {
                 SettingsScreen(onClickLogout = {
-                    session.logout()
+//                    session.logout()
+                    authViewModel.logOut()
                     navController.navigate("login") {
                         popUpTo(
                             navController.graph.findStartDestination().id

@@ -2,7 +2,7 @@ package com.lazysloth.pocketlog.ui.screen.home.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.lazysloth.pocketlog.database.data.TransactionWithAccount
+import com.lazysloth.pocketlog.data.TransactionWithAccount
 import com.lazysloth.pocketlog.database.repository.AccountRepository
 import com.lazysloth.pocketlog.database.repository.TransactionRepository
 import com.lazysloth.pocketlog.di.UserPersists

@@ -40,11 +40,8 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.lazysloth.pocketlog.R
 import com.lazysloth.pocketlog.ui.screen.authentication.viewmodel.AuthViewModel
-import com.lazysloth.pocketlog.ui.screen.authentication.viewmodel.LoginViewModel
-import com.lazysloth.pocketlog.ui.screen.authentication.viewmodel.SignupViewModel
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -57,7 +54,7 @@ fun LoginScreen(
 ) {
     val context = LocalContext.current
     val viewModel: AuthViewModel = koinViewModel()
-    val loginUiState by viewModel.uiState.collectAsState()
+    val loginUiState by viewModel.loginUiState.collectAsState()
     val focusManager = LocalFocusManager.current
 
     val onDone = {
@@ -69,7 +66,7 @@ fun LoginScreen(
         LaunchedEffect(loginUiState.isPasswordMatch) {
             if (loginUiState.isPasswordMatch) {
                 Toast.makeText(context, "Login Successful!", Toast.LENGTH_LONG).show()
-                viewModel.getUserIdByIdentifier(loginUiState.identifier)
+//                viewModel.getUserIdByIdentifier(loginUiState.identifier)
 
 
                 onClickGo()

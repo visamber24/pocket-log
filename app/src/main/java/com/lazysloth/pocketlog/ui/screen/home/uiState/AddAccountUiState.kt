@@ -1,7 +1,7 @@
 package com.lazysloth.pocketlog.ui.screen.home.uiState
 
-import com.lazysloth.pocketlog.database.data.AccountType
-import com.lazysloth.pocketlog.database.data.Account
+import com.lazysloth.pocketlog.data.AccountType
+import com.lazysloth.pocketlog.data.Account
 
 data class AddAccountUiState(
     val id: Long = 0,

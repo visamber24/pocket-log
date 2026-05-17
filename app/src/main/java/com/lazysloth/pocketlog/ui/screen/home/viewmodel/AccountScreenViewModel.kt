@@ -2,7 +2,7 @@ package com.lazysloth.pocketlog.ui.screen.home.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.lazysloth.pocketlog.database.data.Account
+import com.lazysloth.pocketlog.data.Account
 import com.lazysloth.pocketlog.database.repository.AccountRepository
 import com.lazysloth.pocketlog.di.UserPersists
 import com.lazysloth.pocketlog.ui.screen.home.viewmodel.DashboardScreenViewModel.Companion.TIMEOUT_MILLIS

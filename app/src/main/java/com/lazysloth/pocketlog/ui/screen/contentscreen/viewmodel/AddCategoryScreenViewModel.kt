@@ -1,13 +1,12 @@
 package com.lazysloth.pocketlog.ui.screen.contentscreen.viewmodel
 
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.lazysloth.pocketlog.database.data.Category1
-import com.lazysloth.pocketlog.database.data.CategoryType
+import com.lazysloth.pocketlog.data.Category1
+import com.lazysloth.pocketlog.data.CategoryType
 import com.lazysloth.pocketlog.database.repository.CategoryRepository
 import com.lazysloth.pocketlog.di.UserPersists
 import com.lazysloth.pocketlog.ui.screen.home.uiState.AddCategoryUiState

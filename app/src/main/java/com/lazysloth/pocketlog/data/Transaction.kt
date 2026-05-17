@@ -1,4 +1,4 @@
-package com.lazysloth.pocketlog.database.data
+package com.lazysloth.pocketlog.data
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
@@ -9,13 +9,13 @@ import java.time.ZonedDateTime
 
 @Entity(
     tableName = "transactionItem",
-    foreignKeys = [ForeignKey(
-        entity = User::class,
-        parentColumns = arrayOf("id"),
-        childColumns = arrayOf("userId"),
-        onUpdate = ForeignKey.CASCADE,
-        onDelete = ForeignKey.CASCADE
-    )],
+//    foreignKeys = [ForeignKey(
+//        entity = User::class,
+//        parentColumns = arrayOf("id"),
+//        childColumns = arrayOf("userId"),
+//        onUpdate = ForeignKey.CASCADE,
+//        onDelete = ForeignKey.CASCADE
+//    )],
     indices = [Index("userId")]
 )
 data class Transaction(

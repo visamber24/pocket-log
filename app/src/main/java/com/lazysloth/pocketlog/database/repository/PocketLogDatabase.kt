@@ -9,14 +9,14 @@ import com.lazysloth.pocketlog.database.AccountDao
 import com.lazysloth.pocketlog.database.CategoryDao
 import com.lazysloth.pocketlog.database.TransactionItemDao
 import com.lazysloth.pocketlog.database.UserDao
-import com.lazysloth.pocketlog.database.data.Account
-import com.lazysloth.pocketlog.database.data.Category1
-import com.lazysloth.pocketlog.database.data.Converters
-import com.lazysloth.pocketlog.database.data.Transaction
-import com.lazysloth.pocketlog.database.data.User
+import com.lazysloth.pocketlog.data.Account
+import com.lazysloth.pocketlog.data.Category1
+import com.lazysloth.pocketlog.data.Converters
+import com.lazysloth.pocketlog.data.Transaction
+import com.lazysloth.pocketlog.data.User
 
 
-@Database(entities = [Transaction::class, User::class, Account::class, Category1::class], version = 2, exportSchema = false)
+@Database(entities = [Transaction::class, User::class, Account::class, Category1::class], version = 1, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class PocketLogDatabase : RoomDatabase() {
     abstract fun getTransactionItem(): TransactionItemDao

@@ -1,8 +1,8 @@
 package com.lazysloth.pocketlog.database.repository
 
-import com.lazysloth.pocketlog.database.data.Transaction
+import com.lazysloth.pocketlog.data.Transaction
 import com.lazysloth.pocketlog.database.TransactionItemDao
-import com.lazysloth.pocketlog.database.data.TransactionWithAccount
+import com.lazysloth.pocketlog.data.TransactionWithAccount
 import kotlinx.coroutines.flow.Flow
 
 class OfflineTransactionRepository(

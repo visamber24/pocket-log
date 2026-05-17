@@ -1,10 +1,8 @@
 package com.lazysloth.pocketlog.ui.screen.home.uiState
 
-import com.lazysloth.pocketlog.database.data.Account
-import com.lazysloth.pocketlog.database.data.Category
-import com.lazysloth.pocketlog.database.data.Category1
-import com.lazysloth.pocketlog.database.data.CategoryType
-import com.lazysloth.pocketlog.database.data.TransactionType
+import com.lazysloth.pocketlog.data.Account
+import com.lazysloth.pocketlog.data.Category1
+import com.lazysloth.pocketlog.data.TransactionType
 import java.time.ZonedDateTime
 
 data class AddTransactionUiState(
