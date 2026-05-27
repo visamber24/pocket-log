@@ -26,11 +26,11 @@ import com.lazysloth.pocketlog.ui.screen.authentication.VerificationScreen
 import com.lazysloth.pocketlog.ui.screen.authentication.viewmodel.AuthViewModel
 import com.lazysloth.pocketlog.ui.screen.contentscreen.AddAccountScreen
 import com.lazysloth.pocketlog.ui.screen.contentscreen.AddCategoryScreen
+import com.lazysloth.pocketlog.ui.screen.contentscreen.AddTransactionScreen
+import com.lazysloth.pocketlog.ui.screen.contentscreen.EditAccountScreen
 import com.lazysloth.pocketlog.ui.screen.contentscreen.TransactionDetailsScreen
 import com.lazysloth.pocketlog.ui.screen.contentscreen.TransactionEditScreen
 import com.lazysloth.pocketlog.ui.screen.home.HomeScreen
-import com.lazysloth.pocketlog.ui.screen.contentscreen.AddTransactionScreen
-import com.lazysloth.pocketlog.ui.screen.contentscreen.EditAccountScreen
 import com.lazysloth.pocketlog.ui.screen.other.SettingsScreen
 import org.koin.androidx.compose.koinViewModel
 
@@ -38,16 +38,15 @@ import org.koin.androidx.compose.koinViewModel
 fun MainScreenNav(
     session: UserPersists,
     navController: NavHostController = rememberNavController(),
-    link : String,
     modifier: Modifier
 ) {
-    val authViewModel : AuthViewModel = koinViewModel()
+
     var startRoute by remember { mutableStateOf<String?>(null) }
 
 
     LaunchedEffect(Unit) {
-        val userExists = session.checkUser()
-        startRoute = if (session.currentId != null && userExists) {
+//        val userExists = session.checkUser()
+        startRoute = if (session.currentId != null) {
             AuthenticationNavigation.HOME_SCREEN.name
         } else {
             "login"
@@ -90,7 +89,6 @@ fun MainScreenNav(
             }
             composable(route = AuthenticationNavigation.VERIFYING_SCREEN.name) {
                 VerificationScreen(
-                    emailLink = link,
                     onVerificationSuccess ={
                         navController.navigate(AuthenticationNavigation.HOME_SCREEN.name)
                     } ,
@@ -159,6 +157,7 @@ fun MainScreenNav(
                 )
             }
             composable(route = "setting_screen") {
+                val authViewModel : AuthViewModel = koinViewModel()
                 SettingsScreen(onClickLogout = {
 //                    session.logout()
                     authViewModel.logOut()

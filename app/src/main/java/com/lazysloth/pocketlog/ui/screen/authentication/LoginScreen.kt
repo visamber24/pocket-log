@@ -36,11 +36,13 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.lazysloth.pocketlog.R
+import com.lazysloth.pocketlog.data.LoginEvent
 import com.lazysloth.pocketlog.ui.screen.authentication.viewmodel.AuthViewModel
 import org.koin.androidx.compose.koinViewModel
 
@@ -55,6 +57,7 @@ fun LoginScreen(
     val context = LocalContext.current
     val viewModel: AuthViewModel = koinViewModel()
     val loginUiState by viewModel.loginUiState.collectAsState()
+
     val focusManager = LocalFocusManager.current
 
     val onDone = {
@@ -63,19 +66,18 @@ fun LoginScreen(
     }
         //check if password matches
 
-        LaunchedEffect(loginUiState.isPasswordMatch) {
-            if (loginUiState.isPasswordMatch) {
-                Toast.makeText(context, "Login Successful!", Toast.LENGTH_LONG).show()
-//                viewModel.getUserIdByIdentifier(loginUiState.identifier)
-
-
-                onClickGo()
-
-            }
-            else {
-                Toast.makeText(context, "Login failed ", Toast.LENGTH_SHORT).show()
-
-            }
+        LaunchedEffect(Unit) {
+           viewModel.loginEvent.collect {event ->
+               when(event) {
+                   is LoginEvent.Success -> {
+                       Toast.makeText(context, "Login Successful!", Toast.LENGTH_LONG).show()
+                       onClickGo()
+                   }
+                   is LoginEvent.Failure -> {
+                       Toast.makeText(context,event.message, Toast.LENGTH_SHORT).show()
+                   }
+               }
+           }
         }
 
 
@@ -141,7 +143,7 @@ fun LoginScreen(
                         onDone()
                     },
                 ),
-                visualTransformation = VisualTransformation.None,
+                visualTransformation = PasswordVisualTransformation(),
                 shape = RoundedCornerShape(20.dp),
                 label = { Text(stringResource(R.string.password)) },
                 singleLine = true,
@@ -152,8 +154,8 @@ fun LoginScreen(
             Button(
                 onClick = {
                     onDone()
-
                 },
+                enabled =loginUiState.password.isNotEmpty() ,
                 modifier = Modifier
                     .width(59.dp)
                     .height(50.dp)

@@ -26,7 +26,7 @@ data class Account(
     val name: String = "",
     val type: AccountType,
     val balance: Double = 0.0,
-    val currentBalance: Double = balance,
+    val currentBalance: Double = 0.0,
 )
 enum class
 AccountType(

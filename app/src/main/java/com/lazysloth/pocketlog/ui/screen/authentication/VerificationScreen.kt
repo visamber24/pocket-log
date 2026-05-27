@@ -44,7 +44,6 @@ import org.koin.androidx.compose.koinViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun VerificationScreen(
-    emailLink: String,
     authViewModel: AuthViewModel = koinViewModel(),
     verificationType: VerificationType = VerificationType.EMAIL, // EMAIL or PHONE_OTP
     emailOrPhone: String = "", // Pass email or phone number
@@ -156,7 +155,7 @@ fun VerificationScreen(
             // For Email Verification - Check Status Button
             if (verificationType == VerificationType.EMAIL) {
                 Button(
-                    onClick = { authViewModel.checkEmailVerification(emailLink) },
+                    onClick = { authViewModel.checkEmailVerification() },
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text("I have verified my email")

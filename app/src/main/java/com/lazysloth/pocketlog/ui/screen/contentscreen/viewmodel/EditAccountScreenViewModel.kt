@@ -1,5 +1,9 @@
 package com.lazysloth.pocketlog.ui.screen.contentscreen.viewmodel
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableDoubleStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.lazysloth.pocketlog.data.AccountType
@@ -22,18 +26,25 @@ class EditAccountScreenViewModel(
     private val _uiState = MutableStateFlow(AddAccountUiState())
     val uiState: StateFlow<AddAccountUiState> = _uiState.asStateFlow()
 
+    var initialBalance by mutableDoubleStateOf(0.0)
+
     fun getAccountId(id: Long?) {
         viewModelScope.launch {
             try {
                 val account = accountRepository.getAccountByAccountId(id).filterNotNull().first()
                 println("account -> ${account.toAddAccountUiState()}")
                 _uiState.value = account.toAddAccountUiState()
-
+                initialBalance = account.balance
 
             } catch (e: Exception) {
                 print("An exception occur -> $e ")
             }
         }
+    }
+
+    //    val currentBalance = initialBalance - _uiState.value.initialBalance.toDouble()
+    fun getCurrentBalance() {
+
     }
 
     fun onInitialBalanceChange(newBalance: String) {
@@ -68,9 +79,21 @@ class EditAccountScreenViewModel(
         }
     }
 
+    var currentBalance = _uiState.value.currentBalance.toDouble() + 0.0
+    var balanceDifference by mutableDoubleStateOf(0.0)
+
     fun onUpdate() {
         viewModelScope.launch {
             val userId = userPersists.currentId
+//            val initialBalance = _uiState.value.initialBalance
+            if (initialBalance > _uiState.value.initialBalance.toDouble()) {
+                balanceDifference = initialBalance - _uiState.value.initialBalance.toDouble()
+                currentBalance = _uiState.value.currentBalance.toDouble() - balanceDifference
+            } else {
+                balanceDifference = _uiState.value.initialBalance.toDouble() - initialBalance
+                currentBalance = _uiState.value.currentBalance.toDouble() + balanceDifference
+            }
+            _uiState.update { it.copy(currentBalance = currentBalance.toString()) }
             accountRepository.updateAccount(_uiState.value.toAccount(userId))
         }
     }

@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.ksp)
+
     //serialization plugin
     id("org.jetbrains.kotlin.plugin.serialization") version "2.0.21"
     //firebase
@@ -71,13 +72,17 @@ dependencies {
 
 
    //koin
-    implementation("io.insert-koin:koin-android:3.5.6")
-    implementation("io.insert-koin:koin-androidx-compose:3.5.6")
+    implementation(libs.koin.android)
+    implementation(libs.koin.androidx.compose)
 
     //room database
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
     ksp(libs.androidx.room.compiler)
+
+
+
+
     //coroutine
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.1")
 

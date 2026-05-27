@@ -1,23 +1,28 @@
 package com.lazysloth.pocketlog.ui.screen.authentication.viewmodel
 
-import android.content.ContentValues.TAG
 import android.util.Log
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthException
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
+import com.google.firebase.auth.FirebaseAuthInvalidUserException
+import com.google.firebase.auth.actionCodeSettings
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import com.lazysloth.pocketlog.data.LoginEvent
 import com.lazysloth.pocketlog.data.User
 import com.lazysloth.pocketlog.database.repository.UserRepository
 import com.lazysloth.pocketlog.di.UserPersists
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
@@ -41,6 +46,11 @@ class AuthViewModel(
 
     val _loginUiState = MutableStateFlow(LoginUiState())
     val loginUiState: StateFlow<LoginUiState> = _loginUiState.asStateFlow()
+
+
+    val _loginEvent = Channel<LoginEvent>()
+    val loginEvent = _loginEvent.receiveAsFlow()
+
 
 
     fun onIdentifierChange(identifier: String) {
@@ -71,8 +81,9 @@ class AuthViewModel(
 
     }
 
-    fun checkEmailVerification(emailLink: String) {
-        if (auth.isSignInWithEmailLink(emailLink)) {
+    fun checkEmailVerification() {
+        auth.currentUser?.reload() ?: throw Exception("user not found")
+        if (auth.currentUser?.isEmailVerified == true) {
             _signUpUiState.update {
                 it.copy(
                     isSuccess = true
@@ -87,6 +98,16 @@ class AuthViewModel(
     }
 
 
+    val actionCodeSettings = actionCodeSettings {
+        url = "https://pocket-log.firebaseapp.com/finishSignUp"
+        handleCodeInApp = true
+        setAndroidPackageName(
+            "com.lazysloth.pocketlog",
+            true,
+            null
+        )
+    }
+
     fun signUp(signupState: SignupUiState) {
         // [START create_user_with_email]
         viewModelScope.launch(Dispatchers.IO + SupervisorJob()) {
@@ -97,7 +118,7 @@ class AuthViewModel(
                         .await()
                 val firebaseUser = result.user ?: throw Exception("user creation failed ")
                 println("firebaseUser = $firebaseUser")
-                firebaseUser.sendEmailVerification()
+                firebaseUser.sendEmailVerification(actionCodeSettings)
                     .addOnCompleteListener { task ->
                         if (task.isSuccessful) {
                             Log.d("EMAIL", "Verification email sent.")
@@ -108,11 +129,7 @@ class AuthViewModel(
 
                 val firebaseUid = firebaseUser.uid
                 userPersists.currentId = firebaseUid
-//                userRepository.saveUser(
-//                    signupState.toUser(
-//                        firebaseUid
-//                    )
-//                )
+
                 Log.d("AuthViewModel", "Signup successful -> UID: ${firebaseUser.uid}")
                 println("firebaseUid = ${firebaseUser.uid}")
                 userPersists.currentId = firebaseUser.uid
@@ -120,12 +137,18 @@ class AuthViewModel(
             } catch (e: Exception) {
                 Log.e("AuthViewModel", "Signup failed", e)
                 val errorMessage = when {
-                    e.message?.contains("already in use", ignoreCase = true) == true ->
-                        "This email is already registered. Try logging in."
+                    e.message?.contains(
+                        "already in use",
+                        ignoreCase = true
+                    ) == true -> "This email is already registered. Try logging in."
 
-                    e.message?.contains("weak password", ignoreCase = true) == true ||
-                            e.message?.contains("password", ignoreCase = true) == true ->
-                        "Password should be at least 6 characters long."
+                    e.message?.contains(
+                        "weak password",
+                        ignoreCase = true
+                    ) == true || e.message?.contains(
+                        "password",
+                        ignoreCase = true
+                    ) == true -> "Password should be at least 6 characters long."
 
                     e is FirebaseAuthException -> e.message ?: "Authentication error"
                     e is Job -> "Operation cancelled. Please try again."
@@ -139,36 +162,38 @@ class AuthViewModel(
     fun signIn(email: String, password: String) {
         // [START sign_in_with_email]
         viewModelScope.launch(Dispatchers.IO + SupervisorJob()) {
-            val result =
-                auth.signInWithEmailAndPassword(email, password).addOnCompleteListener() { task ->
-
-                    if (task.isSuccessful) {
-                        // Sign in success, update UI with the signed-in user's information
-                        Log.d(TAG, "signInWithEmail:success")
-//                val user = auth.currentUser
-                        _loginUiState.update {
-                            it.copy(
-                                isPasswordMatch = true
-                            )
-                        }
-                    } else {
-                        // If sign in fails, display a message to the user.
-                        Log.w(TAG, "signInWithEmail:failure", task.exception)
-
-                        _loginUiState.update {
-                            it.copy(
-                                isPasswordMatch = false
-                            )
-                        }
-                    }
+            try{
+                val result =
+                    auth.signInWithEmailAndPassword(email, password).await()
+                checkEmailVerification()
+                val firebaseUser = result.user ?: throw Exception("user login failed..")
+                if(_signUpUiState.value.isSuccess){
+                    _loginEvent.send(LoginEvent.Success)
+                    userPersists.currentId = firebaseUser.uid
+                    Log.d(TAG, "signInWithEmail:success")
                 }
-                    .await()
-            val firebaseUser = result.user ?: throw Exception("user login failed..")
-            userPersists.currentId = firebaseUser.uid
+                else {
+                    _loginEvent.send(LoginEvent.Failure("please verify your email, check your spam folder"))
+                    Log.w(TAG, "signInWithEmail:failure")
+                }
+            }
+            catch (e: FirebaseAuthInvalidCredentialsException){
+                _loginEvent.send(LoginEvent.Failure("Email or password is wrong"))
+            }
+            catch (e: FirebaseAuthInvalidUserException){
+                _loginEvent.send(LoginEvent.Failure("Invalid User"))
+            }
+            catch (e: Exception){
+                _loginEvent.send(LoginEvent.Failure("Unknown error"))
+            }
+
+
+
             // [END sign_in_with_email]}
         }
     }
-    fun logOut(){
+
+    fun logOut() {
         auth.signOut()
         userPersists.logout()
     }

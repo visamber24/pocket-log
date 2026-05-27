@@ -2,10 +2,8 @@ package com.lazysloth.pocketlog.ui.screen.home.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.lazysloth.pocketlog.R
 import com.lazysloth.pocketlog.data.Category1
-import com.lazysloth.pocketlog.data.CategoryType
 import com.lazysloth.pocketlog.database.repository.CategoryRepository
 import com.lazysloth.pocketlog.di.UserPersists
 import com.lazysloth.pocketlog.ui.screen.home.uiState.AddCategoryUiState

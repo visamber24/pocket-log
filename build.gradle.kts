@@ -5,13 +5,6 @@ plugins {
 
     alias(libs.plugins.kotlin.compose) apply false
     id("com.google.gms.google-services") version "4.4.4" apply false
+
+
 }
-//all projects {
-//    configurations.all {
-//        resolutionStrategy.eachDependency {
-//            if (requested.group == "org.jetbrains.kotlin") {
-//                useVersion("2.0.21")
-//            }
-//        }
-//    }
-//}

@@ -12,7 +12,20 @@
           "package_name": "com.lazysloth.pocketlog"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "335513869848-alfcaafdakcllmhheikj9crpf4d6kelk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.lazysloth.pocketlog",
+            "certificate_hash": "dec8367f98905c1ba684e6c346e06351a417e628"
+          }
+        },
+        {
+          "client_id": "335513869848-uasjejnra77ogm6ogakjheecs6mejp1r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyAWmhvkv6JN6hoQZFGXmrr4Q9uTyiiKkhU"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "335513869848-uasjejnra77ogm6ogakjheecs6mejp1r.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

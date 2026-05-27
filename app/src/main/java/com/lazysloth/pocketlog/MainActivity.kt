@@ -1,6 +1,7 @@
 package com.lazysloth.pocketlog
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -28,19 +29,23 @@ import com.lazysloth.pocketlog.di.UserPersists
 import com.lazysloth.pocketlog.ui.MainScreenNav
 import com.lazysloth.pocketlog.ui.screen.contentscreen.viewmodel.AddCategoryScreenViewModel
 import com.lazysloth.pocketlog.ui.theme.PocketLogTheme
-import org.koin.android.ext.android.get
+import org.koin.android.ext.android.inject
 import org.koin.androidx.compose.koinViewModel
 
 class MainActivity() : ComponentActivity() {
-    val session : UserPersists = get()
+    val session : UserPersists by inject()
 
     private lateinit var auth: FirebaseAuth
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+//        startKoin {
+//            androidContext(this@MainActivity)
+////            monitoring()
+//        }
         //auth firebase
         auth = Firebase.auth
-        val emailLink = intent.data.toString()
-
+        val emailLink = intent?.data?.toString()
+        Log.d("DEEPLINK", "link = $emailLink")
         enableEdgeToEdge()
         setContent {
             println("current userId is ${session.currentId}")
@@ -48,7 +53,7 @@ class MainActivity() : ComponentActivity() {
                 Scaffold(modifier = Modifier) { innerPadding ->
 //                    MainScreenNav(modifier = Modifier.padding(innerPadding),session = session)
                     val vm : AddCategoryScreenViewModel = koinViewModel()
-                    MainScreenNav(modifier = Modifier.padding(innerPadding),session = session,link = emailLink)
+                    MainScreenNav(modifier = Modifier.padding(innerPadding),session = session)
                 }
             }
         }
