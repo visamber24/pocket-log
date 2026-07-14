@@ -13,12 +13,14 @@ import com.lazysloth.pocketlog.ui.screen.authentication.viewmodel.LoginViewModel
 import com.lazysloth.pocketlog.ui.screen.contentscreen.viewmodel.AddAccountViewModel
 import com.lazysloth.pocketlog.ui.screen.contentscreen.viewmodel.AddCategoryScreenViewModel
 import com.lazysloth.pocketlog.ui.screen.contentscreen.viewmodel.EditAccountScreenViewModel
-import com.lazysloth.pocketlog.ui.screen.other.viewmodel.AddTransactionScreenViewmodel
-import com.lazysloth.pocketlog.ui.screen.home.viewmodel.DashboardScreenViewModel
 import com.lazysloth.pocketlog.ui.screen.contentscreen.viewmodel.EditTransactionScreenViewmodel
 import com.lazysloth.pocketlog.ui.screen.contentscreen.viewmodel.ProfileScreenViewmodel
 import com.lazysloth.pocketlog.ui.screen.home.viewmodel.AccountScreenViewModel
 import com.lazysloth.pocketlog.ui.screen.home.viewmodel.CategoryScreenViewModel
+import com.lazysloth.pocketlog.ui.screen.home.viewmodel.DashboardScreenViewModel
+import com.lazysloth.pocketlog.ui.screen.other.viewmodel.AddTransactionScreenViewmodel
+import com.lazysloth.pocketlog.ui.screen.other.viewmodel.CameraViewModel
+import com.lazysloth.pocketlog.ui.screen.other.viewmodel.GeminiModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
@@ -47,6 +49,7 @@ val appModule = module {
     single<UserRepository> { UserRepository(get()) }
     single<AccountRepository> { OfflineAccountRepository(get()) }
     single<CategoryRepository> { OfflineCategoryRepository(get()) }
+    single { GeminiModel() }
 
     // 5.viewmodel
 
@@ -72,6 +75,7 @@ val appModule = module {
     }
     viewModel {
         AddTransactionScreenViewmodel(
+            get(),
             get(),
             get(),
             get(),
@@ -123,6 +127,9 @@ val appModule = module {
             get()
         )
     }
-
-
+    viewModel {
+        CameraViewModel(
+            get()
+        )
+    }
 }

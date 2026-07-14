@@ -39,6 +39,7 @@ import org.koin.androidx.compose.koinViewModel
 fun DashboardScreen(
     onClickEdit: () -> Unit,
     onClickTransactionDetails: (Int) -> Unit,
+    onClickAiCam:()-> Unit,
     onClickAdd: () -> Unit,
     onClickSetting: () -> Unit,
     viewmodel: DashboardScreenViewModel = koinViewModel()
@@ -69,7 +70,7 @@ fun DashboardScreen(
                 horizontalAlignment = Alignment.End,
 
                 ) {
-                FloatingActionButton(onClick = {}) {
+                FloatingActionButton(onClick = {onClickAiCam()}) {
                     Icon(
                         painter = painterResource(R.drawable.visibility_24px),
                         contentDescription = "Capture with the camera"
@@ -107,6 +108,7 @@ fun DashboardPreview() {
             onClickEdit ={},
             onClickAdd = {},
             onClickSetting = {},
+            onClickAiCam = {},
             onClickTransactionDetails = {})
     }
 }

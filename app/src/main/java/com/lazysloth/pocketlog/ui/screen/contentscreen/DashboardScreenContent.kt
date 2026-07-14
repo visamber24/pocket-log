@@ -198,6 +198,7 @@ fun DashboardPreview() {
             onClickEdit = {},
             onClickAdd = {},
             onClickTransactionDetails = {},
+            onClickAiCam = {},
             onClickSetting = {})
     }
 }

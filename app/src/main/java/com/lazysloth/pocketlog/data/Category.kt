@@ -4,6 +4,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import kotlinx.serialization.Serializable
 
 enum class Category(val string : String) {
     GROCERY("grocery"), ENTERTAINMENT("entertainment"), VEGETABLE("vegetable"), HEALTHCARE("healthcare"), TRAVEL("travel")
@@ -19,6 +20,7 @@ enum class Category(val string : String) {
 //    )],
     indices = [Index("userId")]
 )
+@Serializable
 data class Category1(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,

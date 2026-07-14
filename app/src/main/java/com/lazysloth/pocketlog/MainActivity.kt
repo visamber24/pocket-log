@@ -3,16 +3,23 @@ package com.lazysloth.pocketlog
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.LocalActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
+import androidx.compose.material3.BottomSheetScaffold
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -27,17 +34,21 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
 import com.lazysloth.pocketlog.di.UserPersists
 import com.lazysloth.pocketlog.ui.MainScreenNav
-import com.lazysloth.pocketlog.ui.screen.contentscreen.viewmodel.AddCategoryScreenViewModel
+import com.lazysloth.pocketlog.ui.screen.other.PhotoBottomSheetContent
+import com.lazysloth.pocketlog.ui.screen.other.viewmodel.CameraViewModel
 import com.lazysloth.pocketlog.ui.theme.PocketLogTheme
 import org.koin.android.ext.android.inject
 import org.koin.androidx.compose.koinViewModel
 
 class MainActivity() : ComponentActivity() {
-    val session : UserPersists by inject()
 
+    val session: UserPersists by inject()
     private lateinit var auth: FirebaseAuth
+
+    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
 //        startKoin {
 //            androidContext(this@MainActivity)
 ////            monitoring()
@@ -48,16 +59,47 @@ class MainActivity() : ComponentActivity() {
         Log.d("DEEPLINK", "link = $emailLink")
         enableEdgeToEdge()
         setContent {
+
             println("current userId is ${session.currentId}")
             PocketLogTheme {
-                Scaffold(modifier = Modifier) { innerPadding ->
-//                    MainScreenNav(modifier = Modifier.padding(innerPadding),session = session)
-                    val vm : AddCategoryScreenViewModel = koinViewModel()
-                    MainScreenNav(modifier = Modifier.padding(innerPadding),session = session)
+
+                val scaffoldState = rememberBottomSheetScaffoldState()
+//                val controller = remember {
+//                    Lifecycle
+//                }
+                val cameraViewModel : CameraViewModel = koinViewModel(
+                    viewModelStoreOwner = LocalActivity.current as ComponentActivity
+                )
+                val scope = rememberCoroutineScope()
+                val bitmaps by cameraViewModel.bitmap.collectAsState()
+                BottomSheetScaffold(
+                    scaffoldState = scaffoldState,
+                    modifier = Modifier,
+                    sheetPeekHeight = 0.dp,
+                    sheetContent = {
+                        PhotoBottomSheetContent(
+                            bitmaps = bitmaps,
+                            modifier = Modifier
+                                .fillMaxWidth(),
+
+                        )
+                    }) { innerPadding ->
+                    MainScreenNav(
+                        applicationContext,
+                        modifier = Modifier.padding(innerPadding),
+                        session = session,
+                        scope = scope,
+                        scaffoldState = scaffoldState
+                    )
+
                 }
+//                Scaffold(modifier = Modifier) {
+//
+//                }
             }
         }
     }
+
 }
 
 @Composable

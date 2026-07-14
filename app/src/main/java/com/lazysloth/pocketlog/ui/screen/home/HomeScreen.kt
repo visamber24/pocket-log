@@ -22,7 +22,7 @@ fun HomeScreen(
     onClickTransactionDetails: () -> Unit,
     onClickAdd: () -> Unit,
     onClickSetting: () -> Unit,
-    onClickAi: () -> Unit,
+    onClickAiCam: () -> Unit,
     onClickAddAccount: () -> Unit,
     onClickEditAccount: () -> Unit,
     onClickAddCategory: () -> Unit,
@@ -62,6 +62,7 @@ fun HomeScreen(
                             onClickEdit = { onClickEdit() },
                             onClickTransactionDetails = { onClickTransactionDetails() },
                             onClickAdd = { onClickAdd() },
+                            onClickAiCam = {onClickAiCam()},
                             onClickSetting = { onClickSetting() })
                     }
 
@@ -96,7 +97,7 @@ fun HomeScreenPreview() {
     HomeScreen(
         onClickEdit = {},
         onClickTransactionDetails = {},
-        onClickAi = {},
+        onClickAiCam = {},
         onClickAdd = {},
         onClickSetting = {},
         onClickAddAccount = {},

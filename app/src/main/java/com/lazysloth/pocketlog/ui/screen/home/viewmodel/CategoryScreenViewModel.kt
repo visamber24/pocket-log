@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.lazysloth.pocketlog.R
 import com.lazysloth.pocketlog.data.Category1
+import com.lazysloth.pocketlog.data.CategoryType
 import com.lazysloth.pocketlog.database.repository.CategoryRepository
 import com.lazysloth.pocketlog.di.UserPersists
 import com.lazysloth.pocketlog.ui.screen.home.uiState.AddCategoryUiState
@@ -41,12 +42,12 @@ class CategoryScreenViewModel(
 
 data class CategoryListUiState(
     val categoryList: List<Category1> = listOf(
-//        Category1(icon = "ic_food", name = "food", type = CategoryType.EXPENSE,),
-//        Category1(icon = "ic_shopping", name = "shopping", type = CategoryType.EXPENSE,),
-//        Category1(icon = "ic_gift", name = "gift", type = CategoryType.EXPENSE,),
-//        Category1(icon = "ic_health", name = "health", type = CategoryType.EXPENSE,),
-//        Category1(icon = "ic_entertainment", name = "entertainment", type = CategoryType.EXPENSE,),
-//        Category1(icon = "ic_bills", name = "bills", type = CategoryType.EXPENSE,)
+        Category1(icon = "ic_food", name = "food", type = CategoryType.EXPENSE,),
+        Category1(icon = "ic_shopping", name = "shopping", type = CategoryType.EXPENSE,),
+        Category1(icon = "ic_gift", name = "gift", type = CategoryType.EXPENSE,),
+        Category1(icon = "ic_health", name = "health", type = CategoryType.EXPENSE,),
+        Category1(icon = "ic_entertainment", name = "entertainment", type = CategoryType.EXPENSE,),
+        Category1(icon = "ic_bills", name = "bills", type = CategoryType.EXPENSE,)
     )
 
 )

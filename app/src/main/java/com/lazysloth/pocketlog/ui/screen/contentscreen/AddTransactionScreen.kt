@@ -45,7 +45,9 @@ import androidx.compose.ui.unit.dp
 import com.lazysloth.pocketlog.R
 import com.lazysloth.pocketlog.data.Account
 import com.lazysloth.pocketlog.data.Category1
+import com.lazysloth.pocketlog.data.Transaction
 import com.lazysloth.pocketlog.data.TransactionType
+import com.lazysloth.pocketlog.ui.screen.contentscreen.viewmodel.toAddTransactionUiState
 import com.lazysloth.pocketlog.ui.screen.home.uiState.AddTransactionUiState
 import com.lazysloth.pocketlog.ui.screen.other.viewmodel.AddTransactionScreenViewmodel
 import com.lazysloth.pocketlog.ui.theme.PocketLogTheme
@@ -56,7 +58,10 @@ import java.time.format.FormatStyle
 import java.util.Date
 
 @Composable
-fun AddTransactionScreen(popBackStack: () -> Unit) {
+fun AddTransactionScreen(
+    popBackStack: () -> Unit,
+
+) {
     val vm: AddTransactionScreenViewmodel = koinViewModel()
     val uiState by vm.uiState.collectAsState()
 

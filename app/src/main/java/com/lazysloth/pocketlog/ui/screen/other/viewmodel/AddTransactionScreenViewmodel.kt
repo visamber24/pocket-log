@@ -1,5 +1,7 @@
 package com.lazysloth.pocketlog.ui.screen.other.viewmodel
 
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.lazysloth.pocketlog.data.Account
@@ -14,6 +16,7 @@ import com.lazysloth.pocketlog.ui.screen.home.uiState.AddTransactionUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
@@ -26,20 +29,35 @@ class AddTransactionScreenViewmodel(
     private val transactionRepository: TransactionRepository,
     private val userPersists: UserPersists,
     private val accountRepository: AccountRepository,
-    private val categoryRepository: CategoryRepository
+    private val categoryRepository: CategoryRepository,
+    private val geminiModel: GeminiModel,
 ) : ViewModel() {
 
+    //    val geminiState = geminiModel.extractedData.value
     private val _uiState = MutableStateFlow(AddTransactionUiState())
     val uiState: StateFlow<AddTransactionUiState> = _uiState.asStateFlow()
-
-
+    var dummyCategory: Category1 = Category1()
     init {
+        viewModelScope.launch {
+            geminiModel.extractedData.collect { extracted ->
+                val categoryList =
+                    categoryRepository.getCategoryByUserId(userPersists.currentId).first()
+                if (!categoryList.any { list ->
+                        list.name.equals(extracted.category.name, ignoreCase = true)
+                    }){
+                    categoryRepository.saveCategory(Category1(name = extracted.category1,))
+                }
+                    _uiState.value = extracted
+            }
+        }
         viewModelScope.launch {
             accountRepository
                 .getAccountByUserId(userPersists.currentId)
                 .collect { accounts ->
                     _uiState.update {
-                        it.copy(accounts = accounts)
+                        it.copy(
+                            accounts = accounts
+                        )
                     }
                 }
         }
@@ -53,6 +71,10 @@ class AddTransactionScreenViewmodel(
                 }
         }
 
+    }
+
+    fun generatedResponse() {
+        _uiState.value = geminiModel.extractedData.value
     }
 //    fun loadAccounts(){
 //        viewModelScope.launch {

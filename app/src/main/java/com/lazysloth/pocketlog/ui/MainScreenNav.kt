@@ -1,8 +1,13 @@
 package com.lazysloth.pocketlog.ui
 
+import android.content.Context
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.BottomSheetScaffoldState
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -31,14 +36,21 @@ import com.lazysloth.pocketlog.ui.screen.contentscreen.EditAccountScreen
 import com.lazysloth.pocketlog.ui.screen.contentscreen.TransactionDetailsScreen
 import com.lazysloth.pocketlog.ui.screen.contentscreen.TransactionEditScreen
 import com.lazysloth.pocketlog.ui.screen.home.HomeScreen
+import com.lazysloth.pocketlog.ui.screen.other.CameraPreviewScreen
 import com.lazysloth.pocketlog.ui.screen.other.SettingsScreen
+import com.lazysloth.pocketlog.ui.screen.other.viewmodel.CameraViewModel
+import kotlinx.coroutines.CoroutineScope
 import org.koin.androidx.compose.koinViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreenNav(
+    context: Context,
     session: UserPersists,
     navController: NavHostController = rememberNavController(),
-    modifier: Modifier
+    modifier: Modifier,
+    scope: CoroutineScope,
+    scaffoldState: BottomSheetScaffoldState
 ) {
 
     var startRoute by remember { mutableStateOf<String?>(null) }
@@ -127,7 +139,9 @@ fun MainScreenNav(
                     onClickSetting = {
                         navController.navigate("setting_screen")
                     },
-                    onClickAi = {},
+                    onClickAiCam = {
+                        navController.navigate("camera")
+                    },
                     onClickAddAccount = {
                         navController.navigate("add_account")
                     },
@@ -143,7 +157,8 @@ fun MainScreenNav(
 
             composable("addTransaction") {
                 AddTransactionScreen(
-                    popBackStack = { navController.popBackStack() }
+                    popBackStack = { navController.popBackStack() },
+
                 )
             }
             composable("transactionDetails") {
@@ -170,6 +185,24 @@ fun MainScreenNav(
                     }
                 })
             }
+
+            composable(route = "camera") {
+                CameraPreviewScreen(
+                    onClickGallery = {navController.navigate("Gallery")},
+                    scope = scope,
+                    scaffoldState = scaffoldState,
+                    navToAddTransitionScreen = {
+                        navController.navigate("addTransaction") {
+                            popUpTo("camera") {
+                                inclusive = true
+                            }
+                        }
+
+
+                    }
+                )
+            }
+
             composable(route = "add_account") {
                 AddAccountScreen(
                     popBackStack = { navController.popBackStack() }

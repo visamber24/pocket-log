@@ -5,7 +5,8 @@ plugins {
     alias(libs.plugins.ksp)
 
     //serialization plugin
-    id("org.jetbrains.kotlin.plugin.serialization") version "2.0.21"
+    id("org.jetbrains.kotlin.plugin.serialization") version "2.4.0"
+
     //firebase
 //    id("com.android.application")
     id("com.google.gms.google-services")
@@ -49,11 +50,26 @@ android {
 }
 
 dependencies {
+//    implementation("com.google.cloud:google-cloud-vision:3.91.0")
+    //json deserialization dependency
+    implementation(libs.kotlinx.serialization.json.v171)
+
+    //Camera X
+    implementation(libs.androidx.camera.compose)
+    implementation( libs.androidx.camera.core)
+    implementation( libs.androidx.camera.lifecycle)
+    implementation( libs.androidx.camera.view)
+    implementation(libs.androidx.camera2)
+
+    implementation(libs.accompanist.permissions)
     //firebase
-    implementation(platform("com.google.firebase:firebase-bom:32.7.0"))
+    implementation(platform("com.google.firebase:firebase-bom:34.16.0"))
+    implementation("com.google.firebase:firebase-ai")
+    implementation("com.google.firebase:firebase-appcheck-debug")
     implementation("com.google.firebase:firebase-analytics")
-    implementation("com.google.firebase:firebase-auth-ktx")
+    implementation("com.google.firebase:firebase-auth")
     implementation("com.google.firebase:firebase-firestore")
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
 
     implementation(libs.androidx.ui.tooling)
     implementation(libs.androidx.ui.tooling.preview)
@@ -63,6 +79,8 @@ dependencies {
     // alignment
     implementation(libs.androidx.compose.foundation.layout.v1103)
 
+    //material
+    implementation(libs.androidx.material.icons.extended)
     //Navigation dependency
     implementation(libs.androidx.compose.navigation.suite)
     //datastore dependency
@@ -78,6 +96,9 @@ dependencies {
     //room database
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
+    implementation(libs.play.services.mlkit.text.recognition)
+    implementation(libs.play.services.mlkit.text.recognition.common)
+    implementation(libs.vision.common)
     ksp(libs.androidx.room.compiler)
 
 

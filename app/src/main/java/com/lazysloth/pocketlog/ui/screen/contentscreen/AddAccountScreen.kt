@@ -21,6 +21,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
@@ -37,12 +38,15 @@ import org.koin.androidx.compose.koinViewModel
 fun AddAccountScreen(popBackStack: () -> Unit) {
     val vm: AddAccountViewModel = koinViewModel()
     val uiState by vm.uiState.collectAsState()
-    AddAccountScreenImpl(
-        uiState = uiState,
-        onSave = {
+    val onSave:()-> Unit = remember {
+        {
             popBackStack()
             vm.saveAccount()
-        },
+        }
+    }
+    AddAccountScreenImpl(
+        uiState = uiState,
+        onSave = onSave,
         onInitialBalanceChange = vm::onInitialBalanceChange,
         onAccountNameChange = vm::onAccountNameChange,
         onExpandedAccountType = vm::onExpandAccountType,
@@ -60,6 +64,7 @@ fun AddAccountScreenImpl(
     onExpandedAccountType: (Boolean) -> Unit,
     onAccountSelected: (AccountType) -> Unit
 ) {
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -75,7 +80,11 @@ fun AddAccountScreenImpl(
                 .fillMaxSize()
         ) {
             AddItems(
-                uiState = uiState,
+                initialBalance = uiState.initialBalance,
+                accountName = uiState.accountName,
+                accountType = uiState.accountType,
+                accountTypeExpanded = uiState.accountTypeExpanded,
+                accountTypes = uiState.accountTypes,
                 onInitialBalanceChange = onInitialBalanceChange,
                 onAccountNameChange = onAccountNameChange,
                 onExpandedAccountType = onExpandedAccountType,
@@ -99,18 +108,22 @@ fun AddAccountScreenImpl(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddItems(
-    uiState: AddAccountUiState,
+    initialBalance: String,
+    accountName: String,
+    accountType: AccountType,
+    accountTypeExpanded: Boolean,
+    accountTypes: List<AccountType>,
     onInitialBalanceChange: (String) -> Unit,
     onAccountNameChange: (String) -> Unit,
-    onExpandedAccountType:(Boolean)->Unit,
-    onAccountSelected: (AccountType)-> Unit,
+    onExpandedAccountType: (Boolean) -> Unit,
+    onAccountSelected: (AccountType) -> Unit,
 ) {
 
     OutlinedTextField(
         modifier = Modifier
             .fillMaxWidth()
             .padding(dimensionResource(R.dimen.transaction_input_item_padding)),
-        value = uiState.initialBalance,
+        value = initialBalance,
         onValueChange = { onInitialBalanceChange(it) },
         label = { Text("Initial Balance") },
         colors = OutlinedTextFieldDefaults.colors(
@@ -125,7 +138,7 @@ fun AddItems(
         modifier = Modifier
             .fillMaxWidth()
             .padding(dimensionResource(R.dimen.transaction_input_item_padding)),
-        value = uiState.accountName,
+        value = accountName,
         onValueChange = { onAccountNameChange(it) },
         label = { Text("Name of Account") },
         colors = OutlinedTextFieldDefaults.colors(
@@ -139,7 +152,7 @@ fun AddItems(
 
 
     ExposedDropdownMenuBox(
-        expanded = uiState.accountTypeExpanded,
+        expanded = accountTypeExpanded,
         onExpandedChange = { onExpandedAccountType(it) }
     ) {
         OutlinedTextField(
@@ -148,10 +161,10 @@ fun AddItems(
                 .padding(dimensionResource(R.dimen.transaction_input_item_padding))
                 .menuAnchor(),
             readOnly = true,
-            value = uiState.accountType.name,
+            value = accountType.name,
             onValueChange = {},
             label = { Text("Account") },
-            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = uiState.accountTypeExpanded) },
+            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = accountTypeExpanded) },
             colors = OutlinedTextFieldDefaults.colors(
                 focusedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
                 unfocusedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
@@ -160,9 +173,9 @@ fun AddItems(
             shape = inputFieldShape
         )
         ExposedDropdownMenu(
-            expanded = uiState.accountTypeExpanded,
+            expanded = accountTypeExpanded,
             onDismissRequest = { onExpandedAccountType(false) }) {
-            uiState.accountTypes.forEach { selectionOption ->
+            accountTypes.forEach { selectionOption ->
                 DropdownMenuItem(
                     text = { Text(selectionOption.name) },
                     onClick = {

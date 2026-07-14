@@ -3,8 +3,10 @@ package com.lazysloth.pocketlog.ui.screen.home.uiState
 import com.lazysloth.pocketlog.data.Account
 import com.lazysloth.pocketlog.data.Category1
 import com.lazysloth.pocketlog.data.TransactionType
+import kotlinx.serialization.Contextual
+import kotlinx.serialization.Serializable
 import java.time.ZonedDateTime
-
+@Serializable
 data class AddTransactionUiState(
     val selectedAccountId: Long? = null,
     val accounts : List<Account> = listOf(),
@@ -20,6 +22,7 @@ data class AddTransactionUiState(
 //        Category1(icon = "ic_bills", name = "bills", type = CategoryType.EXPENSE,)
     ),
     val category : Category1 = Category1(),
+    val category1: String = "",
     val selectedCategoryId: Long? = null,
     val expandedAccount: Boolean = false,
     val expandedCategory: Boolean = false,
@@ -29,7 +32,7 @@ data class AddTransactionUiState(
     val inputDescription: String = "",
     val dateOpen : Boolean = false,
     val timeOpen : Boolean = false,
-    val dateTime: ZonedDateTime = ZonedDateTime.now(),
+    @Contextual val dateTime: ZonedDateTime = ZonedDateTime.now(),
     var isSaving: Boolean = false
 )
 //var addAmount by remember { mutableStateOf("0.0") }
