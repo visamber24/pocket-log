@@ -11,6 +11,7 @@ import com.google.firebase.ai.type.generationConfig
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 
 class GeminiModel {
@@ -89,7 +90,7 @@ class GeminiModel {
         }
     }
 }
-
+@Serializable
 data class GeminiExtraction(
     val addAmount: String = "",
     val category1: String = "",
