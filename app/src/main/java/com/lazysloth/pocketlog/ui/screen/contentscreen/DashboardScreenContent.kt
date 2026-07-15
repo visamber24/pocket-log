@@ -76,7 +76,7 @@ fun DashboardScreenContent(
                 icon = painterResource(R.drawable.donut_large_24px),
                 typeOfTransaction = item.transaction.transactionType,
                 amount = item.transaction.amount,
-                accountName = item.account.name,
+                accountName = item.account?.name,
                 categoryName = item.category?.name,
                 note = item.transaction.note,
                 description = item.transaction.description,
@@ -131,12 +131,12 @@ object DialogDestination {
 @Composable
 fun RecordContent(
     icon: Painter,
-    typeOfTransaction: TransactionType,
-    amount: Double,
+    typeOfTransaction: TransactionType?,
+    amount: Double?,
     categoryName: String?,
-    accountName: String,
-    note: String,
-    description: String,
+    accountName: String?,
+    note: String?,
+    description: String?,
     modifier: Modifier = Modifier
 ) {
     Card(
@@ -169,7 +169,7 @@ fun RecordContent(
                     )
                 }
                 Text(
-                    text = note, fontSize = 11.sp, color = Color.Gray, maxLines = 1
+                    text = note ?: "", fontSize = 11.sp, color = Color.Gray, maxLines = 1
                 )
             }
 
@@ -183,7 +183,7 @@ fun RecordContent(
                     text = "₹$amount", fontSize = 14.sp, fontWeight = FontWeight.Bold
                 )
                 Text(
-                    text = accountName, fontSize = 11.sp, color = Color.Gray, maxLines = 1
+                    text = accountName?:"", fontSize = 11.sp, color = Color.Gray, maxLines = 1
                 )
             }
         }

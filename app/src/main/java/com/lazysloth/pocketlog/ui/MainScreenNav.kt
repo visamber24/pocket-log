@@ -197,8 +197,6 @@ fun MainScreenNav(
                                 inclusive = true
                             }
                         }
-
-
                     }
                 )
             }

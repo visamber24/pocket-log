@@ -6,11 +6,11 @@ data class TransactionDetailsUiState(
     val id: Int = 0,
     val amount: String = "",
     val accountList: List<String> = listOf(),
-    val accountName: String = "",
+    val accountName: String? = "",
     val category: String? = "",
-    val transactionType: String = "",
-    val note: String = "",
-    val description: String = "",
+    val transactionType: String? = "",
+    val note: String? = "",
+    val description: String? = "",
     val dateTime: String = "",
 )
 

@@ -1,7 +1,6 @@
 package com.lazysloth.pocketlog.ui.screen.other
 
 import android.util.Log
-import android.util.MutableBoolean
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.LocalActivity
 import androidx.camera.compose.CameraXViewfinder
@@ -63,7 +62,6 @@ import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import com.google.accompanist.permissions.shouldShowRationale
-import com.lazysloth.pocketlog.data.Transaction
 import com.lazysloth.pocketlog.ui.screen.other.viewmodel.AddTransactionScreenViewmodel
 import com.lazysloth.pocketlog.ui.screen.other.viewmodel.CameraViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -155,9 +153,6 @@ fun CameraPreviewContent(
     // Cache the initial coords for each autofocus request
     val autofocusCords = remember(autofocusRequestId) { autofocusRequest.second }
     var isLoading by remember { mutableStateOf(false) }
-    val addTransactionScreenViewmodel: AddTransactionScreenViewmodel = koinViewModel(
-        viewModelStoreOwner = LocalActivity.current as ComponentActivity
-    )
 
 
     // Queue hiding the request for each unique autofocus tap
@@ -231,10 +226,11 @@ fun CameraPreviewContent(
         if (viewModel.isLoading) {
             LoadingScreen()
         }
-        if (viewModel.geminiFinished) {
-            addTransactionScreenViewmodel.generatedResponse()
-            Log.d("Gemini", "response generated")
-            navToAddTransitionScreen()
+        LaunchedEffect(viewModel.geminiFinished) {
+            if (viewModel.geminiFinished) {
+                Log.d("Gemini", "response generated")
+                navToAddTransitionScreen()
+            }
         }
 
         AnimatedVisibility(

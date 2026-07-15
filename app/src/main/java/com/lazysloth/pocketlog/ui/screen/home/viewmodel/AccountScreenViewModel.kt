@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.stateIn
 
 class AccountScreenViewModel(
     accountRepository: AccountRepository,
-    private val userPersists: UserPersists
+    userPersists: UserPersists
 ) : ViewModel() {
 
     val uiStateList: StateFlow<AccountUiState> =

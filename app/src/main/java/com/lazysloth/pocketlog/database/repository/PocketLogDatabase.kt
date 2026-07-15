@@ -16,7 +16,7 @@ import com.lazysloth.pocketlog.data.Transaction
 import com.lazysloth.pocketlog.data.User
 
 
-@Database(entities = [Transaction::class, User::class, Account::class, Category1::class], version = 1, exportSchema = false)
+@Database(entities = [Transaction::class, User::class, Account::class, Category1::class], version = 2, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class PocketLogDatabase : RoomDatabase() {
     abstract fun getTransactionItem(): TransactionItemDao

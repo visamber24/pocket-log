@@ -15,7 +15,7 @@ interface TransactionItemDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(transaction: Transaction)
     @Query("UPDATE accounts SET currentBalance = currentBalance + :amount WHERE id=:accountId")
-    suspend fun updateAccountBalance(accountId: Long, amount: Double)
+    suspend fun updateAccountBalance(accountId: Long?, amount: Double)
     @androidx.room.Transaction
     suspend fun insertTransactionAndUpdateAccountBalance(transaction: Transaction,balanceDelta: Double){
         insert(transaction)

@@ -1,5 +1,6 @@
 package com.lazysloth.pocketlog.ui.screen.contentscreen
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -126,7 +127,7 @@ fun AddTransactionScreenImpl(
                 state = uiState,
                 onAccountSelected,
                 onAmountChange,
-                onExpandedAccount = onExpandedAccount,
+                onExpandedAccount = { onExpandedAccount(it) },
                 onExpandedCategory,
                 onCategorySelected,
                 onTransactionTypeSelected,
@@ -201,6 +202,7 @@ fun AddItems(
         ExposedDropdownMenu(
             expanded = state.expandedAccount, onDismissRequest = { onExpandedAccount(false) }) {
             state.accounts.forEach { selectionOption ->
+                Log.d("Account","account name: $selectionOption.name")
                 DropdownMenuItem(
                     text = { Text(selectionOption.name) }, onClick = {
                         onAccountSelected(selectionOption)
@@ -279,7 +281,7 @@ fun AddItems(
 
 
     OutlinedTextField(
-        value = state.inputNote,
+        value = state.inputNote?:"",
         onValueChange = { onNoteValueChange(it) },
         label = { Text(stringResource(R.string.note) + "..") },
         colors = OutlinedTextFieldDefaults.colors(
@@ -296,7 +298,7 @@ fun AddItems(
     )
 
     OutlinedTextField(
-        value = state.inputDescription,
+        value = state.inputDescription?: "",
         onValueChange = { onDescriptionChange(it) },
         label = { Text(stringResource(R.string.description) + "..") },
         colors = OutlinedTextFieldDefaults.colors(
@@ -349,7 +351,7 @@ fun AddItems(
 @Composable
 fun <T : Enum<T>> RadioGroup(
     options: List<T>,
-    selectedOption: T,
+    selectedOption: T?,
     onOptionSelected: (T) -> Unit = {},
 //    optionToText: (T) -> String
 ) {

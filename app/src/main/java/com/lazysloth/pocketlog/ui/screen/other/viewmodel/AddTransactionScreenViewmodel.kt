@@ -1,11 +1,13 @@
 package com.lazysloth.pocketlog.ui.screen.other.viewmodel
 
+import android.util.Log
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.lazysloth.pocketlog.data.Account
 import com.lazysloth.pocketlog.data.Category1
+import com.lazysloth.pocketlog.data.CategoryType
 import com.lazysloth.pocketlog.data.Transaction
 import com.lazysloth.pocketlog.data.TransactionType
 import com.lazysloth.pocketlog.database.repository.AccountRepository
@@ -37,17 +39,35 @@ class AddTransactionScreenViewmodel(
     private val _uiState = MutableStateFlow(AddTransactionUiState())
     val uiState: StateFlow<AddTransactionUiState> = _uiState.asStateFlow()
     var dummyCategory: Category1 = Category1()
-    init {
+
+    init {Log.d("FLOW", "VM = ${this.hashCode()}")
         viewModelScope.launch {
+            Log.d("FLOW", "Collector started ${this@AddTransactionScreenViewmodel.hashCode()}")
             geminiModel.extractedData.collect { extracted ->
+                Log.d(
+                    "FLOW",
+                    "Received ${this@AddTransactionScreenViewmodel.hashCode()} value=${extracted.category1}"
+                )
                 val categoryList =
                     categoryRepository.getCategoryByUserId(userPersists.currentId).first()
                 if (!categoryList.any { list ->
-                        list.name.equals(extracted.category.name, ignoreCase = true)
-                    }){
-                    categoryRepository.saveCategory(Category1(name = extracted.category1,))
+                        list.name.equals(extracted.category1, ignoreCase = true)
+                    } && extracted.category1 != "") {
+                    categoryRepository.saveCategory(
+                        Category1(
+                            name = extracted.category1,
+                            icon = extracted.icon,
+                            type = CategoryType.EXPENSE,
+                            userId = userPersists.currentId,
+                        )
+                    )
                 }
-                    _uiState.value = extracted
+                _uiState.update {
+                    it.copy(addAmount = extracted.addAmount,
+                        inputNote = extracted.inputNote,
+                        inputDescription = extracted.inputDescription,
+                        )
+                }
             }
         }
         viewModelScope.launch {
@@ -73,9 +93,7 @@ class AddTransactionScreenViewmodel(
 
     }
 
-    fun generatedResponse() {
-        _uiState.value = geminiModel.extractedData.value
-    }
+
 //    fun loadAccounts(){
 //        viewModelScope.launch {
 //            val accounts : List<String> = accountRepository.getAccountNameByUserId(userPersists.currentId)
@@ -174,7 +192,6 @@ class AddTransactionScreenViewmodel(
                     } else {
                         -amount
                     }
-
 //            println("the currentUserid = ${userPersists.currentId}")
                     transactionRepository.insertTransaction(
                         transaction = _uiState.value.toItem(userId),
@@ -208,8 +225,8 @@ class AddTransactionScreenViewmodel(
         id = id,
         userId = userId,
         amount = addAmount.toDoubleOrNull() ?: 0.0,
-        accountId = selectedAccountId!!,
-        categoryId = selectedCategoryId!!,
+        accountId = selectedAccountId,
+        categoryId = selectedCategoryId ?: 0,
         transactionType = selectedType,
         note = inputNote,
         description = inputDescription,

@@ -22,12 +22,12 @@ data class Transaction(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     val userId: String? = "",
-    val amount: Double = 0.0,
-    val accountId: Long = 0,
-    val categoryId: Long =  0,
-    val transactionType: TransactionType = TransactionType.DEBIT,
-    val note: String = "",
-    val description: String = "",
+    val amount: Double? = 0.0,
+    val accountId: Long? = 0,
+    val categoryId: Long? =  0,
+    val transactionType: TransactionType? = TransactionType.DEBIT,
+    val note: String? = "",
+    val description: String? = "",
     val dateTime: ZonedDateTime = ZonedDateTime.now(),
 )
 
