@@ -2,7 +2,7 @@
 
 cameraxVersion = "1.6.1"
 accompanist = "0.37.3"
-koinAndroid = "4.1.1"
+koinAndroid = "4.2.2"
 
 agp = "8.9.1"
 coilCompose = "2.7.0"
